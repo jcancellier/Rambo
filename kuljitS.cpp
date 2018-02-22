@@ -1,4 +1,4 @@
-typedef double Vec[3];
+/*typedef double Vec[3];
 
 class Bullet {
 public:
@@ -9,8 +9,6 @@ public:
 public:
 	Bullet() { }
 };
-
-/*
 
 void kuljitS_physics(){
 
