@@ -14,22 +14,14 @@
 #include <X11/XKBlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+#include "Global.h"
+#include "SpriteSheet.h"
+#include "Timers.h"
+#include "Character.h"
+#include "joshuaC.h"
+#include "erikS.cpp"
 //#include "fonts.h"
 
-//defined types
-typedef double Flt;
-typedef double Vec[3];
-typedef Flt	Matrix[4][4];
-
-//macros
-#define rnd() (((double)rand())/(double)RAND_MAX)
-#define random(a) (rand()%a)
-#define MakeVector(x, y, z, v) (v)[0]=(x),(v)[1]=(y),(v)[2]=(z)
-#define VecCopy(a,b) (b)[0]=(a)[0];(b)[1]=(a)[1];(b)[2]=(a)[2]
-#define VecDot(a,b)	((a)[0]*(b)[0]+(a)[1]*(b)[1]+(a)[2]*(b)[2])
-#define VecSub(a,b,c) (c)[0]=(a)[0]-(b)[0]; \
-                      (c)[1]=(a)[1]-(b)[1]; \
-                      (c)[2]=(a)[2]-(b)[2]
 //constants
 int keys[65365];
 const float timeslice = 1.0f;
@@ -40,106 +32,17 @@ int flipped = 0;
 
 #define ALPHA 1
 
-class Image {
-public:
-        //width and height of full image
-        int width, height;
 
-        //holds every R, G, and B value
-        //ex: first 3 values are the rgb values for first pixel
-        unsigned char *data;
+SpriteSheet img[1] = {"images/walk.gif"};
 
-        ~Image() { delete [] data; }
-        Image(const char *fname) {
-                if (fname[0] == '\0')
-                        return;
-
-                //CONVERT GIF TO PPM
-                char name[40];
-                strcpy(name, fname);
-                int slen = strlen(name);
-                name[slen-4] = '\0';
-                char ppmname[80];
-                sprintf(ppmname,"%s.ppm", name);
-                char ts[100];
-                sprintf(ts, "convert %s %s", fname, ppmname); //command that converts
-                system(ts);
-
-                FILE *fpi = fopen(ppmname, "r");
-                if (fpi) {
-                        char line[200];
-                        fgets(line, 200, fpi);
-                        fgets(line, 200, fpi);
-                        while (line[0] == '#')
-                                fgets(line, 200, fpi);
-                        sscanf(line, "%i %i", &width, &height);
-                        fgets(line, 200, fpi);
-
-                        //get pixel data
-                        int n = width * height * 3;
-                        data = new unsigned char[n];
-                        for (int i=0; i<n; i++)
-                                data[i] = fgetc(fpi);
-                        fclose(fpi);
-                } else {
-                        printf("ERROR opening image: %s\n",ppmname);
-                        exit(0);
-                }
-                unlink(ppmname);
-        }
-};
-
-Image img[1] = {"images/walk.gif"};
-
+//Main Character (rambo)
+Character rambo;
 
 //-----------------------------------------------------------------------------
 //Setup timers
-class Timers {
-public:
-	double physicsRate;
-	double oobillion;
-	struct timespec timeStart, timeEnd, timeCurrent;
-	struct timespec walkTime;
-	Timers() {
-		physicsRate = 1.0 / 30.0;
-		oobillion = 1.0 / 1e9;
-	}
-	double timeDiff(struct timespec *start, struct timespec *end) {
-		return (double)(end->tv_sec - start->tv_sec ) +
-				(double)(end->tv_nsec - start->tv_nsec) * oobillion;
-	}
-	void timeCopy(struct timespec *dest, struct timespec *source) {
-		memcpy(dest, source, sizeof(struct timespec));
-	}
-	void recordTime(struct timespec *t) {
-		clock_gettime(CLOCK_REALTIME, t);
-	}
-} timers;
+Timers timers;
 //-----------------------------------------------------------------------------
-
-class Global {
-public:
-	int done;
-	int xres, yres;
-	int walk;
-	int walkFrame;
-	double delay;
-	GLuint walkTexture;
-	Vec box[20];
-	Global() {
-		done=0;
-		xres=800;
-		yres=600;
-		walk=0;
-		walkFrame=0;
-		delay = 0.1;
-		for (int i=0; i<20; i++) {
-			box[i][0] = rnd() * xres;
-			box[i][1] = rnd() * (yres-220) + 220.0;
-			box[i][2] = 0.0;
-		}
-	}
-} g;
+Global g;
 
 class X11_wrapper {
 private:
@@ -232,7 +135,6 @@ void init();
 void physics(void);
 void render(void);
 
-
 int main(void)
 {
 	initOpengl();
@@ -255,7 +157,7 @@ int main(void)
 
 
 //This function removes background from sprite sheet
-unsigned char *buildAlphaData(Image *img)
+unsigned char *buildAlphaData(SpriteSheet *img)
 {
 	//add 4th component to RGB stream...
 	int i;
@@ -467,7 +369,7 @@ Flt VecNormalize(Vec vec)
 void physics(void)
 {
 	if(keys[XK_Right] == 0 && keys[XK_Left] == 0){
-		g.walkFrame = 0;
+		rambo.frame = 0;
 	}	
 	
 	if(keys[XK_Right]){	
@@ -479,9 +381,9 @@ void physics(void)
 			double timeSpan = timers.timeDiff(&timers.walkTime, &timers.timeCurrent);
 			if (timeSpan > g.delay) {
 				//advance
-				++g.walkFrame;
-				if (g.walkFrame >= 7)
-					g.walkFrame -= 6;
+				++rambo.frame;
+				if (rambo.frame >= 7)
+					rambo.frame -= 6;
 				timers.recordTime(&timers.walkTime);
 			}
 			/*
@@ -493,30 +395,8 @@ void physics(void)
 			*/
 	}
 
-	
-	if(keys[XK_Left]){	
-			flipped = 1;
-			//man is walking...
-			//when time is up, advance the frame.
-			cx -= 4;
-			timers.recordTime(&timers.timeCurrent);
-			double timeSpan = timers.timeDiff(&timers.walkTime, &timers.timeCurrent);
-			if (timeSpan > g.delay) {
-				//advance
-				++g.walkFrame;
-				if (g.walkFrame >= 7)
-					g.walkFrame -= 6;
-				timers.recordTime(&timers.walkTime);
-			}
-			/*
-			for (int i=0; i<20; i++) {
-				g.box[i][0] -= 2.0 * (0.05 / g.delay);
-				if (g.box[i][0] < -10.0)
-					g.box[i][0] += g.xres + 10.0;
-			}
-			*/
-	}
-
+	walkLeft();
+/*
 	if (g.walk) {
 		//man is walking...
 		//when time is up, advance the frame.
@@ -535,6 +415,7 @@ void physics(void)
 				g.box[i][0] += g.xres + 10.0;
 		}
 	}
+	*/
 }
 
 void render(void)
@@ -591,9 +472,9 @@ void render(void)
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);
-	int ix = g.walkFrame % 7;
+	int ix = rambo.frame % 7;
 	int iy = 1;
-	if (g.walkFrame >= 7)
+	if (rambo.frame >= 7)
 		iy = 1;
 	float tx = (float)ix / 7;
 	float ty = (float)iy / 1;
@@ -606,7 +487,11 @@ void render(void)
 	glPopMatrix();
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_ALPHA_TEST);
-	//
+	
+	Platform a(0, 0, 0, 20, 20, 20, 20, 0);
+	a.setColor(1, 0, 0);
+	a.drawPlatform();
+
 //	unsigned int c = 0x00ffff44;
 //	r.bot = g.yres - 20;
 //	r.left = 10;
