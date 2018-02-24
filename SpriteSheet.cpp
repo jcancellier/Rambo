@@ -5,10 +5,12 @@
 #include <unistd.h>
 
 SpriteSheet::~SpriteSheet() { delete [] data; }
-SpriteSheet::SpriteSheet(const char *fname) {
+SpriteSheet::SpriteSheet(const char *fname, int r, int c) {
     if (fname[0] == '\0')
         return;
-
+    
+    rows = r;
+    columns = c;
     //CONVERT GIF TO PPM
     char name[40];
     strcpy(name, fname);

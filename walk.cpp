@@ -33,8 +33,7 @@ int flipped = 0;
 
 #define ALPHA 1
 
-
-SpriteSheet img[1] = {"images/walk.gif"};
+SpriteSheet img[] = {SpriteSheet("images/walk.gif", 1, 7)};
 
 //Main Character (rambo)
 Character rambo;
@@ -374,10 +373,10 @@ void physics(void)
 	}	
 	
 	if(keys[XK_Right]){	
-			flipped = 0;
+			rambo.flipped = false;
 			//man is walking...
 			//when time is up, advance the frame.
-			cx += 4;
+			rambo.centerX += rambo.velocityX;
 			timers.recordTime(&timers.timeCurrent);
 			double timeSpan = timers.timeDiff(&timers.walkTime, &timers.timeCurrent);
 			if (timeSpan > g.delay) {
@@ -466,6 +465,7 @@ void render(void)
 	}
 
 	//Height and width of character
+    /*
 	float h = 50;
 	float w = h * 0.7;
 	glPushMatrix();
@@ -477,31 +477,21 @@ void render(void)
 	glColor4ub(255,255,255,255);
 	int ix = rambo.frame % 7;
 	int iy = 1;
-	if (rambo.frame >= 7)
-		iy = 1;
-	float tx = (float)ix / 7;
-	float ty = (float)iy / 1;
-	glBegin(GL_QUADS);
-		glTexCoord2f(tx,      ty+1); glVertex2i(flipped ? cx+w : cx-w, rambo.getCenterY()-h);
-		glTexCoord2f(tx,      ty);    glVertex2i(flipped ? cx+w : cx-w, rambo.getCenterY()+h);
-		glTexCoord2f(tx+.14285714, ty);    glVertex2i(flipped ? cx-w : cx+w, rambo.getCenterY()+h);
-		glTexCoord2f(tx+.14285714, ty+1); glVertex2i(flipped ? cx-w : cx+w, rambo.getCenterY()-h);
-	glEnd();
-	glPopMatrix();
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glDisable(GL_ALPHA_TEST);
-	
+    */
+
+    //draw Rambo
+    rambo.draw();
+
 	Platform a(0, 0, 0, 20, 20, 20, 20, 0);
 	a.setColor(1, 0, 0);
 	a.drawPlatform();
 
-
 	//Rambo hitbox center
-	glPointSize(10);
-	glBegin(GL_POINTS);
-	glColor3f(0, 0, 0);
-	glVertex3f(rambo.getCenterX(), rambo.getCenterY(), 0);
-	glEnd();
+	//glPointSize(10);
+	//glBegin(GL_POINTS);
+	//glColor3f(0, 0, 0);
+	//glVertex3f(rambo.getCenterX(), rambo.getCenterY(), 0);
+	//glEnd();
 
 	unsigned int c = 0x00ffff44;
 	r.bot = g.yres - 20;

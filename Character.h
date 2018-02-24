@@ -10,6 +10,9 @@ class Character{
 	    int frame;
 	    bool flipped;
 	    float health;
+        int spriteSheetIndex;
+        float velocityX;
+        float velocityY;
 
 	    Character();
 	    //Accessors
@@ -29,6 +32,9 @@ class Character{
 	    void setFrame(int f);
 	    void setFlipped(bool f);
 	    void setHealth(float h);
+
+        //Other
+        void draw();
 };
 
 #endif
