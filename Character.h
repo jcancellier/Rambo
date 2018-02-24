@@ -14,7 +14,8 @@ class Character{
         float velocityX;
         float velocityY;
 
-	    Character();
+	    Character(int);
+
 	    //Accessors
 	    float getCenterX() const;
 	    float getCenterY() const;

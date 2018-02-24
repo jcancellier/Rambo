@@ -13,7 +13,7 @@ extern int keys[];
 extern Character rambo;
 extern SpriteSheet img[];
 
-Character::Character(){
+Character::Character(int ssIdx){
 	centerX = 100;
 	centerY = 200;
 	height = 50;
@@ -21,7 +21,7 @@ Character::Character(){
 	frame = 0;
 	flipped = false;
 	health = 4;
-    spriteSheetIndex = 0;
+    spriteSheetIndex = ssIdx;
     velocityX = 4;
     velocityY = 4;
 }
@@ -58,10 +58,14 @@ void Character::draw()
     float ssWidth = (float)1.0/img[spriteSheetIndex].columns;
     float ssHeight = (float)1.0/img[spriteSheetIndex].rows;
 
-	int ix = rambo.frame % 7;
+	int ix = rambo.frame % img[spriteSheetIndex].columns;
 	int iy = 1;
-	
-	float textureX = (float)ix / 7;
+
+    //move to next row of spriteSheet (if available)
+	if(rambo.frame >= 7)
+        iy = 2;
+
+	float textureX = (float)ix / img[spriteSheetIndex].columns;
 	float textureY = (float)iy / 1;
 	glBegin(GL_QUADS);
 	    glTexCoord2f(textureX, textureY+ssHeight); 
