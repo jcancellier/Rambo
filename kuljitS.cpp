@@ -3,7 +3,7 @@
 #include "Timers.h"
 #include "SpriteSheet.h"
 #include "Character.h"
-
+#include "fonts.h"	
 extern int flipped;
 extern float cx;
 extern Timers timers;
@@ -28,15 +28,18 @@ void kuljitS_physics()
 	}
 	//apply gravity
 	/*uncomment when rambo gets a velocity
-	if(rambo.getCenterY() > 200){
-		rambo.setVelocityY(rambo.getVelocityY() + gravity;
-	}
-*/
-	
+	  if(rambo.getCenterY() > 200){
+	  rambo.setVelocityY(rambo.getVelocityY() + gravity;
+	  }
+	 */
 
+}
 
-	
-
-		
+void printKuljitS(int x, int y, int size, int color){
+	Rect r;
+	r.bot = y;
+	r.left = x;
+	r.center = 0;
+	ggprint8b(&r, size, color, "Kuljit Singh");
 }
 
