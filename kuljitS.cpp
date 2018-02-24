@@ -1,57 +1,42 @@
-/*typedef double Vec[3];
+#include<X11/keysym.h>
+#include "Global.h"
+#include "Timers.h"
+#include "SpriteSheet.h"
+#include "Character.h"
 
-class Bullet {
-public:
-	Vec pos;
-	Vec vel;
-	float color[3];
-	struct timespec time;
-public:
-	Bullet() { }
-};
+extern int flipped;
+extern float cx;
+extern Timers timers;
+extern Global g;
+extern int keys[];
+extern Character rambo;
+extern const float gravity;
 
-void kuljitS_physics(){
+#define JUMP_STRENGTH 5
 
-    /////////////////////////////////////////////////////////
-    //update bullets
-    /////////////////////////////////////////////////////////
-    struct timespec bt;
-    clock_gettime(CLOCK_REALTIME, &bt);
-    int i=0;
-    while (i < g.nbullets) {
-	Bullet *b = &g.barr[i];
-	//How long has bullet been alive?
-	double ts = timers.timeDiff(&b->time, &bt);
-	if (ts > 2.5) {
-	    //time to delete the bullet.
-	    memcpy(&g.barr[i], &g.barr[g.nbullets-1],
-		    sizeof(Bullet));
-	    g.nbullets--;
-	    //do not increment i.
-	    continue;
+void kuljitS_physics() 
+{
+	//check for a jump
+	if(keys[XK_a]){
+		rambo.setCenterY(rambo.getCenterY()+JUMP_STRENGTH);
+		//Uncomment below when rambo get a velocity
+		//rambo.setVelocityY(JUMP_STRENGTH);
 	}
-	//move the bullet
-	b->pos[0] += b->vel[0];
-	b->pos[1] += b->vel[1];
-	//Check for collision with window edges
-	if (b->pos[0] < 0.0 ||
-		b->pos[0] > (float)gl.xres ||
-		b->pos[1] < 0.0 ||
-		b->pos[1] > (float)gl.yres){
-	    memcpy(&g.barr[i], &g.barr[g.nbullets-1], sizeof(Bullet));
-	    g.nbullets--;	
-	} 
-	i++;
-    }
+
+	if(rambo.getCenterY() > 200){
+		rambo.setCenterY(rambo.getCenterY() + -2.0f);
+	}
+	//apply gravity
+	/*uncomment when rambo gets a velocity
+	if(rambo.getCenterY() > 200){
+		rambo.setVelocityY(rambo.getVelocityY() + gravity;
+	}
+*/
+	
 
 
-    //////////////////////////////////////////////////////////
-    //check keys for space press to create bullet
-    //////////////////////////////////////////////////////////
+	
 
-
-
-
+		
 }
 
-*/

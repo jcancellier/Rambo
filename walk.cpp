@@ -20,7 +20,8 @@
 #include "Character.h"
 #include "joshuaC.h"
 #include "erikS.cpp"
-//#include "fonts.h"
+#include "kuljitS.h"
+#include "fonts.h"
 
 //constants
 int keys[65365];
@@ -210,7 +211,7 @@ void initOpengl(void)
 	//glClear(GL_COLOR_BUFFER_BIT);
 	//Do this to allow fonts
 	glEnable(GL_TEXTURE_2D);
-	//initialize_fonts();
+	initialize_fonts();
 	//
 	//load the images file into a ppm structure.
 	//
@@ -416,11 +417,13 @@ void physics(void)
 		}
 	}
 	*/
+
+	kuljitS_physics();
 }
 
 void render(void)
 {
-	//Rect r;
+	Rect r;
 	//Clear the screen
 	glClearColor(0.0, 0.5, 1.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -479,10 +482,10 @@ void render(void)
 	float tx = (float)ix / 7;
 	float ty = (float)iy / 1;
 	glBegin(GL_QUADS);
-		glTexCoord2f(tx,      ty+1); glVertex2i(flipped ? cx+w : cx-w, cy-h);
-		glTexCoord2f(tx,      ty);    glVertex2i(flipped ? cx+w : cx-w, cy+h);
-		glTexCoord2f(tx+.14285714, ty);    glVertex2i(flipped ? cx-w : cx+w, cy+h);
-		glTexCoord2f(tx+.14285714, ty+1); glVertex2i(flipped ? cx-w : cx+w, cy-h);
+		glTexCoord2f(tx,      ty+1); glVertex2i(flipped ? cx+w : cx-w, rambo.getCenterY()-h);
+		glTexCoord2f(tx,      ty);    glVertex2i(flipped ? cx+w : cx-w, rambo.getCenterY()+h);
+		glTexCoord2f(tx+.14285714, ty);    glVertex2i(flipped ? cx-w : cx+w, rambo.getCenterY()+h);
+		glTexCoord2f(tx+.14285714, ty+1); glVertex2i(flipped ? cx-w : cx+w, rambo.getCenterY()-h);
 	glEnd();
 	glPopMatrix();
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -492,11 +495,19 @@ void render(void)
 	a.setColor(1, 0, 0);
 	a.drawPlatform();
 
-//	unsigned int c = 0x00ffff44;
-//	r.bot = g.yres - 20;
-//	r.left = 10;
-//	r.center = 0;
-	//ggprint8b(&r, 16, c, "right arrow -> walk right");
-	//ggprint8b(&r, 16, c, "left arrow  <- walk left");
-	//ggprint8b(&r, 16, c, "frame: %i", g.walkFrame);
+
+	//Rambo hitbox center
+	glPointSize(10);
+	glBegin(GL_POINTS);
+	glColor3f(0, 0, 0);
+	glVertex3f(rambo.getCenterX(), rambo.getCenterY(), 0);
+	glEnd();
+
+	unsigned int c = 0x00ffff44;
+	r.bot = g.yres - 20;
+	r.left = 10;
+	r.center = 0;
+	ggprint8b(&r, 16, c, "right arrow -> walk right");
+	ggprint8b(&r, 16, c, "left arrow  <- walk left");
+	ggprint8b(&r, 16, c, "a key to jump");
 }
