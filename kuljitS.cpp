@@ -3,7 +3,8 @@
 #include "Timers.h"
 #include "SpriteSheet.h"
 #include "Character.h"
-#include "fonts.h"	
+#include "fonts.h"
+
 extern int flipped;
 extern float cx;
 extern Timers timers;
@@ -17,16 +18,16 @@ extern const float gravity;
 void kuljitS_physics() 
 {
 	//check for a jump
-	if(keys[XK_a]){
+	if (keys[XK_a]) {
 		rambo.setCenterY(rambo.getCenterY()+JUMP_STRENGTH);
 		//Uncomment below when rambo get a velocity
 		//rambo.setVelocityY(JUMP_STRENGTH);
 	}
 
-	if(rambo.getCenterY() > 200){
+	//apply gravity
+	if (rambo.getCenterY() > 200) {
 		rambo.setCenterY(rambo.getCenterY() + -2.0f);
 	}
-	//apply gravity
 	/*uncomment when rambo gets a velocity
 	  if(rambo.getCenterY() > 200){
 	  rambo.setVelocityY(rambo.getVelocityY() + gravity;
