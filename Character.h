@@ -9,11 +9,12 @@ class Character{
 	    float width;
 	    int frame;
 	    bool flipped;
+        bool jumping;
 	    float health;
         int spriteSheetIndex;
         float velocityX;
         float velocityY;
-
+      
 	    Character(int);
 
 	    //Accessors

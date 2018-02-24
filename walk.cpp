@@ -33,7 +33,7 @@ int flipped = 0;
 
 #define ALPHA 1
 
-SpriteSheet img[] = {SpriteSheet("images/walk.gif", 1, 7)};
+SpriteSheet img[] = {SpriteSheet("images/walk.gif", 2, 7)};
 
 //Main Character (rambo)
 Character rambo(0);
@@ -292,6 +292,8 @@ int checkKeys(XEvent *e)
 	
 	if(e->type == KeyPress){
 		keys[key] = 1;
+        //if(keys[XK_b])
+            //rambo.frame = 6;
 	}
 	if(e->type == KeyRelease){
 		keys[key] = 0;
@@ -368,10 +370,7 @@ Flt VecNormalize(Vec vec)
 
 void physics(void)
 {
-	if(keys[XK_Right] == 0 && keys[XK_Left] == 0){
-		rambo.frame = 0;
-	}	
-	
+    joshuaCInput();	
 	if(keys[XK_Right]){	
 			rambo.flipped = false;
 			//man is walking...
@@ -394,8 +393,6 @@ void physics(void)
 			}
 			*/
 	}
-
-	walkLeft();
 /*
 	if (g.walk) {
 		//man is walking...
@@ -487,11 +484,11 @@ void render(void)
 	a.drawPlatform();
 
 	//Rambo hitbox center
-	//glPointSize(10);
-	//glBegin(GL_POINTS);
-	//glColor3f(0, 0, 0);
-	//glVertex3f(rambo.getCenterX(), rambo.getCenterY(), 0);
-	//glEnd();
+	glPointSize(10);
+	glBegin(GL_POINTS);
+	glColor3f(0, 0, 0);
+	glVertex3f(rambo.getCenterX(), rambo.getCenterY(), 0);
+	glEnd();
 
 	unsigned int c = 0x00ffff44;
 	r.bot = g.yres - 20;

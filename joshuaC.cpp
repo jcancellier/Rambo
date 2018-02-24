@@ -1,9 +1,18 @@
+/* Author: Joshua Cancellier
+ *
+ * Start Date: February 24, 2018
+ *
+ * Purpose: handle character input, movement, and animations
+ *
+ */
+
 #include<X11/keysym.h>
 #include "Global.h"
 #include "Timers.h"
 #include "SpriteSheet.h"
 #include "Character.h"
 #include <GL/glx.h>
+#include "joshuaC.h"
 
 extern int flipped;
 extern float cx;
@@ -13,6 +22,7 @@ extern int keys[];
 extern Character rambo;
 extern SpriteSheet img[];
 
+//Constructors
 Character::Character(int ssIdx){
 	centerX = 100;
 	centerY = 200;
@@ -20,6 +30,7 @@ Character::Character(int ssIdx){
 	width = height * 0.7;
 	frame = 0;
 	flipped = false;
+    jumping = false;
 	health = 4;
     spriteSheetIndex = ssIdx;
     velocityX = 4;
@@ -44,7 +55,7 @@ void Character::setFrame(int f){ frame = f; }
 void Character::setFlipped(bool f){ flipped = f; }
 void Character::setHealth(float h){health = h; }
 
-//Others
+//Character Member functions
 void Character::draw()
 {
 	glPushMatrix();
@@ -62,8 +73,9 @@ void Character::draw()
 	int iy = 0;
 
     //move to next row of spriteSheet (if available)
-	if(rambo.frame >= 7)
-        	iy = 1;
+	if(frame >= img[spriteSheetIndex].columns) {
+        iy = 1;
+    }
 
 	float textureX = (float)ix / img[spriteSheetIndex].columns;
 	float textureY = (float)iy / img[spriteSheetIndex].rows;
@@ -85,6 +97,16 @@ void Character::draw()
 	glDisable(GL_ALPHA_TEST); 
 }
 
+//Handle Input and animations
+void joshuaCInput(){
+    if(keys[XK_Right] == 0 && keys[XK_Left] == 0 && !rambo.jumping){
+        rambo.frame = 0;
+    }
+
+ 	jumpAnimation();
+	walkLeft();
+}
+
 void walkLeft()
 {
 	if(keys[XK_Left]){
@@ -92,13 +114,48 @@ void walkLeft()
 		rambo.centerX -= rambo.velocityX;
 		timers.recordTime(&timers.timeCurrent);
 		//record time between frames
-		double timeSpan = timers.timeDiff(&timers.walkTime, &timers.timeCurrent);
+		double timeSpan = timers.timeDiff(&timers.walkTime, 
+										&timers.timeCurrent);
 		if (timeSpan > g.delay) {
 			//advance frame
 			++rambo.frame;
-			if (rambo.frame >= 7)
+			if (rambo.frame >= 7) {
 				rambo.frame -= 6;
+			}
 			timers.recordTime(&timers.walkTime);
 		}
 	}
+}
+
+void jumpAnimation()
+{
+    if (rambo.centerY > 200) {
+        rambo.jumping = true;
+    }
+    else { 
+        rambo.jumping = false;
+    }
+
+    if (keys[XK_a] || rambo.jumping) {
+
+        rambo.jumping = true;
+        //check if in walk state
+        if (rambo.frame >= 0 && rambo.frame <= 6) {
+            rambo.frame = 7;
+		}
+        //rambo.flipped = (keys[XK_Left] ? true : false);
+        
+		timers.recordTime(&timers.timeCurrent);
+		//record time between frames
+		double timeSpan = timers.timeDiff(&timers.walkTime, 
+										&timers.timeCurrent);
+		if (timeSpan > g.delay) {
+			//advance frame
+			++rambo.frame;
+			if (rambo.frame >= 11) {
+				rambo.frame = 7;
+			}
+			timers.recordTime(&timers.walkTime);
+		}
+    }
 }
