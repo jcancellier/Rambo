@@ -487,11 +487,11 @@ void render(void)
 	a.drawPlatform();
 
 	//Rambo hitbox center
-	glPointSize(10);
-	glBegin(GL_POINTS);
-	glColor3f(0, 0, 0);
-	glVertex3f(rambo.getCenterX(), rambo.getCenterY(), 0);
-	glEnd();
+	//glPointSize(10);
+	//glBegin(GL_POINTS);
+	//glColor3f(0, 0, 0);
+	//glVertex3f(rambo.getCenterX(), rambo.getCenterY(), 0);
+	//glEnd();
 
 	unsigned int c = 0x00ffff44;
 	r.bot = g.yres - 20;

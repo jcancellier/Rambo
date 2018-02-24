@@ -59,14 +59,14 @@ void Character::draw()
     float ssHeight = (float)1.0/img[spriteSheetIndex].rows;
 
 	int ix = rambo.frame % img[spriteSheetIndex].columns;
-	int iy = 1;
+	int iy = 0;
 
     //move to next row of spriteSheet (if available)
 	if(rambo.frame >= 7)
-        iy = 2;
+        	iy = 1;
 
 	float textureX = (float)ix / img[spriteSheetIndex].columns;
-	float textureY = (float)iy / 1;
+	float textureY = (float)iy / img[spriteSheetIndex].rows;
 	glBegin(GL_QUADS);
 	    glTexCoord2f(textureX, textureY+ssHeight); 
         glVertex2i(flipped ? centerX+width : centerX-width, centerY-height);
