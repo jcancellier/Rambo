@@ -379,17 +379,7 @@ void render(void)
     glVertex2i(g.xres,   0);
     glVertex2i(0,         0);
     glEnd();
-    //
-    //fake shadow
-    //glColor3f(0.25, 0.25, 0.25);
-    //glBegin(GL_QUADS);
-    //    glVertex2i(cx-60, 150);
-    //    glVertex2i(cx+50, 150);
-    //    glVertex2i(cx+50, 130);
-    //    glVertex2i(cx-60, 130);
-    //glEnd();
-    //
-    //show boxes as background
+    
     for (int i=0; i<20; i++) {
         glPushMatrix();
         glTranslated(g.box[i][0],g.box[i][1],g.box[i][2]);
@@ -402,21 +392,6 @@ void render(void)
         glEnd();
         glPopMatrix();
     }
-    
-    //Height and width of character
-    /*
-     float h = 50;
-     float w = h * 0.7;
-     glPushMatrix();
-     glColor3f(1.0, 1.0, 1.0);
-     glBindTexture(GL_TEXTURE_2D, g.walkTexture);
-     //
-     glEnable(GL_ALPHA_TEST);
-     glAlphaFunc(GL_GREATER, 0.0f);
-     glColor4ub(255,255,255,255);
-     int ix = rambo.frame % 7;
-     int iy = 1;
-     */
     
     //draw Rambo
     rambo.draw();
