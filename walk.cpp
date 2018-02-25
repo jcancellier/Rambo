@@ -31,7 +31,7 @@ const float gravity = -0.2f;
 float cx = 100;    //Sprite x postion
 float cy = 200; //Sprite y postion
 int flipped = 0;
-bool debug_mode = false;
+bool debug_mode = true;
 
 #define ALPHA 1
 
@@ -415,6 +415,7 @@ void render(void)
         ggprint8b(&r, 16, c, "right arrow -> walk right");
         ggprint8b(&r, 16, c, "left arrow  <- walk left");
         ggprint8b(&r, 16, c, "a key to jump");
+        ggprint8b(&r, 16, c, "h key to toggle debug mode");
         printKuljitS(g.xres - 100, g.yres-20, 16, 0);
     }
 }
