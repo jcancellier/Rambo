@@ -31,18 +31,18 @@ const float gravity = -0.2f;
 float cx = 100;    //Sprite x postion
 float cy = 200; //Sprite y postion
 int flipped = 0;
+bool debug_mode = false;
 
 #define ALPHA 1
 
+//load textures (filename, rows, columns)
 SpriteSheet img[] = {SpriteSheet("images/walk.gif", 2, 7)};
 
 //Main Character (rambo)
 Character rambo(0);
 
-//-----------------------------------------------------------------------------
 //Setup timers
 Timers timers;
-//-----------------------------------------------------------------------------
 Global g;
 
 class X11_wrapper {
@@ -299,6 +299,10 @@ int checkKeys(XEvent *e)
     if(e->type == KeyRelease){
         keys[key] = 0;
     }
+
+    if(e->type == KeyPress && key == XK_h){
+        debug_mode = !debug_mode;
+    }
     
     //(void)shift;
     switch (key) {
@@ -428,12 +432,15 @@ void render(void)
     glVertex3f(rambo.getCenterX(), rambo.getCenterY(), 0);
     glEnd();
     
-    unsigned int c = 0x00ffff44;
-    r.bot = g.yres - 20;
-    r.left = 10;
-    r.center = 0;
-    ggprint8b(&r, 16, c, "right arrow -> walk right");
-    ggprint8b(&r, 16, c, "left arrow  <- walk left");
-    ggprint8b(&r, 16, c, "a key to jump");
+    if(debug_mode){
+        unsigned int c = 0x00ffff44;
+        r.bot = g.yres - 20;
+        r.left = 10;
+        r.center = 0;
+        ggprint8b(&r, 16, c, "right arrow -> walk right");
+        ggprint8b(&r, 16, c, "left arrow  <- walk left");
+        ggprint8b(&r, 16, c, "a key to jump");
+        printKuljitS(g.xres - 100, g.yres-20, 16, 0);
+    }
 }
 

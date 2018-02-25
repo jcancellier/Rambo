@@ -102,7 +102,7 @@ void Character::draw()
 //Handle Input and animations
 void joshuaCInput()
 {
-    if(keys[XK_Right] == 0 && keys[XK_Left] == 0 && !rambo.jumping){
+    if (keys[XK_Right] == 0 && keys[XK_Left] == 0 && !rambo.jumping) {
         rambo.frame = 0;
     }
     
