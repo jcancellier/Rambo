@@ -65,38 +65,38 @@ void Character::draw()
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
     glColor4ub(255,255,255,255);
-
+    
     float ssWidth = (float)1.0/img[spriteSheetIndex].columns;
     float ssHeight = (float)1.0/img[spriteSheetIndex].rows;
-
+    
     int ix = rambo.frame % img[spriteSheetIndex].columns;
     int iy = 0;
-
+    
     //move to next row of spriteSheet (if available)
     if(frame >= img[spriteSheetIndex].columns) {
         iy = 1;
     }
-
+    
     float textureX = (float)ix / img[spriteSheetIndex].columns;
     float textureY = (float)iy / img[spriteSheetIndex].rows;
-
+    
     glBegin(GL_QUADS);
-    glTexCoord2f(textureX, textureY+ssHeight); 
+    glTexCoord2f(textureX, textureY+ssHeight);
     glVertex2i(flipped ? centerX+width : centerX-width, centerY-height);
-
-    glTexCoord2f(textureX, textureY);    
+    
+    glTexCoord2f(textureX, textureY);
     glVertex2i(flipped ? centerX+width : centerX-width, centerY+height);
-
-    glTexCoord2f(textureX+ssWidth, textureY);    
+    
+    glTexCoord2f(textureX+ssWidth, textureY);
     glVertex2i(flipped ? centerX-width : centerX+width, centerY+height);
-
-    glTexCoord2f(textureX+ssWidth, textureY+ssHeight); 
+    
+    glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
     glVertex2i(flipped ? centerX-width : centerX+width, centerY-height);
     glEnd();
-
+    
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_ALPHA_TEST); 
+    glDisable(GL_ALPHA_TEST);
 }
 
 //Handle Input and animations
@@ -105,29 +105,8 @@ void joshuaCInput()
     if(keys[XK_Right] == 0 && keys[XK_Left] == 0 && !rambo.jumping){
         rambo.frame = 0;
     }
-
+    
     jumpAnimation();
-    walkLeft();
-}
-
-void walkLeft()
-{
-    if (keys[XK_Left]) {
-        rambo.flipped = true;
-        rambo.centerX -= rambo.velocityX;
-        timers.recordTime(&timers.timeCurrent);
-        //record time between frames
-        double timeSpan = timers.timeDiff(&timers.walkTime, 
-                &timers.timeCurrent);
-        if (timeSpan > g.delay) {
-            //advance frame
-            ++rambo.frame;
-            if (rambo.frame >= 7) {
-                rambo.frame -= 6;
-            }
-            timers.recordTime(&timers.walkTime);
-        }
-    }
 }
 
 void jumpAnimation()
@@ -135,23 +114,23 @@ void jumpAnimation()
     if (rambo.centerY > 200) {
         rambo.jumping = true;
     }
-    else { 
+    else {
         rambo.jumping = false;
     }
-
+    
     if (keys[XK_a] || rambo.jumping) {
-
+        
         rambo.jumping = true;
         //check if in walk state
         if (rambo.frame >= 0 && rambo.frame <= 6) {
             rambo.frame = 7;
         }
         //rambo.flipped = (keys[XK_Left] ? true : false);
-
+        
         timers.recordTime(&timers.timeCurrent);
         //record time between frames
-        double timeSpan = timers.timeDiff(&timers.walkTime, 
-                &timers.timeCurrent);
+        double timeSpan = timers.timeDiff(&timers.walkTime,
+                                          &timers.timeCurrent);
         if (timeSpan > g.delay) {
             //advance frame
             ++rambo.frame;
