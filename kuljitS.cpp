@@ -11,7 +11,7 @@ extern Timers timers;
 extern Global g;
 extern int keys[];
 extern Character rambo;
-extern const float gravity;
+extern float gravity;
 
 #define JUMP_STRENGTH 5
 
@@ -19,20 +19,29 @@ void kuljitS_physics()
 {
 	//check for a jump
 	if (keys[XK_a]) {
-		rambo.setCenterY(rambo.getCenterY()+JUMP_STRENGTH);
+		//rambo.setCenterY(rambo.getCenterY()+JUMP_STRENGTH);
 		//Uncomment below when rambo get a velocity
-		//rambo.setVelocityY(JUMP_STRENGTH);
+		rambo.velocityY=JUMP_STRENGTH;
 	}
 
 	//apply gravity
 	if (rambo.getCenterY() > 200) {
-		rambo.setCenterY(rambo.getCenterY() + -2.0f);
+		//rambo.setCenterY(rambo.getCenterY() + -2.0f);
+		rambo.velocityY += gravity;
 	}
 	/*uncomment when rambo gets a velocity
 	  if(rambo.getCenterY() > 200){
 	  rambo.setVelocityY(rambo.getVelocityY() + gravity;
 	  }
 	 */
+
+	//update rambo position
+	rambo.centerY +=rambo.velocityY;
+
+	//velocity == 0 if standing on a platform
+	if(rambo.centerY <= 200){
+		rambo.velocityY = 0;
+	}
 
 }
 

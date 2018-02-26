@@ -27,7 +27,7 @@
 //constants
 int keys[65365];
 const float timeslice = 1.0f;
-const float gravity = -0.2f;
+float gravity = -0.2f;
 float cx = 100;    //Sprite x postion
 float cy = 200; //Sprite y postion
 int flipped = 0;
