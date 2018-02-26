@@ -23,7 +23,6 @@
 #include "kuljitS.h"
 #include "fernandoM.h"
 #include "fonts.h"
-
 //constants
 int keys[65365];
 const float timeslice = 1.0f;
