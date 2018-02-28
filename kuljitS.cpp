@@ -13,19 +13,19 @@ extern int keys[];
 extern Character rambo;
 extern float gravity;
 
-#define JUMP_STRENGTH 5
+#define JUMP_STRENGTH 12
 
 void kuljitS_physics() 
 {
 	//check for a jump
-	if (keys[XK_a]) {
+	if (keys[XK_a] && !rambo.jumping){
 		//rambo.setCenterY(rambo.getCenterY()+JUMP_STRENGTH);
 		//Uncomment below when rambo get a velocity
 		rambo.velocityY=JUMP_STRENGTH;
 	}
 
 	//apply gravity
-	if (rambo.getCenterY() > 200) {
+	if (rambo.jumping) {
 		//rambo.setCenterY(rambo.getCenterY() + -2.0f);
 		rambo.velocityY += gravity;
 	}
