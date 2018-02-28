@@ -1,3 +1,7 @@
+// 3350 Project Rambo - kuljitS.cpp
+// author: Kuljit Singh
+// last modified: Feb 28, 2018
+
 #include<X11/keysym.h>
 #include "Global.h"
 #include "Timers.h"
