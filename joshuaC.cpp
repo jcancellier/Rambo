@@ -45,7 +45,11 @@ float Character::getHeight() const{ return height; }
 float Character::getWidth() const{ return width; }
 int Character::getFrame() const{ return frame; }
 bool Character::isFlipped() const{ return flipped; }
+bool Character::isJumping() const{ return jumping; }
 float Character::getHealth() const{ return health; }
+int Character::getSpriteSheetIndex() const{ return spriteSheetIndex; }
+float Character::getVelocityX() const{ return velocityX; }
+float Character::getVelocityY() const { return velocityY; }
 
 //Mutators
 void Character::setCenterX(float x){ centerX = x; }
@@ -54,7 +58,11 @@ void Character::setHeight(float h){ height = h; }
 void Character::setWidth(float w){ width = w; }
 void Character::setFrame(int f){ frame = f; }
 void Character::setFlipped(bool f){ flipped = f; }
+void Character::setJumping(bool j){ jumping = j; }
 void Character::setHealth(float h){health = h; }
+void Character::setSpriteSheetIndex(int ssIdx){ spriteSheetIndex = ssIdx; }
+void Character::setVelocityX(float vx) { velocityX = vx; }
+void Character::setVelocityY(float vy) { velocityY = vy; }
 
 //Character Member functions
 void Character::draw()

@@ -24,7 +24,11 @@ class Character{
 	    float getWidth() const;
 	    int getFrame() const;
 	    bool isFlipped() const;
+		bool isJumping() const;
 	    float getHealth() const;
+		int getSpriteSheetIndex() const;
+		float getVelocityX() const;
+		float getVelocityY() const;
 
 	    //Mutators
 	    void setCenterX(float x);
@@ -33,9 +37,13 @@ class Character{
 	    void setWidth(float w);
 	    void setFrame(int f);
 	    void setFlipped(bool f);
+		void setJumping(bool j);
 	    void setHealth(float h);
-
-        //Other
+		void setSpriteSheetIndex(int ssIdx);
+		void setVelocityX(float vx);
+		void setVelocityY(float vy);
+        
+		//Other
         void draw();
 };
 
