@@ -26,7 +26,7 @@ extern SpriteSheet img[];
 Character::Character(int ssIdx)
 {
     centerX = 100;
-    centerY = 10000;
+    centerY = 800;
     height = 50;
     width = height * 0.7;
     frame = 0;
