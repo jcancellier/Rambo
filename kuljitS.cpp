@@ -21,40 +21,32 @@ extern float gravity;
 
 void kuljitS_physics() 
 {
-	//check for a jump
-	if (keys[XK_a] && !rambo.jumping) {
-		rambo.jumping = true;
-		//rambo.setCenterY(rambo.getCenterY()+JUMP_STRENGTH);
-		//Uncomment below when rambo get a velocity
-		rambo.velocityY=JUMP_STRENGTH;
-	}
+    //check for a jump
+    if (keys[XK_a] && !rambo.jumping) {
+        rambo.jumping = true;
+        rambo.velocityY=JUMP_STRENGTH;
+    }
 
-	//apply gravity
-	if (rambo.jumping) {
-		//rambo.setCenterY(rambo.getCenterY() + -2.0f);
-		rambo.velocityY += gravity;
-	}
-	/*uncomment when rambo gets a velocity
-	  if(rambo.getCenterY() > 200){
-	  rambo.setVelocityY(rambo.getVelocityY() + gravity;
-	  }
-	 */
+    //apply gravity
+    if (rambo.jumping) {
+        rambo.velocityY += gravity;
+    }
 
-	//update rambo position
-	rambo.centerY +=rambo.velocityY;
+    //update rambo position
+    rambo.centerY +=rambo.velocityY;
 
-	//velocity == 0 if standing on a platform
-	if(rambo.centerY <= 200){
-		rambo.velocityY = 0;
-	}
+    //velocity == 0 if standing on a platform
+    if(rambo.centerY <= 200){
+        rambo.velocityY = 0;
+    }
 
 }
 
 void printKuljitS(int x, int y, int size, int color){
-	Rect r;
-	r.bot = y;
-	r.left = x;
-	r.center = 0;
-	ggprint8b(&r, size, color, "Kuljit Singh");
+    Rect r;
+    r.bot = y;
+    r.left = x;
+    r.center = 0;
+    ggprint8b(&r, size, color, "Kuljit Singh");
 }
 
