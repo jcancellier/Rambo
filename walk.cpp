@@ -24,10 +24,9 @@
 #include "fernandoM.h"
 #include "fonts.h"
 #include "Bullet.h" 
-
+#include "rafaelN.h"
 
 //global
-
 int nbullets = 0;
 
 
@@ -318,6 +317,7 @@ int checkKeys(XEvent *e)
             g.walk ^= 1;
             break;
         case XK_Left:
+            sound();
             break;
         case XK_Right:
             break;
