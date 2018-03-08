@@ -23,6 +23,14 @@
 #include "kuljitS.h"
 #include "fernandoM.h"
 #include "fonts.h"
+#include "Bullet.h" 
+
+
+//global
+
+int nbullets = 0;
+
+
 //constants
 int keys[65365];
 const float timeslice = 1.0f;
@@ -355,7 +363,9 @@ void physics(void)
 {
     joshuaCInput();
     walkInput();
+   // spaceButton();
     kuljitS_physics();
+    //fernandoPhysics();
 }
 
 void render(void)
@@ -391,10 +401,15 @@ void render(void)
         glEnd();
         glPopMatrix();
     }
+
+    Bullet *b = new Bullet();
     
     //draw Rambo
     rambo.draw();
+    //b->draw();
     
+
+
     Platform a(0, 0, 0, 20, 20, 20, 20, 0);
     a.setColor(1, 0, 0);
     a.drawPlatform();
