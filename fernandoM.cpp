@@ -174,7 +174,7 @@ void spaceButton()
                                 //Bullet *b = &g.barr[g.nbullets];
                                // timeCopy(&b->time, &bt);
                                 
-				Bullet *b = new Bullet;
+			//	Bullet *b = new Bullet;
 				
                                 nbullets++;
                                 //convert angle to a vector

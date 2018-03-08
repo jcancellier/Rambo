@@ -402,7 +402,7 @@ void render(void)
         glPopMatrix();
     }
 
-    Bullet *b = new Bullet();
+//    Bullet *b = new Bullet();
     
     //draw Rambo
     rambo.draw();
