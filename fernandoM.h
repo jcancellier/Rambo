@@ -4,5 +4,7 @@
 void walkInput();
 void walkLeft();
 void walkRight();
+void spaceButton();
+void fernandoPhysics();
 
 #endif
