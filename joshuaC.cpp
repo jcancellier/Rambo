@@ -13,7 +13,8 @@
 #include "Character.h"
 #include <GL/glx.h>
 #include "joshuaC.h"
-
+#include "fonts.h"
+#include <sstream>
 extern int flipped;
 extern float cx;
 extern Timers timers;
@@ -67,6 +68,18 @@ void Character::setVelocityY(float vy) { velocityY = vy; }
 //Character Member functions
 void Character::draw()
 {
+	//record animation time/////////////////////
+	timers.recordTime(&timers.timeCurrent);
+	timers.recordTime(&timers.animationTime);
+	double timeSpan = timers.timeDiff(&timers.walkTime, &timers.timeCurrent);
+
+	Rect r;
+	r.bot = g.yres - 200;
+	r.left = 10;
+	r.center = 0;
+	ggprint8b(&r, 16, 0x00ffff44, "JoshuaCInput():");
+	ggprint8b(&r, 16, 0x00ffff44, "%f", timeSpan);
+	///////////////////////////////////////
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
     glBindTexture(GL_TEXTURE_2D, g.walkTexture);
