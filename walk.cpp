@@ -23,6 +23,7 @@
 #include "kuljitS.h"
 #include "fernandoM.h"
 #include "fonts.h"
+#include "rafaelN.h"
 //constants
 int keys[65365];
 const float timeslice = 1.0f;
@@ -310,6 +311,7 @@ int checkKeys(XEvent *e)
             g.walk ^= 1;
             break;
         case XK_Left:
+            sound();
             break;
         case XK_Right:
             break;
