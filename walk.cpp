@@ -406,6 +406,7 @@ void render(void)
     
     //draw Rambo
     rambo.draw();
+    rambo.drawOptimized();
     //b->draw();
     
 

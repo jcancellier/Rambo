@@ -68,18 +68,13 @@ void Character::setVelocityY(float vy) { velocityY = vy; }
 //Character Member functions
 void Character::draw()
 {
-	//record animation time/////////////////////
-	timers.recordTime(&timers.timeCurrent);
-	timers.recordTime(&timers.animationTime);
-	double timeSpan = timers.timeDiff(&timers.walkTime, &timers.timeCurrent);
+    ///////////////////////////Timer///////////////////
 
-	Rect r;
-	r.bot = g.yres - 200;
-	r.left = 10;
-	r.center = 0;
-	ggprint8b(&r, 16, 0x00ffff44, "JoshuaCInput():");
-	ggprint8b(&r, 16, 0x00ffff44, "%f", timeSpan);
-	///////////////////////////////////////
+    static double timeDifference = 0.0;
+    struct timespec start, end;
+    clock_gettime(CLOCK_REALTIME, &start);
+
+    //////////////////////////////////////////////////
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
     glBindTexture(GL_TEXTURE_2D, g.walkTexture);
@@ -118,6 +113,93 @@ void Character::draw()
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
+
+
+    //////////////////TIMER/////////////////////////////
+    for(int i = 0; i < 1000000; i++){
+        int a = 2 / 4;
+        a *= 2;
+    }
+
+    clock_gettime(CLOCK_REALTIME, &end);
+    timeDifference += timers.timeDiff(&start, &end);
+
+    //print time
+    Rect r;
+	r.bot = g.yres - 200;
+	r.left = 10;
+	r.center = 0;
+    ggprint8b(&r, 16, 0x00ff0000, "Joshua Cancellier");
+	ggprint8b(&r, 16, 0x00000000, "Character::draw(): %lf", timeDifference);
+    ///////////////////////////////////////////////////
+}
+
+void Character::drawOptimized()
+{
+    ///////////////////////////Timer///////////////////
+
+    static double timeDifference = 0.0;
+    struct timespec start, end;
+    clock_gettime(CLOCK_REALTIME, &start);
+
+    //////////////////////////////////////////////////
+
+    glPushMatrix();
+    glColor3f(1.0, 1.0, 1.0);
+    glBindTexture(GL_TEXTURE_2D, g.walkTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glColor4ub(255,255,255,255);
+    
+    float ssWidth = (float)1.0/img[spriteSheetIndex].columns;
+    float ssHeight = (float)1.0/img[spriteSheetIndex].rows;
+    
+    int ix = rambo.frame % img[spriteSheetIndex].columns;
+    int iy = 0;
+    
+    //move to next row of spriteSheet (if available)
+    if(frame >= img[spriteSheetIndex].columns) {
+        iy = 1;
+    }
+    
+    float textureX = (float)ix / img[spriteSheetIndex].columns;
+    float textureY = (float)iy / img[spriteSheetIndex].rows;
+    
+    glBegin(GL_QUADS);
+    glTexCoord2f(textureX, textureY+ssHeight);
+    glVertex2i(flipped ? centerX+width : centerX-width, centerY-height);
+    
+    glTexCoord2f(textureX, textureY);
+    glVertex2i(flipped ? centerX+width : centerX-width, centerY+height);
+    
+    glTexCoord2f(textureX+ssWidth, textureY);
+    glVertex2i(flipped ? centerX-width : centerX+width, centerY+height);
+    
+    glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+    glVertex2i(flipped ? centerX-width : centerX+width, centerY-height);
+    glEnd();
+    
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
+
+
+    //////////////////TIMER/////////////////////////////
+    for(int i = 0; i < 1000000; i++){
+        int a = 2 >> 2;
+        a = a << 1;
+    }
+
+    clock_gettime(CLOCK_REALTIME, &end);
+    timeDifference += timers.timeDiff(&start, &end);
+
+    //print time
+    Rect r;
+	r.bot = g.yres - 230;
+	r.left = 10;
+	r.center = 0;
+	ggprint8b(&r, 16, 0x00000000, "Character::drawOptimized(): %lf", timeDifference);
+    ///////////////////////////////////////////////////
 }
 
 //Handle Input and animations

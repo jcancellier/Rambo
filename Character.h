@@ -45,6 +45,7 @@ class Character{
         
 		//Other
         void draw();
+		void drawOptimized();
 };
 
 #endif
