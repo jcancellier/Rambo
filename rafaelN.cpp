@@ -1,5 +1,6 @@
 //Finally a simple OpenAL example program.
-//Gordon Griesel
+//Author: Gordon Griesel
+//Edited By: Rafael Noriega
 //2015 - 2018
 #include <stdio.h>
 #include <string.h>
