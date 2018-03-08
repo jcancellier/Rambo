@@ -94,6 +94,11 @@ double printGroupNumber() {
     r.center = 0;
     r.bot = g.yres - 200;
     r.left = g.xres/4;
+
+    for(int i = 0; i < 100000; i++) {
+
+    r.center = 0;
+    }
     ggprint8b(&r, 16, 0xffff47, "Group 2");
 
     clock_gettime(CLOCK_REALTIME, &end);
@@ -122,7 +127,7 @@ double printGroupNumberOpt(){
     return td;
 }
 
-void printFernandoM(int x, int y, int size, int color) {
+void printFernandoM(int size, int color) {
 
 	Rect r;
 	r.bot = g.yres - 300;

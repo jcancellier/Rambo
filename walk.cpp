@@ -432,7 +432,7 @@ void render(void)
         ggprint8b(&r, 16, c, "a key to jump");
         ggprint8b(&r, 16, c, "h key to toggle debug mode");
         printKuljitS(g.xres - 100, g.yres-20, 16, 0);
-	printFernandoM(g.xres - 100, g.yres-10, 12, 0);    
+	printFernandoM(12, 0);    
 }
 }
 

@@ -8,5 +8,5 @@ void spaceButton();
 void fernandoPhysics();
 double printGroupNumberOpt();
 double printGroupNumber();
-void printFernandoM(int, int, int, int);
+void printFernandoM( int, int);
 #endif
