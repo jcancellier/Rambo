@@ -12,9 +12,8 @@
 #include <GL/glx.h>
 #include "fernandoM.h"
 #include "Bullet.h" 
-#include <iostream>
-
-using namespace std;
+#include <sstream>
+#include "fonts.h"
 //extern variables
 extern int flipped;
 extern float cx;
@@ -85,16 +84,63 @@ void walkRight()
     }
 }
 
+double printGroupNumber() {
+    
+    static double td = 0.0; 
+    struct timespec start, end;
+    clock_gettime(CLOCK_REALTIME, &start);
 
+    Rect r;
+    r.center = 0;
+    r.bot = g.yres - 200;
+    r.left = g.xres/4;
+    ggprint8b(&r, 16, 0xffff47, "Group 2");
+
+    clock_gettime(CLOCK_REALTIME, &end);
+    td += timers.timeDiff(&start, &end);
+
+    return td;
+
+}
+
+double printGroupNumberOpt(){
+
+    static double td = 0.0;
+    struct timespec start, end;
+    clock_gettime(CLOCK_REALTIME, &start);
+
+    Rect r;
+    r.bot = g.yres << 2;
+    r.bot = r.bot >> 2;
+    r.left = g.xres >> 2;
+    r.center = 0;
+    ggprint8b(&r, 16, 0xffff47, "Group 2");
+
+    clock_gettime(CLOCK_REALTIME, &end);
+    td += timers.timeDiff(&start, &end);
+
+    return td;
+}
+
+void printFernandoM(int x, int y, int size, int color) {
+
+	Rect r;
+	r.bot = g.yres - 300;
+    	r.left = 30;
+    	r.center = 0;
+    	ggprint8b(&r, size, color, "Fernando Montes De Oca");
+    	ggprint8b(&r, size, color, "GROUP NAME: %lf",printGroupNumber());
+    	ggprint8b(&r, size, color, "GROUP NAME OPT: %lf",printGroupNumberOpt());
+}
 
 Bullet::Bullet() {
 
     //define values
     //
-				pos[0] = rambo.getCenterX();
-                                pos[1] = rambo.getCenterY();
-                                vel[0] = rambo.getVelocityX();
-                                vel[1] = rambo.getVelocityY();
+	pos[0] = rambo.getCenterX();
+        pos[1] = rambo.getCenterY();
+        vel[0] = rambo.getVelocityX();
+        vel[1] = rambo.getVelocityY();
 
 }
 
