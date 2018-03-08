@@ -19,7 +19,6 @@ void sound()
     alutInit(0, NULL);
     if (alGetError() != AL_NO_ERROR) {
         printf("ERROR: alutInit()\n");
-        return 0;
     }
     //Clear error state.
     alGetError();
@@ -33,7 +32,7 @@ void sound()
     //
     //Buffer holds the sound information.
     ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("sound_files/Migos_gun.wav");
+    alBuffer = alutCreateBufferFromFile("Migos_gun.wav");
     //
     //Source refers to the sound.
     ALuint alSource;
@@ -46,12 +45,9 @@ void sound()
     alSourcei(alSource, AL_LOOPING, AL_FALSE);
     if (alGetError() != AL_NO_ERROR) {
         printf("ERROR: setting source\n");
-        return 0;
     }
-    for (int i=0; i<5; i++) {
         alSourcePlay(alSource);
         usleep(290000);
-    }
     //Cleanup.
     //First delete the source.
     alDeleteSources(1, &alSource);
