@@ -2,6 +2,15 @@
 //Author: Gordon Griesel
 //Edited By: Rafael Noriega
 //2015 - 2018
+
+#include <X11/keysym.h>
+#include "Global.h"
+#include "Timers.h"
+#include "SpriteSheet.h"
+#include "Character.h"
+#include <GL/glx.h>
+#include <sstream>
+#include "fonts.h"
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -13,6 +22,8 @@
 #include "rafaelN.h"
 #endif //USE_OPENAL_SOUND
 
+extern Timers timers;
+extern Global g;
 void sound()
 {
     //Get started right here.
@@ -66,5 +77,52 @@ void sound()
     //Close device.
     alcCloseDevice(Device);
 #endif //USE_OPENAL_SOUND
+}
+
+
+
+
+
+double test_funct() {
+   
+    static double td = 0.0; 
+    struct timespec start, end;
+    clock_gettime(CLOCK_REALTIME, &start);
+
+    Rect r;
+    r.center = 0;
+    r.bot = g.yres - 500;
+    r.left = g.xres/3;
+
+    for(int i = 0; i < 100000; i++) {
+
+    r.center = 0;
+    }
+    ggprint8b(&r, 16, 0xffff47, "Rafael");
+
+    clock_gettime(CLOCK_REALTIME, &end);
+    td += timers.timeDiff(&start, &end);
+
+    return td;
+
+}
+
+double test_funct2(){
+
+    static double td = 0.0;
+    struct timespec start, end;
+    clock_gettime(CLOCK_REALTIME, &start);
+
+    Rect r;
+    r.bot = g.yres << 3;
+    r.bot = r.bot >> 3;
+    r.left = g.xres >> 3;
+    r.center = 0;
+    ggprint8b(&r, 16, 0xffff47, "Rafael :) ");
+
+    clock_gettime(CLOCK_REALTIME, &end);
+    td += timers.timeDiff(&start, &end);
+
+    return td;
 }
 
