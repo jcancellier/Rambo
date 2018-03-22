@@ -28,7 +28,7 @@ Character::Character(int ssIdx)
 {
     centerX = 100;
     centerY = 800;
-    height = .1 * (float)g.yres;
+    height = .08 * (float)g.yres;
     width = height * 0.7;
     printf("%f\n", height);
     frame = 0;
