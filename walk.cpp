@@ -52,12 +52,15 @@ int selectedOption = NEWGAME;
 //load textures (filename, rows, columns)
 SpriteSheet img[] = {SpriteSheet("images/walk.gif", 2, 7)};
 
+//Global class
+Global g;
+
 //Main Character (rambo)
 Character rambo(0);
 
 //Setup timers
 Timers timers;
-Global g;
+
 
 class X11_wrapper {
 private:

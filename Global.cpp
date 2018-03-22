@@ -2,8 +2,8 @@
 
 Global::Global() {
     done=0;
-    xres=800;
-    yres=600;
+    xres=1280;
+    yres=720;
     walk=0;
     walkFrame=0;
     delay = 0.1;

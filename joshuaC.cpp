@@ -28,8 +28,9 @@ Character::Character(int ssIdx)
 {
     centerX = 100;
     centerY = 800;
-    height = 50;
+    height = .08 * (float)g.yres;
     width = height * 0.7;
+    printf("%f\n", height);
     frame = 0;
     flipped = false;
     jumping = false;
@@ -115,6 +116,8 @@ void Character::draw()
     glDisable(GL_ALPHA_TEST);
 
 
+    //#define PROFILING
+    #ifdef PROFILING
     //////////////////TIMER/////////////////////////////
     for(int i = 0; i < 1000000; i++){
         int a = 2 / 4;
@@ -124,6 +127,7 @@ void Character::draw()
     clock_gettime(CLOCK_REALTIME, &end);
     timeDifference += timers.timeDiff(&start, &end);
 
+
     //print time
     Rect r;
 	r.bot = g.yres - 200;
@@ -132,6 +136,7 @@ void Character::draw()
     ggprint8b(&r, 16, 0x00ff0000, "Joshua Cancellier");
 	ggprint8b(&r, 16, 0x00000000, "Character::draw(): %lf", timeDifference);
     ///////////////////////////////////////////////////
+    #endif
 }
 
 void Character::drawOptimized()
@@ -183,6 +188,8 @@ void Character::drawOptimized()
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
 
+    //#define PROFILING
+    #ifdef PROFILING
 
     //////////////////TIMER/////////////////////////////
     for(int i = 0; i < 1000000; i++){
@@ -200,6 +207,7 @@ void Character::drawOptimized()
 	r.center = 0;
 	ggprint8b(&r, 16, 0x00000000, "Character::drawOptimized(): %lf", timeDifference);
     ///////////////////////////////////////////////////
+    #endif
 }
 
 //Handle Input and animations
