@@ -26,6 +26,10 @@
 #include "Bullet.h" 
 #include "rafaelN.h"
 
+//GAME STATES
+#define MAINMENU 0
+#define INGAME 1
+
 //global
 int nbullets = 0;
 
@@ -38,6 +42,7 @@ float cx = 100;    //Sprite x postion
 float cy = 200; //Sprite y postion
 int flipped = 0;
 bool debug_mode = true;
+int gameState = INGAME;
 
 #define ALPHA 1
 
@@ -254,89 +259,112 @@ void init() {
 
 void checkMouse(XEvent *e)
 {
-    //Did the mouse move?
-    //Was a mouse button clicked?
-    static int savex = 0;
-    static int savey = 0;
-    //
-    if (e->type == ButtonRelease) {
-        return;
-    }
-    if (e->type == ButtonPress) {
-        if (e->xbutton.button==1) {
-            //Left button is down
-        }
-        if (e->xbutton.button==3) {
-            //Right button is down
-        }
-    }
-    if (savex != e->xbutton.x || savey != e->xbutton.y) {
-        //Mouse moved
-        savex = e->xbutton.x;
-        savey = e->xbutton.y;
+    switch (gameState) {
+        case MAINMENU:
+            checkMouseMainMenu(e);  
+            break;
+        case INGAME:
+            //Did the mouse move?
+            //Was a mouse button clicked?
+            static int savex = 0;
+            static int savey = 0;
+            //
+            if (e->type == ButtonRelease) {
+            return;
+            }
+            if (e->type == ButtonPress) {
+            if (e->xbutton.button==1) {
+                //Left button is down
+            }
+            if (e->xbutton.button==3) {
+                //Right button is down
+            }
+            }
+            if (savex != e->xbutton.x || savey != e->xbutton.y) {
+            //Mouse moved
+            savex = e->xbutton.x;
+            savey = e->xbutton.y;
+            }
+            break;
+        default:
+            printf("Fatal Error in game state\n\n");
+            exit(1);
     }
 }
 
 int checkKeys(XEvent *e)
 {
-    //keyboard input?
-    /*
-     static int shift=0;
-     if (e->type != KeyRelease && e->type != KeyPress)
-     return 0;
-     int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
-     if (e->type == KeyRelease) {
-     if (key == XK_Shift_L || key == XK_Shift_R)
-     shift = 0;
-     return 0;
-     }
-     if (key == XK_Shift_L || key == XK_Shift_R) {
-     shift=1;
-     return 0;
-     }
-     */
-    int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
     
-    if(e->type == KeyPress){
-        keys[key] = 1;
-        //if(keys[XK_b])
-        //rambo.frame = 6;
-    }
-    if(e->type == KeyRelease){
-        keys[key] = 0;
+    int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
+    switch (gameState) {
+        case MAINMENU:
+            checkKeysMainMenu(key, e);
+            break;
+        case INGAME:
+            //keyboard input?
+            /*
+             static int shift=0;
+             if (e->type != KeyRelease && e->type != KeyPress)
+             return 0;
+             int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
+             if (e->type == KeyRelease) {
+             if (key == XK_Shift_L || key == XK_Shift_R)
+             shift = 0;
+             return 0;
+             }
+             if (key == XK_Shift_L || key == XK_Shift_R) {
+             shift=1;
+             return 0;
+             }
+             */
+            
+            if(e->type == KeyPress){
+                keys[key] = 1;
+                //if(keys[XK_b])
+                //rambo.frame = 6;
+            }
+            if(e->type == KeyRelease){
+                keys[key] = 0;
+            }
+
+            if(e->type == KeyPress && key == XK_h){
+                debug_mode = !debug_mode;
+            }
+            
+            //(void)shift;
+            switch (key) {
+                case XK_w:
+                    timers.recordTime(&timers.walkTime);
+                    g.walk ^= 1;
+                    break;
+                case XK_Left:
+                    sound();
+                    break;
+                case XK_Right:
+                    break;
+                case XK_Up:
+                    break;
+                case XK_Down:
+                    break;
+                case XK_equal:
+                    g.delay -= 0.005;
+                    if (g.delay < 0.005)
+                        g.delay = 0.005;
+                    break;
+                case XK_minus:
+                    g.delay += 0.005;
+                    break;
+                case XK_Escape:
+                    return 1;
+                    break;
+            }
+            return 0;
+            break;
+        default:
+            printf("FATAL ERROR IN GAME STATE\n\n");
+            exit(1);
     }
 
-    if(e->type == KeyPress && key == XK_h){
-        debug_mode = !debug_mode;
-    }
-    
-    //(void)shift;
-    switch (key) {
-        case XK_w:
-            timers.recordTime(&timers.walkTime);
-            g.walk ^= 1;
-            break;
-        case XK_Left:
-            sound();
-            break;
-        case XK_Right:
-            break;
-        case XK_Up:
-            break;
-        case XK_Down:
-            break;
-        case XK_equal:
-            g.delay -= 0.005;
-            if (g.delay < 0.005)
-                g.delay = 0.005;
-            break;
-        case XK_minus:
-            g.delay += 0.005;
-            break;
-        case XK_Escape:
-            return 1;
-            break;
-    }
     return 0;
 }
 
@@ -361,78 +389,96 @@ Flt VecNormalize(Vec vec)
 
 void physics(void)
 {
-    joshuaCInput();
-    walkInput();
-   // spaceButton();
-    kuljitS_physics();
-    //fernandoPhysics();
+    switch (gameState) {
+        case MAINMENU:
+            break;
+        case INGAME:
+            joshuaCInput();
+            walkInput();
+           // spaceButton();
+            kuljitS_physics();
+            //fernandoPhysics();
+            break;
+        default:
+            printf("FATAL ERROR IN GAME STATE\n\n");
+            exit(1);
+    }
 }
 
 void render(void)
 {
-    Rect r;
-    //Clear the screen
-    glClearColor(0.0, 0.5, 1.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
-    //the position of the sprite on the screen
-    //float cx = 100;
-    //float cy = 200;
-    //
-    //show ground
-    glBegin(GL_QUADS);
-    glColor3f(0.0, 0.5, 0.0);
-    glVertex2i(0,       220);
-    glVertex2i(g.xres, 220);
-    glColor3f(0.0, 0.7, 0.0);
-    glVertex2i(g.xres,   0);
-    glVertex2i(0,         0);
-    glEnd();
-    
-    for (int i=0; i<20; i++) {
-        glPushMatrix();
-        glTranslated(g.box[i][0],g.box[i][1],g.box[i][2]);
-        glColor3f(1.0, 1.0, 1.0);
-        glBegin(GL_QUADS);
-        glVertex2i( 0,  0);
-        glVertex2i( 0, 30);
-        glVertex2i(20, 30);
-        glVertex2i(20,  0);
-        glEnd();
-        glPopMatrix();
+    switch (gameState) {
+        case MAINMENU:
+           break;
+        case INGAME: 
+            Rect r;
+            //Clear the screen
+            glClearColor(0.0, 0.5, 1.0, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT);
+            
+            //the position of the sprite on the screen
+            //float cx = 100;
+            //float cy = 200;
+            //
+            //show ground
+            glBegin(GL_QUADS);
+            glColor3f(0.0, 0.5, 0.0);
+            glVertex2i(0,       220);
+            glVertex2i(g.xres, 220);
+            glColor3f(0.0, 0.7, 0.0);
+            glVertex2i(g.xres,   0);
+            glVertex2i(0,         0);
+            glEnd();
+            
+            for (int i=0; i<20; i++) {
+                glPushMatrix();
+                glTranslated(g.box[i][0],g.box[i][1],g.box[i][2]);
+                glColor3f(1.0, 1.0, 1.0);
+                glBegin(GL_QUADS);
+                glVertex2i( 0,  0);
+                glVertex2i( 0, 30);
+                glVertex2i(20, 30);
+                glVertex2i(20,  0);
+                glEnd();
+                glPopMatrix();
+            }
+
+        //    Bullet *b = new Bullet();
+            
+            //draw Rambo
+            rambo.draw();
+            rambo.drawOptimized();
+            //b->draw();
+            
+
+            {
+                Platform a(0, 0, 0, 20, 20, 20, 20, 0);
+                a.setColor(1, 0, 0);
+                a.drawPlatform();
+            }
+            //Rambo hitbox center
+            glPointSize(10);
+            glBegin(GL_POINTS);
+            glColor3f(0, 0, 0);
+            glVertex3f(rambo.getCenterX(), rambo.getCenterY(), 0);
+            glEnd();
+            
+            if(debug_mode){
+                unsigned int c = 0x00ffff44;
+                r.bot = g.yres - 20;
+                r.left = 10;
+                r.center = 0;
+                ggprint8b(&r, 16, c, "right arrow -> walk right");
+                ggprint8b(&r, 16, c, "left arrow  <- walk left");
+                ggprint8b(&r, 16, c, "a key to jump");
+                ggprint8b(&r, 16, c, "h key to toggle debug mode");
+                printKuljitS(g.xres - 100, g.yres-20, 16, 0);
+                printFernandoM(12, 0);    
+            }
+            break;
+        default:
+            printf("FATAL ERROR IN GAME STATE\n\n");
+            exit(1);
     }
-
-//    Bullet *b = new Bullet();
-    
-    //draw Rambo
-    rambo.draw();
-    rambo.drawOptimized();
-    //b->draw();
-    
-
-
-    Platform a(0, 0, 0, 20, 20, 20, 20, 0);
-    a.setColor(1, 0, 0);
-    a.drawPlatform();
-    
-    //Rambo hitbox center
-    glPointSize(10);
-    glBegin(GL_POINTS);
-    glColor3f(0, 0, 0);
-    glVertex3f(rambo.getCenterX(), rambo.getCenterY(), 0);
-    glEnd();
-    
-    if(debug_mode){
-        unsigned int c = 0x00ffff44;
-        r.bot = g.yres - 20;
-        r.left = 10;
-        r.center = 0;
-        ggprint8b(&r, 16, c, "right arrow -> walk right");
-        ggprint8b(&r, 16, c, "left arrow  <- walk left");
-        ggprint8b(&r, 16, c, "a key to jump");
-        ggprint8b(&r, 16, c, "h key to toggle debug mode");
-        printKuljitS(g.xres - 100, g.yres-20, 16, 0);
-	printFernandoM(12, 0);    
-}
 }
 

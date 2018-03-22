@@ -61,7 +61,6 @@ double printRamboCenter(){
     return td;
 }
 
-
 double printRamboCenterOpt(){
     
     static double td = 0.0;
@@ -80,6 +79,7 @@ double printRamboCenterOpt(){
 
     return td;
 }
+
 void printKuljitS(int x, int y, int size, int color){
     Rect r;
     r.bot = y;
@@ -88,4 +88,14 @@ void printKuljitS(int x, int y, int size, int color){
     ggprint8b(&r, size, color, "Kuljit Singh");
     ggprint8b(&r, size, color, "RAMBO: %lf",printRamboCenter());
     ggprint8b(&r, size, color, "R_OPT: %lf",printRamboCenterOpt());
+}
+
+void checkMouseMainMenu(XEvent *e)
+{
+
+}
+
+int checkKeysMainMenu(int key, XEvent *e)
+{
+    return 0; 
 }

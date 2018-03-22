@@ -9,5 +9,7 @@ void kuljitS_physics();
 void printKuljitS(int, int, int, int);
 double printRamboCenter();
 double printRamborCenterOpt();
+void checkMouseMainMenu(XEvent*);
+int checkKeysMainMenu(int, XEvent*);
 
 #endif
