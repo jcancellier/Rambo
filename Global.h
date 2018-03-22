@@ -34,6 +34,7 @@ class Global{
 	int walkFrame;
 	double delay;
 	GLuint walkTexture;
+	GLuint ramboLogoTexture;
 	Vec box[20];
 	Global();
 };

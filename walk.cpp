@@ -44,13 +44,13 @@ float cx = 100; //Sprite x postion
 float cy = 200; //Sprite y postion
 int flipped = 0;
 bool debug_mode = true;
-int gameState = INGAME;
+int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 
 #define ALPHA 1
 
 //load textures (filename, rows, columns)
-SpriteSheet img[] = {SpriteSheet("images/walk.gif", 2, 7)};
+SpriteSheet img[] = {SpriteSheet("images/walk.gif", 2, 7), SpriteSheet("images/ramboLogo.gif", 1, 1)};
 
 //Global class
 Global g;
@@ -259,6 +259,7 @@ void initOpengl(void)
     //1st param: # of textures
     //2nd param: specifies where generated texture names are stored
     glGenTextures(1, &g.walkTexture);
+    glGenTextures(1, &g.ramboLogoTexture);
     //-------------------------------------------------------------------------
     //silhouette
     //this is similar to a sprite graphic
@@ -271,6 +272,25 @@ void initOpengl(void)
     //must build a new set of data...
     //This is where the texture is initialized in OpenGL (full sheet)
     unsigned char *walkData = buildAlphaData(&img[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+    //free(walkData);
+    //unlink("./images/walk.ppm");
+    //-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
+    //ramboLogo
+    //this is similar to a sprite graphic
+    //
+    w = img[1].width;
+    h = img[1].height;
+    glBindTexture(GL_TEXTURE_2D, g.ramboLogoTexture);
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //
+    //must build a new set of data...
+    //This is where the texture is initialized in OpenGL (full sheet)
+    walkData = buildAlphaData(&img[1]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
     //free(walkData);

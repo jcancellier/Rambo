@@ -19,8 +19,10 @@ extern Character rambo;
 extern float gravity;
 extern int gameState;
 extern int selectedOption;
+extern SpriteSheet img[];
 
 #define JUMP_STRENGTH 12
+#define INGAME 1
 
 void kuljitS_physics() 
 {
@@ -112,6 +114,7 @@ int checkKeysMainMenu(int key, XEvent *e)
             selectedOption = (selectedOption+1)%3;
             break;
         case XK_Return:
+			gameState = INGAME;
             printf("ENTER\n");
             break;
         case XK_Right:
@@ -125,5 +128,41 @@ int checkKeysMainMenu(int key, XEvent *e)
 
 void renderMainMenu()
 {
+    glPushMatrix();
+    glColor3f(1.0, 1.0, 1.0);
+    glBindTexture(GL_TEXTURE_2D, g.ramboLogoTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glColor4ub(255,255,255,255);
+
+    float ssWidth = (float)1.0/img[1].columns;
+    float ssHeight = (float)1.0/img[1].rows;
+
+    float textureX = 0;
+    float textureY = 0;
+
+    float centerX = g.xres/2;
+    float centerY = g.yres/2;	
+
+	float width = 520;
+	float height = 104;
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(textureX, textureY+ssHeight);
+    glVertex2i(centerX-width, centerY-height);
+
+    glTexCoord2f(textureX, textureY);
+    glVertex2i(centerX-width, centerY+height);
+
+    glTexCoord2f(textureX+ssWidth, textureY);
+    glVertex2i(centerX+width, centerY+height);
+
+    glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+    glVertex2i(centerX+width, centerY-height);
+    glEnd();
+
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
 
 }
