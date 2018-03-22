@@ -30,11 +30,13 @@
 #define MAINMENU 0
 #define INGAME 1
 
-//global
+//OPTIONS
+#define NEWGAME 0
+#define LEADERBOARD 1
+#define EXIT 2
+
+//globals
 int nbullets = 0;
-
-
-//constants
 int keys[65365];
 const float timeslice = 1.0f;
 float gravity = -0.5f;
@@ -42,7 +44,8 @@ float cx = 100;    //Sprite x postion
 float cy = 200; //Sprite y postion
 int flipped = 0;
 bool debug_mode = true;
-int gameState = INGAME;
+int gameState = MAINMENU;
+int selectedOption = NEWGAME;
 
 #define ALPHA 1
 
@@ -298,7 +301,7 @@ int checkKeys(XEvent *e)
     int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
     switch (gameState) {
         case MAINMENU:
-            checkKeysMainMenu(key, e);
+            return checkKeysMainMenu(key, e);
             break;
         case INGAME:
             //keyboard input?
@@ -409,7 +412,8 @@ void render(void)
 {
     switch (gameState) {
         case MAINMENU:
-           break;
+            renderMainMenu();
+            break;
         case INGAME: 
             Rect r;
             //Clear the screen

@@ -17,6 +17,8 @@ extern Global g;
 extern int keys[];
 extern Character rambo;
 extern float gravity;
+extern int gameState;
+extern int selectedOption;
 
 #define JUMP_STRENGTH 12
 
@@ -91,11 +93,37 @@ void printKuljitS(int x, int y, int size, int color){
 }
 
 void checkMouseMainMenu(XEvent *e)
-{
-
+{    
+    if (e->type == KeyPress) {
+        
+    }
 }
 
 int checkKeysMainMenu(int key, XEvent *e)
 {
+    if (e->type == KeyPress) {
+        
+    }
+    switch (key){
+        case XK_Up:
+            selectedOption = (selectedOption-1)%3;
+            break;
+        case XK_Down:
+            selectedOption = (selectedOption+1)%3;
+            break;
+        case XK_Return:
+            printf("ENTER\n");
+            break;
+        case XK_Right:
+            break;
+        case XK_Escape:
+            return 1;
+            break;
+    }
     return 0; 
+}
+
+void renderMainMenu()
+{
+
 }
