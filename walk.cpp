@@ -44,7 +44,7 @@ float cx = 100; //Sprite x postion
 float cy = 200; //Sprite y postion
 int flipped = 0;
 bool debug_mode = true;
-int gameState = MAINMENU;
+int gameState = INGAME;
 int selectedOption = NEWGAME;
 
 #define ALPHA 1
