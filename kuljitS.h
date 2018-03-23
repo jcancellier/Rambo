@@ -12,4 +12,5 @@ double printRamborCenterOpt();
 void checkMouseMainMenu(XEvent*);
 int checkKeysMainMenu(int, XEvent*);
 void renderMainMenu();
+int acceptGameState(int);
 #endif

@@ -48,7 +48,7 @@ void kuljitS_physics()
 }
 
 double printRamboCenter(){
-    
+
     static double td = 0.0;
     struct timespec start, end;
     clock_gettime(CLOCK_REALTIME, &start);
@@ -66,7 +66,7 @@ double printRamboCenter(){
 }
 
 double printRamboCenterOpt(){
-    
+
     static double td = 0.0;
     struct timespec start, end;
     clock_gettime(CLOCK_REALTIME, &start);
@@ -94,34 +94,50 @@ void printKuljitS(int x, int y, int size, int color){
     ggprint8b(&r, size, color, "R_OPT: %lf",printRamboCenterOpt());
 }
 
+int acceptGameState(int selectedOption)
+{
+    switch(selectedOption){
+        case 0:
+            gameState = INGAME;
+            break;
+        case 1:
+            //open HTML LEADERBOARD
+            break;
+        case 2:
+            return 1;
+        default:
+            printf("FATAL ERROR IN GAME STATE\n\n");
+            exit(1);
+    }
+    return 0;
+}
+
 void checkMouseMainMenu(XEvent *e)
 {    
     if (e->type == KeyPress) {
-        
+
     }
 }
 
 int checkKeysMainMenu(int key, XEvent *e)
 {
     if (e->type == KeyPress) {
-        
-    }
-    switch (key){
-        case XK_Up:
-            selectedOption = (selectedOption-1)%3;
-            break;
-        case XK_Down:
-            selectedOption = (selectedOption+1)%3;
-            break;
-        case XK_Return:
-			gameState = INGAME;
-            printf("ENTER\n");
-            break;
-        case XK_Right:
-            break;
-        case XK_Escape:
-            return 1;
-            break;
+        switch (key){
+            case XK_Up:
+                selectedOption = ((selectedOption-1)+3)%3;
+                break;
+            case XK_Down:
+                selectedOption = ((selectedOption+1)+3)%3;
+                break;
+            case XK_Return:
+                return acceptGameState(selectedOption);
+                break;
+            case XK_Right:
+                break;
+            case XK_Escape:
+                return 1;
+                break;
+        }
     }
     return 0; 
 }
@@ -142,10 +158,10 @@ void renderMainMenu()
     float textureY = 0;
 
     float centerX = g.xres/2;
-    float centerY = g.yres/2;	
+    float centerY = g.yres*2/3; 
 
-	float width = 520;
-	float height = 104;
+    float width = 520;
+    float height = 104;
 
     glBegin(GL_QUADS);
     glTexCoord2f(textureX, textureY+ssHeight);
@@ -165,4 +181,29 @@ void renderMainMenu()
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
 
+    Rect r;
+    r.bot = g.yres/3;
+    r.left = g.xres/2;
+    r.center = 1;
+
+    switch (selectedOption) {
+        case 0:
+            ggprint8b(&r, 16, 0x123fff, "NEW GAME");
+            ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
+            ggprint8b(&r, 16, 0xffffff, "EXIT");
+            break;
+        case 1:
+            ggprint8b(&r, 16, 0xffffff, "NEW GAME");
+            ggprint8b(&r, 16, 0x123fff, "LEADERBOARD");
+            ggprint8b(&r, 16, 0xffffff, "EXIT");
+            break;
+        case 2:
+            ggprint8b(&r, 16, 0xffffff, "NEW GAME");
+            ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
+            ggprint8b(&r, 16, 0x123fff, "EXIT");
+            break;
+        default:
+//            printf("FATAL GAME ERROR\n\n");
+            break;
+    }
 }
