@@ -94,9 +94,9 @@ Bullet::Bullet() {
 
     //define values
 	pos[0] = rambo.getCenterX();
-        pos[1] = rambo.getCenterY();
-        vel[0] = 10;
-        vel[1] = 10;
+    pos[1] = rambo.getCenterY();
+    vel[0] = 0.001;
+    vel[1] = 0.0010;
 }
 
 //Bullet Destructor
@@ -112,15 +112,18 @@ void spaceButton()
 
                         Bullet *b = &g.ramboBullets[nbullets];
                         //convert angle to a vector
-                        float rad = ((90.0+90.0) / 360.0f) * 3.14 * 2.0;
-			//convert angle to a vector
-			float xdir = cos(rad);
-			float ydir = sin(rad);
+                        
+                        //float rad = ((90.0+90.0) / 360.0f) * 3.14 * 2.0;
+			            //convert angle to a vector
+			            //float xdir = cos(rad);
+			            //float ydir = sin(rad);
 
                         b->pos[0] = rambo.getCenterX();
                         b->pos[1] = rambo.getCenterY();
-                        b->vel[0] += xdir*6.0f + rnd()*0.1;
-                        b->vel[1] += ydir*6.0f + rnd()*0.1;  
+                        //b->vel[0] += xdir*6.0f + rnd()*0.1;
+                       // b->vel[1] += ydir*6.0f + rnd()*0.1;  
+                        b->vel[0] += 0.00000001;
+                        b->vel[1] += 0.00000001;
                         b->color[0] = 1.0f;
                         b->color[1] = 1.0f;
                         b->color[2] = 1.0f; 
@@ -138,17 +141,33 @@ void fernandoPhysics()
 		Bullet *b = &g.ramboBullets[i];
 
 		//if he's looking left, shoot left
+        if(rambo.flipped) {
+            b->pos[0] -= 135;
+		    b->pos[1] -= 5;
+        }
+        else { 
+            b->pos[0] += 135;
+		    b->pos[1] += 5;
+        }
 
-                //still need to delete bullets..
-                if(rambo.flipped) {
-                        b->pos[0] -= 135;
-		        b->pos[1] -= 5;
-                }
-                else { 
-                        b->pos[0] += 135;
-		        b->pos[1] += 5;
-                }
-		i++;
+        //Check for collision with window edges and deleting if so
+		if (b->pos[0] < 0.0) {
+			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
+			nbullets--;
+		}
+		else if (b->pos[0] > (float)g.xres) {
+			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
+			nbullets--;
+		}
+		else if (b->pos[1] < 0.0) {
+			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
+			nbullets--;
+		}
+		else if (b->pos[1] > (float)g.yres) {
+			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
+			nbullets--;
+		}
+		    i++;
 	}
 }
 double printGroupNumber() {
