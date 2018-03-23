@@ -5,12 +5,11 @@ class Bullet {
 
     public: 
 
-	Vec pos;
-	Vec vel; 
+	float pos[3];
+	float vel[3]; 
 	float color[3];
 	struct timespec time;
 	
-	void draw();
 	~Bullet();
 	Bullet(); 
 };
