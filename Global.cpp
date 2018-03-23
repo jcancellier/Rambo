@@ -7,6 +7,8 @@ Global::Global() {
     walk=0;
     walkFrame=0;
     delay = 0.1;
+    ramboBullets = new Bullet[30];
+
     for (int i=0; i<20; i++) {
 	box[i][0] = rnd() * xres;
 	box[i][1] = rnd() * (yres-220) + 220.0;

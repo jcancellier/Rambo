@@ -10,6 +10,7 @@
 #include <X11/XKBlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+#include "Bullet.h"
 
 //defined types
 typedef double Flt;
@@ -33,6 +34,7 @@ class Global{
 	int walk;
 	int walkFrame;
 	double delay;
+	Bullet *ramboBullets;
 	GLuint walkTexture;
 	GLuint ramboLogoTexture;
 	Vec box[20];

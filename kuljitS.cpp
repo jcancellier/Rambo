@@ -121,7 +121,6 @@ void checkMouseMainMenu(XEvent *e)
 
 int checkKeysMainMenu(int key, XEvent *e)
 {
-    printf("%i\n", selectedOption);
     if (e->type == KeyPress) {
         switch (key){
             case XK_Up:

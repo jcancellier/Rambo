@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
+#include <iostream>
 #include <X11/Xlib.h>
 #include <X11/XKBlib.h>
 #include <X11/keysym.h>
@@ -47,6 +48,7 @@ bool debug_mode = false;
 bool display_hitbox = true;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
+int MAX_BULLETS = 30;
 
 #define ALPHA 1
 
@@ -429,6 +431,9 @@ int checkKeys(XEvent *e)
         case XK_Escape:
             return 1;
             break;
+	case XK_space:
+	    spaceButton();
+	    break;
         default:
             break;
         }
@@ -471,9 +476,8 @@ void physics(void)
     case INGAME:
         joshuaCInput();
         walkInput();
-        // spaceButton();
         kuljitS_physics();
-        //fernandoPhysics();
+        fernandoPhysics();
         break;
     default:
         printf("FATAL ERROR IN GAME STATE\n\n");
@@ -522,18 +526,36 @@ void render(void)
             glPopMatrix();
         }
 
-        //    Bullet *b = new Bullet();
-
         //draw Rambo
         rambo.draw();
         rambo.drawOptimized();
-        //b->draw();
+            //DRAW BULLET 
+            Bullet *b; 
+            
+            for (int i = 0; i < nbullets; i++) {
+                b = &g.ramboBullets[i];
+
+                glColor3f(1.0, 1.0, 1.0);
+                        glBegin(GL_POINTS);
+                            glVertex2f(b->pos[0],      b->pos[1]);
+                            glVertex2f(b->pos[0]-1.0f, b->pos[1]);
+                            glVertex2f(b->pos[0]+1.0f, b->pos[1]);
+                            glVertex2f(b->pos[0],      b->pos[1]-1.0f);
+                            glVertex2f(b->pos[0],      b->pos[1]+1.0f);
+                glColor3f(0.8, 0.8, 0.8);
+                            glVertex2f(b->pos[0]-1.0f, b->pos[1]-1.0f);
+                            glVertex2f(b->pos[0]-1.0f, b->pos[1]+1.0f);
+                            glVertex2f(b->pos[0]+1.0f, b->pos[1]-1.0f);
+                            glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
+                        glEnd();
+            }
 
         {
             Platform a(0, 0, 0, 20, 20, 20, 20, 0);
             a.setColor(1, 0, 0);
             a.drawPlatform();
         }
+
         //Rambo hitbox center
         glPointSize(10);
         glBegin(GL_POINTS);
