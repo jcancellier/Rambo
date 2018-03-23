@@ -14,6 +14,7 @@
 #include <GL/glx.h>
 #include "joshuaC.h"
 #include "fonts.h"
+#include "HitBox.h"
 #include <sstream>
 extern int flipped;
 extern float cx;
@@ -38,6 +39,13 @@ Character::Character(int ssIdx)
     spriteSheetIndex = ssIdx;
     velocityX = 4;
     velocityY = 4;
+}
+
+HitBox::HitBox(int top, int bottom, int left, int right){
+    this->top = top;
+    this->bottom = bottom;
+    this->left = left;
+    this->right = right;
 }
 
 //Accessors
@@ -69,13 +77,14 @@ void Character::setVelocityY(float vy) { velocityY = vy; }
 //Character Member functions
 void Character::draw()
 {
+    #ifdef PROFILING
     ///////////////////////////Timer///////////////////
-
     static double timeDifference = 0.0;
     struct timespec start, end;
     clock_gettime(CLOCK_REALTIME, &start);
-
     //////////////////////////////////////////////////
+    #endif
+
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
     glBindTexture(GL_TEXTURE_2D, g.walkTexture);
@@ -115,8 +124,6 @@ void Character::draw()
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
 
-
-    //#define PROFILING
     #ifdef PROFILING
     //////////////////TIMER/////////////////////////////
     for(int i = 0; i < 1000000; i++){
@@ -141,13 +148,14 @@ void Character::draw()
 
 void Character::drawOptimized()
 {
+    #ifdef PROFILING
     ///////////////////////////Timer///////////////////
 
     static double timeDifference = 0.0;
     struct timespec start, end;
     clock_gettime(CLOCK_REALTIME, &start);
-
     //////////////////////////////////////////////////
+    #endif
 
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
@@ -188,9 +196,7 @@ void Character::drawOptimized()
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
 
-    //#define PROFILING
     #ifdef PROFILING
-
     //////////////////TIMER/////////////////////////////
     for(int i = 0; i < 1000000; i++){
         int a = 2 >> 2;

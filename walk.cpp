@@ -38,19 +38,20 @@
 //globals
 int nbullets = 0;
 int keys[65365];
-const float timeslice = 1.0f;
+//const float timeslice = 1.0f;
 float gravity = -0.5f;
 float cx = 100; //Sprite x postion
 float cy = 200; //Sprite y postion
 int flipped = 0;
-bool debug_mode = true;
-int gameState = INGAME;
+bool debug_mode = false;
+int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 
 #define ALPHA 1
 
 //load textures (filename, rows, columns)
-SpriteSheet img[] = {SpriteSheet("images/walk.gif", 2, 7), SpriteSheet("images/ramboLogo.gif", 1, 1)};
+SpriteSheet img[] = {SpriteSheet("images/walk.gif", 2, 7), 
+                    SpriteSheet("images/ramboLogo.gif", 1, 1)};
 
 //Global class
 Global g;
