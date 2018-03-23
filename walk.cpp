@@ -44,6 +44,7 @@ float cx = 100; //Sprite x postion
 float cy = 200; //Sprite y postion
 int flipped = 0;
 bool debug_mode = false;
+bool display_hitbox = true;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 
@@ -382,9 +383,16 @@ int checkKeys(XEvent *e)
             keys[key] = 0;
         }
 
+        //Toggle debug mode
         if (e->type == KeyPress && key == XK_h)
         {
             debug_mode = !debug_mode;
+        }
+
+        //Toggle hitboxes
+        if (e->type == KeyPress && key == XK_6)
+        {
+            display_hitbox = !display_hitbox;
         }
 
         //(void)shift;
@@ -541,7 +549,9 @@ void render(void)
             r.center = 0;
             ggprint8b(&r, 16, c, "right arrow -> walk right");
             ggprint8b(&r, 16, c, "left arrow  <- walk left");
-            ggprint8b(&r, 16, c, "a key to jump");
+            ggprint8b(&r, 16, c, "minus key to shrink Rambo");
+            ggprint8b(&r, 16, c, "u key to expand Rambo");
+            ggprint8b(&r, 16, c, "6 key to toggle hitbox");
             ggprint8b(&r, 16, c, "h key to toggle debug mode");
             printKuljitS(g.xres - 100, g.yres - 20, 16, 0);
             printFernandoM(12, 0);

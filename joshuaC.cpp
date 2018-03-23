@@ -16,14 +16,13 @@
 #include "fonts.h"
 #include "HitBox.h"
 #include <sstream>
-extern int flipped;
 extern float cx;
 extern Timers timers;
 extern Global g;
 extern int keys[];
 extern Character rambo;
 extern SpriteSheet img[];
-
+extern bool display_hitbox;
 //Constructors
 Character::Character(int ssIdx)
 {
@@ -39,13 +38,37 @@ Character::Character(int ssIdx)
     spriteSheetIndex = ssIdx;
     velocityX = 4;
     velocityY = 4;
+    hitBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
 }
 
-HitBox::HitBox(int top, int bottom, int left, int right){
+HitBox::HitBox(int top, int bottom, int left, int right)
+{
     this->top = top;
     this->bottom = bottom;
     this->left = left;
     this->right = right;
+}
+
+void HitBox::updateHitBox(int top, int bottom, int left, int right)
+{
+    this->top = top;
+    this->bottom = bottom;
+    this->left = left;
+    this->right = right;
+}
+
+void HitBox::draw()
+{
+    glBegin(GL_LINE_LOOP);
+
+	glColor3f(1.0, 1.0, 1.0);
+	glVertex2i(left, bottom);
+	glVertex2i(left, top);
+    glColor3f(1.0, 1.0, 1.0);
+	glVertex2i(right, top);
+	glVertex2i(right, bottom);
+
+	glEnd();
 }
 
 //Accessors
@@ -124,9 +147,13 @@ void Character::draw()
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
 
+    if(display_hitbox)
+        hitBox->draw();
+    update();
+    
     #ifdef PROFILING
     //////////////////TIMER/////////////////////////////
-    for(int i = 0; i < 1000000; i++){
+    for (int i = 0; i < 1000000; i++) {
         int a = 2 / 4;
         a *= 2;
     }
@@ -144,6 +171,37 @@ void Character::draw()
 	ggprint8b(&r, 16, 0x00000000, "Character::draw(): %lf", timeDifference);
     ///////////////////////////////////////////////////
     #endif
+}
+//TODO: add hitboxes for running (or change sprites to line up on center)
+//preferably the latter
+void Character::update(){
+    //if ()
+    if (jumping) {
+        if (flipped) {
+            hitBox->updateHitBox(centerY+(height/2),
+                centerY-(height/2),
+                centerX-(width/2),
+                centerX+(height/2));
+        } else {
+            hitBox->updateHitBox(centerY+(height/2),
+                centerY-(height/2),
+                centerX-(width/2),
+                centerX+(height/2));
+        }
+        return;
+    }
+
+    if (flipped) {
+        hitBox->updateHitBox(centerY+(height/2),
+                            centerY-(height/2)-(height*.486111), //28
+                            centerX-(width/2)+(height*.225694), //13
+                            centerX+(height/2)-(height*.2080)); //12
+    } else {
+        hitBox->updateHitBox(centerY+(height/2),
+                            centerY-(height/2)-(height*.486111), //28
+                            centerX-(width/2)+(height*.086805), //5
+                            centerX+(height/2)-(height*.347222)); //20
+    }
 }
 
 void Character::drawOptimized()
@@ -171,7 +229,7 @@ void Character::drawOptimized()
     int iy = 0;
     
     //move to next row of spriteSheet (if available)
-    if(frame >= img[spriteSheetIndex].columns) {
+    if (frame >= img[spriteSheetIndex].columns) {
         iy = 1;
     }
     
@@ -198,7 +256,7 @@ void Character::drawOptimized()
 
     #ifdef PROFILING
     //////////////////TIMER/////////////////////////////
-    for(int i = 0; i < 1000000; i++){
+    for (int i = 0; i < 1000000; i++) {
         int a = 2 >> 2;
         a = a << 1;
     }
@@ -219,6 +277,7 @@ void Character::drawOptimized()
 //Handle Input and animations
 void joshuaCInput()
 {
+    //check if rambo is standing
     if (keys[XK_Right] == 0 && keys[XK_Left] == 0 && !rambo.jumping) {
         rambo.frame = 0;
     }
@@ -230,8 +289,7 @@ void jumpAnimation()
 {
     if (rambo.centerY > 200) {
         rambo.jumping = true;
-    }
-    else {
+    } else {
         rambo.jumping = false;
     }
     

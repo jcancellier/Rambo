@@ -1,3 +1,5 @@
+#include "HitBox.h"
+
 #ifndef CHARACTER_H
 #define CHARACTER_H
 //cx and cy in walk.cpp
@@ -14,6 +16,7 @@ class Character{
         int spriteSheetIndex;
         float velocityX;
         float velocityY;
+		HitBox *hitBox;
       
 	    Character(int);
 
@@ -46,6 +49,10 @@ class Character{
 		//Other
         void draw();
 		void drawOptimized();
+		void update();
+		~Character(){
+			delete hitBox;
+		}
 };
 
 #endif
