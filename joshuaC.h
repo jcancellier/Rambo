@@ -8,5 +8,6 @@ void jumpAnimation();
 void shootAndRunAnimation();
 void angleUpAnimation();
 void angleDownAnimation();
+void proneAnimation();
 
 #endif

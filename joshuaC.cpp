@@ -35,6 +35,7 @@ Character::Character(int ssIdx)
     flipped = false;
     jumping = false;
     shooting = false;
+    prone = false;
     health = 4;
     spriteSheetIndex = ssIdx;
     velocityX = 4;
@@ -294,14 +295,17 @@ void joshuaCInput()
     angleDownAnimation();
     shootAndRunAnimation();
 
+    proneAnimation();
 }
 
 //function that makes character walk left
 void walkLeft()
 {
-    if (keys[XK_Left] ) {
-
+    if (keys[XK_Left]) {
+        
         rambo.flipped = true;
+        if(rambo.prone)
+            return;
         rambo.centerX -= rambo.velocityX;
         if(rambo.shooting || keys[XK_space] || keys[XK_Up] || keys[XK_Down])
             return;
@@ -325,6 +329,9 @@ void walkRight()
 {
     if (keys[XK_Right]) {
         rambo.flipped = false;
+        if (rambo.prone) {
+            return;
+        }
         rambo.centerX += rambo.velocityX;
         if(rambo.shooting || keys[XK_space] || keys[XK_Up] || keys[XK_Down])
             return;
@@ -381,7 +388,7 @@ void shootAndRunAnimation()
     clock_gettime(CLOCK_REALTIME, &start);
     if(keys[XK_space])
         timeDifference = 0;
-    if((keys[XK_space] && !rambo.jumping && rambo.frame != 0 && !keys[XK_Up] && !keys[XK_Down]) || (rambo.shooting && !rambo.jumping)){
+    if((keys[XK_space] && !rambo.jumping && rambo.frame != 0 && !keys[XK_Up] && !keys[XK_Down]) || (rambo.shooting && !rambo.jumping && ! rambo.prone)){
         //printf("we in here boiii\n");
         rambo.shooting = true;
         //start rambo in correct position
@@ -437,7 +444,7 @@ void shootAndRunAnimation()
 
 void angleUpAnimation()
 {
-        if (((keys[XK_Right] && keys[XK_Up]) || (keys[XK_Left] && keys[XK_Up])) && !rambo.isJumping()) {
+        if (((keys[XK_Right] && keys[XK_Up]) || (keys[XK_Left] && keys[XK_Up])) && !rambo.isJumping() && !rambo.prone) {
          //start rambo in correct position
         //TODO: must update this switch statement as more
         //animations are added
@@ -480,9 +487,10 @@ void angleUpAnimation()
         }
     }
 }
+
 void angleDownAnimation()
 {
-        if (((keys[XK_Right] && keys[XK_Down]) || (keys[XK_Left] && keys[XK_Down])) && !rambo.isJumping()) {
+        if (((keys[XK_Right] && keys[XK_Down]) || (keys[XK_Left] && keys[XK_Down])) && !rambo.isJumping() && !rambo.prone) {
          //start rambo in correct position
         //TODO: must update this switch statement as more
         //animations are added
@@ -527,4 +535,15 @@ void angleDownAnimation()
             timers.recordTime(&timers.walkTime);
         }
     }
+}
+
+void proneAnimation()
+{
+    if ((rambo.frame == 0 || rambo.prone) && keys[XK_Down] && !keys[XK_Up] && !rambo.isJumping()) {
+        rambo.setFrame(20);
+        rambo.prone = true;
+    } else {
+        rambo.prone = false;
+    }
+    return;
 }
