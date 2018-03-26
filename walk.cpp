@@ -377,9 +377,8 @@ int checkKeys(XEvent *e)
         if (e->type == KeyPress)
         {
             keys[key] = 1;
-            //if(keys[XK_b])
-            //rambo.frame = 6;
         }
+        
         if (e->type == KeyRelease)
         {
             keys[key] = 0;
