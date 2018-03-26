@@ -34,6 +34,7 @@ Character::Character(int ssIdx)
     frame = 0;
     flipped = false;
     jumping = false;
+    shooting = false;
     health = 4;
     spriteSheetIndex = ssIdx;
     velocityX = 4;
@@ -286,7 +287,7 @@ void joshuaCInput()
     jumpAnimation();
     walkLeft();
     walkRight();
-    //shootAndRunAnimation();
+    shootAndRunAnimation();
 }
 
 //function that makes character walk left
@@ -296,6 +297,8 @@ void walkLeft()
 
         rambo.flipped = true;
         rambo.centerX -= rambo.velocityX;
+        if(rambo.shooting || keys[XK_space])
+            return;
         timers.recordTime(&timers.timeCurrent);
         //record time between frames
         double timeSpan = timers.timeDiff(&timers.walkTime,
@@ -304,7 +307,7 @@ void walkLeft()
             //advance frame
             ++rambo.frame;
             if (rambo.frame >= 7) {
-                rambo.frame -= 6;
+                rambo.frame = 1;
             }
             timers.recordTime(&timers.walkTime);
         }
@@ -317,6 +320,8 @@ void walkRight()
     if (keys[XK_Right]) {
         rambo.flipped = false;
         rambo.centerX += rambo.velocityX;
+        if(rambo.shooting || keys[XK_space])
+            return;
         timers.recordTime(&timers.timeCurrent);
         //record time between frames
         double timeSpan = timers.timeDiff(&timers.walkTime,
@@ -325,7 +330,7 @@ void walkRight()
             //advance frame
             ++rambo.frame;
             if (rambo.frame >= 7) {
-                rambo.frame -= 6;
+                rambo.frame = 1;
             }
             timers.recordTime(&timers.walkTime);
         }
@@ -343,7 +348,7 @@ void jumpAnimation()
     if (keys[XK_a] || rambo.jumping) {
         
         //check if in walk state
-        if (rambo.frame >= 0 && rambo.frame <= 6) {
+        if ((rambo.frame >= 0 && rambo.frame <= 6) || (rambo.frame >= 11 && rambo.frame <= 13)) {
             rambo.frame = 7;
         }
         //rambo.flipped = (keys[XK_Left] ? true : false);
@@ -365,23 +370,23 @@ void jumpAnimation()
 
 void shootAndRunAnimation()
 {
-    if(keys[XK_space] && !rambo.jumping && rambo.frame != 0){
-
+    if((keys[XK_space] && !rambo.jumping && rambo.frame != 0) || (rambo.shooting && !rambo.jumping)){
+        rambo.shooting = true;
         //start rambo in correct position
         //TODO: must update this switch statement as more
         //animations are added
         switch (rambo.frame) {
             case 1:
             case 4:
-                rambo.frame = 13;
+                rambo.frame = 12;
                 break;
             case 2:
             case 5:
-                rambo.frame = 11;
+                rambo.frame = 13;
                 break;
             case 3:
             case 6:
-                rambo.frame = 12;
+                rambo.frame = 11;
                 break;
             case 7:
             case 8:
@@ -405,6 +410,16 @@ void shootAndRunAnimation()
             }
             timers.recordTime(&timers.walkTime);
         }
+
+        //prevent rambo from releasing from his shooting position too early
+        //not doing this makes the shooting look glitchy
+        timers.recordTime(&timers.timeCurrent);
+        double timeSpan2 = timers.timeDiff(&timers.ramboWeaponOutTime,
+                                            &timers.timeCurrent);
+        if(timeSpan2 > g.drawWeaponDelay){
+            rambo.shooting = false;
+            timers.recordTime(&timers.ramboWeaponOutTime);
+        }   
     }
     return;
 }

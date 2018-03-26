@@ -34,6 +34,7 @@ class Global{
 	int walk;
 	int walkFrame;
 	double delay;
+	double drawWeaponDelay;
 	Bullet *ramboBullets;
 	GLuint walkTexture;
 	GLuint ramboLogoTexture;

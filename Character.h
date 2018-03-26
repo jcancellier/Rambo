@@ -12,6 +12,7 @@ class Character{
 	    int frame;
 	    bool flipped;
         bool jumping;
+		bool shooting;
 	    float health;
         int spriteSheetIndex;
         float velocityX;
