@@ -420,7 +420,7 @@ void shootAndRunAnimation()
         //not doing this makes the shooting look glitchy
         clock_gettime(CLOCK_REALTIME, &end);
         timeDifference += timers.timeDiff(&start, &end);
-        if(timeDifference > .00005){
+        if(timeDifference > .00002){
             rambo.shooting = false;
             timeDifference = 0;
         }   
