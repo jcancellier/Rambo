@@ -370,6 +370,11 @@ void jumpAnimation()
 
 void shootAndRunAnimation()
 {
+    static double timeDifference = 0.0;
+    struct timespec start, end;
+    clock_gettime(CLOCK_REALTIME, &start);
+    if(keys[XK_space])
+        timeDifference = 0;
     if((keys[XK_space] && !rambo.jumping && rambo.frame != 0) || (rambo.shooting && !rambo.jumping)){
         rambo.shooting = true;
         //start rambo in correct position
@@ -413,12 +418,11 @@ void shootAndRunAnimation()
 
         //prevent rambo from releasing from his shooting position too early
         //not doing this makes the shooting look glitchy
-        timers.recordTime(&timers.timeCurrent);
-        double timeSpan2 = timers.timeDiff(&timers.ramboWeaponOutTime,
-                                            &timers.timeCurrent);
-        if(timeSpan2 > g.drawWeaponDelay){
+        clock_gettime(CLOCK_REALTIME, &end);
+        timeDifference += timers.timeDiff(&start, &end);
+        if(timeDifference > .00005){
             rambo.shooting = false;
-            timers.recordTime(&timers.ramboWeaponOutTime);
+            timeDifference = 0;
         }   
     }
     return;
