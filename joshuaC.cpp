@@ -126,6 +126,9 @@ void Character::draw()
     if(frame >= img[spriteSheetIndex].columns) {
         iy = 1;
     }
+    if (frame >= (img[spriteSheetIndex].columns*2)) {
+        iy = 2;
+    }
     
     float textureX = (float)ix / img[spriteSheetIndex].columns;
     float textureY = (float)iy / img[spriteSheetIndex].rows;
@@ -287,17 +290,20 @@ void joshuaCInput()
     jumpAnimation();
     walkLeft();
     walkRight();
+    angleUpAnimation();
+    angleDownAnimation();
     shootAndRunAnimation();
+
 }
 
 //function that makes character walk left
 void walkLeft()
 {
-    if (keys[XK_Left]) {
+    if (keys[XK_Left] ) {
 
         rambo.flipped = true;
         rambo.centerX -= rambo.velocityX;
-        if(rambo.shooting || keys[XK_space])
+        if(rambo.shooting || keys[XK_space] || keys[XK_Up])
             return;
         timers.recordTime(&timers.timeCurrent);
         //record time between frames
@@ -320,7 +326,7 @@ void walkRight()
     if (keys[XK_Right]) {
         rambo.flipped = false;
         rambo.centerX += rambo.velocityX;
-        if(rambo.shooting || keys[XK_space])
+        if(rambo.shooting || keys[XK_space] || keys[XK_Up])
             return;
         timers.recordTime(&timers.timeCurrent);
         //record time between frames
@@ -375,7 +381,8 @@ void shootAndRunAnimation()
     clock_gettime(CLOCK_REALTIME, &start);
     if(keys[XK_space])
         timeDifference = 0;
-    if((keys[XK_space] && !rambo.jumping && rambo.frame != 0) || (rambo.shooting && !rambo.jumping)){
+    if((keys[XK_space] && !rambo.jumping && rambo.frame != 0 && !keys[XK_Up]) || (rambo.shooting && !rambo.jumping)){
+        //printf("we in here boiii\n");
         rambo.shooting = true;
         //start rambo in correct position
         //TODO: must update this switch statement as more
@@ -425,5 +432,56 @@ void shootAndRunAnimation()
             timeDifference = 0;
         }   
     }
+    return;
+}
+
+void angleUpAnimation()
+{
+        if (((keys[XK_Right] && keys[XK_Up]) || (keys[XK_Left] && keys[XK_Up])) && !rambo.isJumping()) {
+         //start rambo in correct position
+        //TODO: must update this switch statement as more
+        //animations are added
+        switch (rambo.frame) {
+            case 1:
+            case 4:
+            case 12:
+                rambo.frame = 15;
+                break;
+            case 2:
+            case 5:
+            case 13:
+                rambo.frame = 16;
+                break;
+            case 3:
+            case 6:
+            case 11:
+                rambo.frame = 14;
+                break;
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+                rambo.frame = 14;
+            case 0:
+                rambo.frame = 15;
+        }
+        
+        timers.recordTime(&timers.timeCurrent);
+        //record time between frames
+        double timeSpan = timers.timeDiff(&timers.walkTime,
+                                          &timers.timeCurrent);
+        if (timeSpan > g.delay) {
+            //advance frame
+            ++rambo.frame;
+            if (rambo.frame >= 17) {
+                rambo.frame = 14;
+            }
+            timers.recordTime(&timers.walkTime);
+        }
+    }
+    return;
+}
+void angleDownAnimation()
+{
     return;
 }

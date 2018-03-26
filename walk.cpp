@@ -526,7 +526,7 @@ void render(void)
 
         //draw Rambo
         rambo.draw();
-        rambo.drawOptimized();
+        //rambo.drawOptimized();
             //DRAW BULLET 
             Bullet *b; 
             

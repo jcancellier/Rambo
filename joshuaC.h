@@ -6,5 +6,7 @@ void walkLeft();
 void walkRight();
 void jumpAnimation();
 void shootAndRunAnimation();
+void angleUpAnimation();
+void angleDownAnimation();
 
 #endif
