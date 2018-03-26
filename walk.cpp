@@ -475,7 +475,6 @@ void physics(void)
         break;
     case INGAME:
         joshuaCInput();
-        walkInput();
         kuljitS_physics();
         fernandoPhysics();
         break;

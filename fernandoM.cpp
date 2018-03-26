@@ -32,63 +32,6 @@ using namespace std;
 //constants 
 const int MAX_BULLETS = 30;
 
-
-//function to get input and make right/left movements
-void walkInput() {
-
-//      makes Rambo stay still if no keys are being pressed and he's not jumping
-    if (keys[XK_Right] == 0 && keys[XK_Left] == 0 && !rambo.jumping) {
-        
-        rambo.frame = 0;
-    }
-    
-    walkLeft();
-    walkRight();
-}
-
-//function that makes character walk left
-void walkLeft()
-{
-    if (keys[XK_Left]) {
-
-        rambo.flipped = true;
-        rambo.centerX -= rambo.velocityX;
-        timers.recordTime(&timers.timeCurrent);
-        //record time between frames
-        double timeSpan = timers.timeDiff(&timers.walkTime,
-                                          &timers.timeCurrent);
-        if (timeSpan > g.delay) {
-            //advance frame
-            ++rambo.frame;
-            if (rambo.frame >= 7) {
-                rambo.frame -= 6;
-            }
-            timers.recordTime(&timers.walkTime);
-        }
-    }
-}
-
-//function that makes character walk right
-void walkRight()
-{
-    if (keys[XK_Right]) {
-        rambo.flipped = false;
-        rambo.centerX += rambo.velocityX;
-        timers.recordTime(&timers.timeCurrent);
-        //record time between frames
-        double timeSpan = timers.timeDiff(&timers.walkTime,
-                                          &timers.timeCurrent);
-        if (timeSpan > g.delay) {
-            //advance frame
-            ++rambo.frame;
-            if (rambo.frame >= 7) {
-                rambo.frame -= 6;
-            }
-            timers.recordTime(&timers.walkTime);
-        }
-    }
-}
-
 //Bullet Constructor
 Bullet::Bullet() {
 

@@ -172,21 +172,22 @@ void Character::draw()
     ///////////////////////////////////////////////////
     #endif
 }
-//TODO: add hitboxes for running (or change sprites to line up on center)
-//preferably the latter
-void Character::update(){
+
+//Implements updating of any child components such as the hitbox
+void Character::update()
+{
     //if ()
     if (jumping) {
         if (flipped) {
-            hitBox->updateHitBox(centerY+(height/2),
-                centerY-(height/2),
+            hitBox->updateHitBox(centerY+(height/2)-(height*.12),
+                centerY-(height/2)+(height*.07),
                 centerX-(width/2),
-                centerX+(height/2));
+                centerX+(height/2)-(height*.16));
         } else {
-            hitBox->updateHitBox(centerY+(height/2),
-                centerY-(height/2),
+            hitBox->updateHitBox(centerY+(height/2)-(height*.12),
+                centerY-(height/2)+(height*.07),
                 centerX-(width/2),
-                centerX+(height/2));
+                centerX+(height/2)-(height*.16));
         }
         return;
     }
@@ -194,13 +195,13 @@ void Character::update(){
     if (flipped) {
         hitBox->updateHitBox(centerY+(height/2),
                             centerY-(height/2)-(height*.486111), //28
-                            centerX-(width/2)+(height*.225694), //13
+                            centerX-(width/2)+(height*.08), //13
                             centerX+(height/2)-(height*.2080)); //12
     } else {
         hitBox->updateHitBox(centerY+(height/2),
                             centerY-(height/2)-(height*.486111), //28
                             centerX-(width/2)+(height*.086805), //5
-                            centerX+(height/2)-(height*.347222)); //20
+                            centerX+(height/2)-(height*.2)); //20
     }
 }
 
@@ -283,6 +284,52 @@ void joshuaCInput()
     }
     
     jumpAnimation();
+    walkLeft();
+    walkRight();
+    //shootAndRunAnimation();
+}
+
+//function that makes character walk left
+void walkLeft()
+{
+    if (keys[XK_Left]) {
+
+        rambo.flipped = true;
+        rambo.centerX -= rambo.velocityX;
+        timers.recordTime(&timers.timeCurrent);
+        //record time between frames
+        double timeSpan = timers.timeDiff(&timers.walkTime,
+                                          &timers.timeCurrent);
+        if (timeSpan > g.delay) {
+            //advance frame
+            ++rambo.frame;
+            if (rambo.frame >= 7) {
+                rambo.frame -= 6;
+            }
+            timers.recordTime(&timers.walkTime);
+        }
+    }
+}
+
+//function that makes character walk right
+void walkRight()
+{
+    if (keys[XK_Right]) {
+        rambo.flipped = false;
+        rambo.centerX += rambo.velocityX;
+        timers.recordTime(&timers.timeCurrent);
+        //record time between frames
+        double timeSpan = timers.timeDiff(&timers.walkTime,
+                                          &timers.timeCurrent);
+        if (timeSpan > g.delay) {
+            //advance frame
+            ++rambo.frame;
+            if (rambo.frame >= 7) {
+                rambo.frame -= 6;
+            }
+            timers.recordTime(&timers.walkTime);
+        }
+    }
 }
 
 void jumpAnimation()
@@ -314,4 +361,50 @@ void jumpAnimation()
             timers.recordTime(&timers.walkTime);
         }
     }
+}
+
+void shootAndRunAnimation()
+{
+    if(keys[XK_space] && !rambo.jumping && rambo.frame != 0){
+
+        //start rambo in correct position
+        //TODO: must update this switch statement as more
+        //animations are added
+        switch (rambo.frame) {
+            case 1:
+            case 4:
+                rambo.frame = 13;
+                break;
+            case 2:
+            case 5:
+                rambo.frame = 11;
+                break;
+            case 3:
+            case 6:
+                rambo.frame = 12;
+                break;
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+                rambo.frame = 11;
+            default:
+                break;
+        }
+
+        timers.recordTime(&timers.timeCurrent);
+
+        double timeSpan = timers.timeDiff(&timers.walkTime,
+                                          &timers.timeCurrent);
+
+        if (timeSpan > g.delay) {
+            //advance frame
+            ++rambo.frame;
+            if (rambo.frame >= 14 || rambo.frame < 11) {
+                rambo.frame = 11;
+            }
+            timers.recordTime(&timers.walkTime);
+        }
+    }
+    return;
 }

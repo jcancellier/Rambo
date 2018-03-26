@@ -1,9 +1,6 @@
 #ifndef FERNANDOM_H
 #define FERNANDOM_H
 
-void walkInput();
-void walkLeft();
-void walkRight();
 void spaceButton();
 void fernandoPhysics();
 double printGroupNumberOpt();
