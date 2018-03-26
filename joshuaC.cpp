@@ -303,7 +303,7 @@ void walkLeft()
 
         rambo.flipped = true;
         rambo.centerX -= rambo.velocityX;
-        if(rambo.shooting || keys[XK_space] || keys[XK_Up])
+        if(rambo.shooting || keys[XK_space] || keys[XK_Up] || keys[XK_Down])
             return;
         timers.recordTime(&timers.timeCurrent);
         //record time between frames
@@ -326,7 +326,7 @@ void walkRight()
     if (keys[XK_Right]) {
         rambo.flipped = false;
         rambo.centerX += rambo.velocityX;
-        if(rambo.shooting || keys[XK_space] || keys[XK_Up])
+        if(rambo.shooting || keys[XK_space] || keys[XK_Up] || keys[XK_Down])
             return;
         timers.recordTime(&timers.timeCurrent);
         //record time between frames
@@ -381,7 +381,7 @@ void shootAndRunAnimation()
     clock_gettime(CLOCK_REALTIME, &start);
     if(keys[XK_space])
         timeDifference = 0;
-    if((keys[XK_space] && !rambo.jumping && rambo.frame != 0 && !keys[XK_Up]) || (rambo.shooting && !rambo.jumping)){
+    if((keys[XK_space] && !rambo.jumping && rambo.frame != 0 && !keys[XK_Up] && !keys[XK_Down]) || (rambo.shooting && !rambo.jumping)){
         //printf("we in here boiii\n");
         rambo.shooting = true;
         //start rambo in correct position
@@ -479,9 +479,52 @@ void angleUpAnimation()
             timers.recordTime(&timers.walkTime);
         }
     }
-    return;
 }
 void angleDownAnimation()
 {
-    return;
+        if (((keys[XK_Right] && keys[XK_Down]) || (keys[XK_Left] && keys[XK_Down])) && !rambo.isJumping()) {
+         //start rambo in correct position
+        //TODO: must update this switch statement as more
+        //animations are added
+        switch (rambo.frame) {
+            case 1:
+            case 4:
+            case 12:
+            case 15:
+                rambo.frame = 18;
+                break;
+            case 2:
+            case 5:
+            case 13:
+            case 16:
+                rambo.frame = 19;
+                break;
+            case 3:
+            case 6:
+            case 11:
+            case 14:
+                rambo.frame = 17;
+                break;
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+                rambo.frame = 17;
+            case 0:
+                rambo.frame = 18;
+        }
+        
+        timers.recordTime(&timers.timeCurrent);
+        //record time between frames
+        double timeSpan = timers.timeDiff(&timers.walkTime,
+                                          &timers.timeCurrent);
+        if (timeSpan > g.delay) {
+            //advance frame
+            ++rambo.frame;
+            if (rambo.frame >= 20) {
+                rambo.frame = 17;
+            }
+            timers.recordTime(&timers.walkTime);
+        }
+    }
 }
