@@ -198,15 +198,30 @@ void Character::update()
     }
 
     if (flipped) {
-        hitBox->updateHitBox(centerY+(height/2),
-                            centerY-(height/2)-(height*.486111), //28
-                            centerX-(width/2)+(height*.08), //13
-                            centerX+(height/2)-(height*.2080)); //12
+        if(rambo.prone){
+            hitBox->updateHitBox(centerY - (height*.45),
+                                 centerY - (height*1),
+                                 centerX - (height*.5),      //13
+                                 centerX + (height / 2) - (height * .2080));  //12
+        }
+        else{ //standing
+            hitBox->updateHitBox(centerY+(height/2),
+                                centerY-(height/2)-(height*.486111), //28
+                                centerX-(width/2)+(height*.08), //13
+                                centerX+(height/2)-(height*.2080)); //12
+        }
     } else {
-        hitBox->updateHitBox(centerY+(height/2),
-                            centerY-(height/2)-(height*.486111), //28
-                            centerX-(width/2)+(height*.086805), //5
-                            centerX+(height/2)-(height*.2)); //20
+        if(rambo.prone){
+            hitBox->updateHitBox(centerY - (height*.45),
+                                 centerY - (height*1), 
+                                 centerX - (height*.5),  //5
+                                 centerX + (height / 2) - (height * .2));     //20
+        } else { //standing
+            hitBox->updateHitBox(centerY+(height/2),
+                                centerY-(height/2)-(height*.486111), //28
+                                centerX-(width/2)+(height*.086805), //5
+                                centerX+(height/2)-(height*.2)); //20
+        }
     }
 }
 
