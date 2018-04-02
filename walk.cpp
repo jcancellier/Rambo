@@ -53,7 +53,7 @@ int MAX_BULLETS = 30;
 #define ALPHA 1
 
 //load textures (filename, rows, columns)
-SpriteSheet img[] = {SpriteSheet("images/walk.gif", 3, 7), 
+SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7), 
                     SpriteSheet("images/ramboLogo.gif", 1, 1)};
 
 //Global class

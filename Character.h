@@ -14,6 +14,7 @@ class Character{
         bool jumping;
 		bool shooting;
 		bool prone;
+		bool aimUp;
 	    float health;
         int spriteSheetIndex;
         float velocityX;

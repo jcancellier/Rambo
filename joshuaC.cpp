@@ -23,6 +23,7 @@ extern int keys[];
 extern Character rambo;
 extern SpriteSheet img[];
 extern bool display_hitbox;
+
 //Constructors
 Character::Character(int ssIdx)
 {
@@ -36,6 +37,7 @@ Character::Character(int ssIdx)
     jumping = false;
     shooting = false;
     prone = false;
+    aimUp = false;
     health = 4;
     spriteSheetIndex = ssIdx;
     velocityX = 4;
@@ -127,8 +129,13 @@ void Character::draw()
     if(frame >= img[spriteSheetIndex].columns) {
         iy = 1;
     }
+
     if (frame >= (img[spriteSheetIndex].columns*2)) {
         iy = 2;
+    }
+
+    if (frame >= (img[spriteSheetIndex].columns*3)) {
+        iy = 3;
     }
     
     float textureX = (float)ix / img[spriteSheetIndex].columns;
@@ -181,7 +188,6 @@ void Character::draw()
 //Implements updating of any child components such as the hitbox
 void Character::update()
 {
-    //if ()
     if (jumping) {
         if (flipped) {
             hitBox->updateHitBox(centerY+(height/2)-(height*.12),
@@ -309,8 +315,8 @@ void joshuaCInput()
     angleUpAnimation();
     angleDownAnimation();
     shootAndRunAnimation();
-
     proneAnimation();
+    aimUpAnimation();
 }
 
 //function that makes character walk left
@@ -554,6 +560,17 @@ void proneAnimation()
         rambo.prone = true;
     } else {
         rambo.prone = false;
+    }
+    return;
+}
+
+void aimUpAnimation()
+{
+    if ((rambo.frame == 0 || rambo.aimUp) && keys[XK_Up] && !keys[XK_Down] && !keys[XK_Left] && !keys[XK_Right] && !rambo.isJumping()) {
+        rambo.setFrame(21);
+        rambo.aimUp = true;
+    } else {
+        rambo.aimUp = false;
     }
     return;
 }
