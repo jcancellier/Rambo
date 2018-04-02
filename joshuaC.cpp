@@ -300,7 +300,7 @@ void Character::drawOptimized()
     ///////////////////////////////////////////////////
     #endif
 }
-
+ 
 //Handle Input and animations
 void joshuaCInput()
 {
