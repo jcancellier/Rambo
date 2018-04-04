@@ -144,6 +144,9 @@ int checkKeysMainMenu(int key, XEvent *e)
 
 void renderMainMenu()
 {
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
     glBindTexture(GL_TEXTURE_2D, g.ramboLogoTexture);
@@ -160,8 +163,8 @@ void renderMainMenu()
     float centerX = g.xres/2;
     float centerY = g.yres*2/3; 
 
-    float width = 520;
-    float height = 104;
+    float width = floor(((float)g.xres/1280)*img[1].width);
+    float height = floor(((float)g.yres/720)*img[1].height);
 
     glBegin(GL_QUADS);
     glTexCoord2f(textureX, textureY+ssHeight);
