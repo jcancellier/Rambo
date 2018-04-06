@@ -38,8 +38,8 @@ Bullet::Bullet() {
     //define values
 	pos[0] = rambo.getCenterX();
     pos[1] = rambo.getCenterY();
-    vel[0] = 0.001;
-    vel[1] = 0.0010;
+    vel[0] = 10;
+    vel[1] = 10;
 }
 
 //Bullet Destructor
@@ -55,18 +55,34 @@ void spaceButton()
 
                         Bullet *b = &g.ramboBullets[nbullets];
                         //convert angle to a vector
-                        
-                        //float rad = ((90.0+90.0) / 360.0f) * 3.14 * 2.0;
-			            //convert angle to a vector
+                        //  float rad = ((360.0 + 90.0) / 360.0f) * 3.14 * 2.0;
+			            //cout << "rad = " << rad << endl;
+                        //convert angle to a vector
 			            //float xdir = cos(rad);
-			            //float ydir = sin(rad);
+			            // float ydir = sin(rad);
+                        //   cout << "xdir: " << xdir << endl;
+                        //   cout << "ydir: " << ydir << endl;
 
                         b->pos[0] = rambo.getCenterX();
                         b->pos[1] = rambo.getCenterY();
-                        //b->vel[0] += xdir*6.0f + rnd()*0.1;
-                       // b->vel[1] += ydir*6.0f + rnd()*0.1;  
-                        b->vel[0] += 0.00000001;
-                        b->vel[1] += 0.00000001;
+
+                        if (rambo.flipped){
+                            //b->vel[0] -= xdir*6.0f + rnd()*0.1;
+                            if(!(b->vel[0] < 0.0)){
+                                b->vel[0] *= -1;
+
+                            }
+                            
+                        }
+                        else {
+                            if((b->vel[0] < 0.0))
+                            {
+                                b->vel[0] *= -1;
+                            }
+    
+                            cout << "vel[0]" << b->vel[0] << endl;
+                        }
+
                         b->color[0] = 1.0f;
                         b->color[1] = 1.0f;
                         b->color[2] = 1.0f; 
@@ -81,20 +97,19 @@ void fernandoPhysics()
 	int i = 0;
 	while (i < nbullets) {
 
-		Bullet *b = &g.ramboBullets[i];
+		    Bullet *b = &g.ramboBullets[i];
 
-		//if he's looking left, shoot left
-        if(rambo.flipped) {
-            b->pos[0] -= 135;
-		    b->pos[1] -= 5;
-        }
-        else { 
-            b->pos[0] += 135;
-		    b->pos[1] += 5;
-        }
-
+            b->pos[0] += b->vel[0];
+            
+          /*  cout << "vel[0] = " << b->vel[0] << endl;
+            cout << "vel[1] = " << b->vel[1] << endl;
+            cout << "pos[0] = " << b->pos[0] << endl;
+            cout << "pos[1] = " << b->pos[1] << endl;
+            */
+          //cout << "NBULLETS: " << nbullets << endl;
+        
         //Check for collision with window edges and deleting if so
-		if (b->pos[0] < 0.0) {
+        if (b->pos[0] < 0.0) {
 			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
 			nbullets--;
 		}
