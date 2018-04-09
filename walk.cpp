@@ -526,26 +526,13 @@ void render(void)
 
         //draw Rambo
         rambo.draw();
-        //rambo.drawOptimized();
+        
             //DRAW BULLET 
             Bullet *b; 
-            
+
             for (int i = 0; i < nbullets; i++) {
                 b = &g.ramboBullets[i];
-
-                glColor3f(1.0, 1.0, 1.0);
-                        glBegin(GL_POINTS);
-                            glVertex2f(b->pos[0],      b->pos[1]);
-                            glVertex2f(b->pos[0]-1.0f, b->pos[1]);
-                            glVertex2f(b->pos[0]+1.0f, b->pos[1]);
-                            glVertex2f(b->pos[0],      b->pos[1]-1.0f);
-                            glVertex2f(b->pos[0],      b->pos[1]+1.0f);
-                glColor3f(0.8, 0.8, 0.8);
-                            glVertex2f(b->pos[0]-1.0f, b->pos[1]-1.0f);
-                            glVertex2f(b->pos[0]-1.0f, b->pos[1]+1.0f);
-                            glVertex2f(b->pos[0]+1.0f, b->pos[1]-1.0f);
-                            glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
-                        glEnd();
+                b->draw();
             }
 
         {

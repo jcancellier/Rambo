@@ -8,8 +8,11 @@ class Bullet {
 	float pos[3];
 	float vel[3]; 
 	float color[3];
+	float width; 
+	float height;
 	struct timespec time;
 	
+	void draw();
 	~Bullet();
 	Bullet(); 
 };

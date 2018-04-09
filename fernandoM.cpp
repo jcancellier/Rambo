@@ -40,11 +40,23 @@ Bullet::Bullet() {
     pos[1] = rambo.getCenterY();
     vel[0] = 10;
     vel[1] = 10;
+    height = 5.0;
+    width = height;
+
 }
 
 //Bullet Destructor
 Bullet::~Bullet() {
         cout << "destructor" << endl;
+}
+void Bullet::draw() {
+     glColor3f(1.0, 1.0, 1.0);
+                        glBegin(GL_QUADS);
+                        glVertex2i(pos[0] - (width / 2), pos[1] + (height/2));
+                        glVertex2i(pos[0] + (width / 2), pos[1] + (height/2));
+                        glVertex2i(pos[0] + (width / 2), pos[1] - (height/2));
+                        glVertex2i(pos[0] - (width / 2), pos[1] - (height/2));
+                        glEnd();
 }
 
 void spaceButton()
@@ -54,23 +66,13 @@ void spaceButton()
                         //shoot a bullet...
 
                         Bullet *b = &g.ramboBullets[nbullets];
-                        //convert angle to a vector
-                        //  float rad = ((360.0 + 90.0) / 360.0f) * 3.14 * 2.0;
-			            //cout << "rad = " << rad << endl;
-                        //convert angle to a vector
-			            //float xdir = cos(rad);
-			            // float ydir = sin(rad);
-                        //   cout << "xdir: " << xdir << endl;
-                        //   cout << "ydir: " << ydir << endl;
 
                         b->pos[0] = rambo.getCenterX();
                         b->pos[1] = rambo.getCenterY();
 
                         if (rambo.flipped){
-                            //b->vel[0] -= xdir*6.0f + rnd()*0.1;
                             if(!(b->vel[0] < 0.0)){
                                 b->vel[0] *= -1;
-
                             }
                             
                         }
@@ -101,13 +103,6 @@ void fernandoPhysics()
 
             b->pos[0] += b->vel[0];
             
-          /*  cout << "vel[0] = " << b->vel[0] << endl;
-            cout << "vel[1] = " << b->vel[1] << endl;
-            cout << "pos[0] = " << b->pos[0] << endl;
-            cout << "pos[1] = " << b->pos[1] << endl;
-            */
-          //cout << "NBULLETS: " << nbullets << endl;
-        
         //Check for collision with window edges and deleting if so
         if (b->pos[0] < 0.0) {
 			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
