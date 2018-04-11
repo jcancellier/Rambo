@@ -22,6 +22,7 @@ class Character{
 		HitBox *hitBox;
       
 	    Character(int);
+        Character();
 
 	    //Accessors
 	    float getCenterX() const;

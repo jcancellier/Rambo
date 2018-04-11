@@ -30,6 +30,7 @@ typedef Flt     Matrix[4][4];
 class Global{
     public:
 	int done;
+    unsigned long score;
 	int xres, yres;
 	int walk;
 	int walkFrame;

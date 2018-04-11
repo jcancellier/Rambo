@@ -20,12 +20,48 @@ extern float gravity;
 extern int gameState;
 extern int selectedOption;
 extern SpriteSheet img[];
+extern int MAX_ENEMIES;
+extern int nEnemies;
+extern Character* enemies;
+extern int nbullets;
 
 #define JUMP_STRENGTH 12
 #define INGAME 1
 
 void kuljitS_physics() 
 {
+    //check for bullet collision with enemy
+    for(int i=0; i<nbullets; i++){
+        for(int j=0; j<nEnemies; j++){
+            if(g.ramboBullets[i].pos[0] > enemies[j].hitBox->getLeft() &&
+                    g.ramboBullets[i].pos[0] < enemies[j].hitBox->getRight()){
+                enemies[j].centerY = enemies[nEnemies-1].centerY;
+                enemies[j].centerX = enemies[nEnemies-1].centerX;
+                enemies[j].velocityY = enemies[nEnemies-1].velocityY;
+                enemies[j].velocityX = enemies[nEnemies-1].velocityX;
+                enemies[j].flipped = enemies[nEnemies-1].flipped;
+                enemies[j].health = enemies[nEnemies-1].health;
+                g.score+=50;
+                nEnemies--;
+            }
+        }
+    }
+    
+    //create new enemies if not at max enemies
+    if(nEnemies < MAX_ENEMIES) {
+        enemies[nEnemies].centerY = 200;  
+        if(rnd() < .5) {
+            enemies[nEnemies].centerX = 0 - rnd()*50; 
+            enemies[nEnemies].velocityX = rnd()*2 + 2;  
+            enemies[nEnemies].flipped=false;
+        } else {
+            enemies[nEnemies].centerX = g.xres + rnd()*50;  
+            enemies[nEnemies].velocityX = -1*(rnd()*2 + 2);
+            enemies[nEnemies].flipped=true;  
+        } 
+        nEnemies++;   
+    }    
+
     //check for a jump
     if (keys[XK_a] && !rambo.jumping) {
         rambo.jumping = true;
@@ -39,12 +75,48 @@ void kuljitS_physics()
 
     //update rambo position
     rambo.centerY +=rambo.velocityY;
+    rambo.centerX +=rambo.velocityX;
+
+    //update enemy positions
+    for(int i=0; i<nEnemies; i++){
+        if(enemies[i].centerX < 0 && enemies[i].velocityX<0){
+            enemies[i].velocityX *= -1;
+            enemies[i].flipped=false;
+        }
+
+        if(enemies[i].centerX > g.xres && enemies[i].velocityX>0){
+            enemies[i].velocityX *= -1;
+            enemies[i].flipped=true;
+        }
+        enemies[i].centerX += enemies[i].velocityX;
+        enemies[i].centerY += enemies[i].velocityY;
+    }
 
     //velocity == 0 if standing on a platform
     if(rambo.centerY <= 200){
+        rambo.centerY = 200;
         rambo.velocityY = 0;
     }
 
+}
+
+void kuljitS_render(){
+    Rect r;
+    
+    //draw enemies + enemy ID's
+    for(int i=0; i<nEnemies; i++){
+        enemies[i].draw();
+        r.left = enemies[i].centerX;
+        r.bot = enemies[i].centerY + 100;
+        ggprint8b(&r, 16, 0xffffff, "%i", i);
+    }
+
+    //print score
+    r.bot = g.yres-20;
+    r.left = g.xres/2;
+    r.center = 1;
+    ggprint8b(&r, 16, 0xffffff, "Score: %i", g.score);
+    
 }
 
 double printRamboCenter(){
@@ -96,12 +168,15 @@ void printKuljitS(int x, int y, int size, int color){
 
 int acceptGameState(int selectedOption)
 {
+    //update game state to selected option in main menu
     switch(selectedOption){
         case 0:
             gameState = INGAME;
             break;
         case 1:
             //open HTML LEADERBOARD
+            system("firefox cs.csubak.edu");
+            //ShellExecute(NULL, "open", "cs.csubak.edu", NULL, NULL, SW_SHOWNORMAL);
             break;
         case 2:
             return 1;
@@ -144,9 +219,11 @@ int checkKeysMainMenu(int key, XEvent *e)
 
 void renderMainMenu()
 {
+    //set background to black
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    //draw rambo logo //////////////////////////////////////
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
     glBindTexture(GL_TEXTURE_2D, g.ramboLogoTexture);
@@ -184,6 +261,9 @@ void renderMainMenu()
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
 
+    ////////////////////////////////////////////
+
+    //display meny options
     Rect r;
     r.bot = g.yres/3;
     r.left = g.xres/2;

@@ -9,6 +9,7 @@ Global::Global() {
     delay = 0.1;
     drawWeaponDelay = 0.5;
     ramboBullets = new Bullet[30];
+    score = 0;    
 
     for (int i=0; i<20; i++) {
 	box[i][0] = rnd() * xres;

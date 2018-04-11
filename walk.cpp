@@ -49,6 +49,8 @@ bool display_hitbox = true;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
+int MAX_ENEMIES = 5;
+int nEnemies = 0;
 
 #define ALPHA 1
 
@@ -61,6 +63,7 @@ Global g;
 
 //Main Character (rambo)
 Character rambo(0);
+Character* enemies = new Character[MAX_ENEMIES];
 
 //Setup timers
 Timers timers;
@@ -428,6 +431,9 @@ int checkKeys(XEvent *e)
             rambo.setWidth(rambo.getWidth() * 2);
             break;
         case XK_Escape:
+            printf("EXITING GAME\n");
+//            delete [] enemies;
+  //          enemies = NULL;
             return 1;
             break;
 	case XK_space:
@@ -526,6 +532,8 @@ void render(void)
 
         //draw Rambo
         rambo.draw();
+        kuljitS_render();
+
         //rambo.drawOptimized();
             //DRAW BULLET 
             Bullet *b; 

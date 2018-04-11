@@ -6,6 +6,7 @@
 #ifndef KULJITS_H
 #define KULJITS_H
 void kuljitS_physics();
+void kuljitS_render();
 void printKuljitS(int, int, int, int);
 double printRamboCenter();
 double printRamborCenterOpt();

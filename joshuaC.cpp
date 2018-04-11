@@ -40,8 +40,28 @@ Character::Character(int ssIdx)
     aimUp = false;
     health = 4;
     spriteSheetIndex = ssIdx;
-    velocityX = 4;
-    velocityY = 4;
+    velocityX = 0;
+    velocityY = 0;
+    hitBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
+}
+
+Character::Character()
+{
+    centerX = 100;
+    centerY = 800;
+    height = .08 * (float)g.yres;
+    width = height * 0.7;
+    printf("%f\n", height);
+    frame = 0;
+    flipped = false;
+    jumping = false;
+    shooting = false;
+    prone = false;
+    aimUp = false;
+    health = 4;
+    spriteSheetIndex = 0;
+    velocityX = 0;
+    velocityY = 0;
     hitBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
 }
 
@@ -61,6 +81,13 @@ void HitBox::updateHitBox(int top, int bottom, int left, int right)
     this->right = right;
 }
 
+int HitBox::getLeft() const {
+    return(this->left);
+}
+
+int HitBox::getRight() const {
+    return(this->right);
+}
 void HitBox::draw()
 {
     glBegin(GL_LINE_LOOP);
@@ -122,7 +149,7 @@ void Character::draw()
     float ssWidth = (float)1.0/img[spriteSheetIndex].columns;
     float ssHeight = (float)1.0/img[spriteSheetIndex].rows;
     
-    int ix = rambo.frame % img[spriteSheetIndex].columns;
+    int ix = this->frame % img[spriteSheetIndex].columns;
     int iy = 0;
     
     //move to next row of spriteSheet (if available)
@@ -307,6 +334,7 @@ void joshuaCInput()
     //check if rambo is standing
     if (keys[XK_Right] == 0 && keys[XK_Left] == 0 && !rambo.jumping) {
         rambo.frame = 0;
+        rambo.velocityX = 0;
     }
     
     jumpAnimation();
@@ -325,7 +353,7 @@ void walkLeft()
     if (keys[XK_Left]) {
         
         rambo.flipped = true;
-        rambo.centerX -= rambo.velocityX;
+        rambo.velocityX = -4;
         if(rambo.shooting || keys[XK_space] || keys[XK_Up] || keys[XK_Down])
             return;
         timers.recordTime(&timers.timeCurrent);
@@ -348,7 +376,7 @@ void walkRight()
 {
     if (keys[XK_Right]) {
         rambo.flipped = false;
-        rambo.centerX += rambo.velocityX;
+        rambo.velocityX = 4;
         if(rambo.shooting || keys[XK_space] || keys[XK_Up] || keys[XK_Down])
             return;
         timers.recordTime(&timers.timeCurrent);
