@@ -16,7 +16,7 @@
 #include "fernandoM.h"
 #include "Bullet.h" 
 #include "fonts.h"
-
+ 
 //extern variables
 extern int flipped;
 extern float cx;
@@ -26,6 +26,9 @@ extern int keys[];
 extern Character rambo;
 extern SpriteSheet img[];
 extern int nbullets;
+extern int MAX_ENEMIES;
+extern int nEnemies;
+extern Character* enemies;
 
 using namespace std; 
 
@@ -82,8 +85,7 @@ void spaceButton()
                                 b->vel[0] *= -1;
                             }
     
-                            cout << "vel[0]" << b->vel[0] << endl;
-                        }
+                            }
 
                         b->color[0] = 1.0f;
                         b->color[1] = 1.0f;
@@ -122,6 +124,14 @@ void fernandoPhysics()
 		}
 		    i++;
 	}
+       
+}
+
+void deleteBullet(int n) {
+    
+    memcpy(&g.ramboBullets[n], &g.ramboBullets[nbullets-1], sizeof(Bullet));
+    nbullets--;
+                
 }
 double printGroupNumber() {
     

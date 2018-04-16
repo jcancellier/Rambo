@@ -24,6 +24,7 @@ extern int MAX_ENEMIES;
 extern int nEnemies;
 extern Character* enemies;
 extern int nbullets;
+extern void deleteBullet(int);
 
 #define JUMP_STRENGTH 12
 #define INGAME 1
@@ -35,6 +36,7 @@ void kuljitS_physics()
         for(int j=0; j<nEnemies; j++){
             if(g.ramboBullets[i].pos[0] > enemies[j].hitBox->getLeft() &&
                     g.ramboBullets[i].pos[0] < enemies[j].hitBox->getRight()){
+                        deleteBullet(i);
                 enemies[j].centerY = enemies[nEnemies-1].centerY;
                 enemies[j].centerX = enemies[nEnemies-1].centerX;
                 enemies[j].velocityY = enemies[nEnemies-1].velocityY;
