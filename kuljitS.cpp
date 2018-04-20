@@ -35,7 +35,9 @@ void kuljitS_physics()
     for(int i=0; i<nbullets; i++){
         for(int j=0; j<nEnemies; j++){
             if(g.ramboBullets[i].pos[0] > enemies[j].hitBox->getLeft() &&
-                    g.ramboBullets[i].pos[0] < enemies[j].hitBox->getRight()){
+                    g.ramboBullets[i].pos[0] < enemies[j].hitBox->getRight() &&
+                    g.ramboBullets[i].pos[1] > enemies[j].hitBox->getBottom() &&
+                    g.ramboBullets[i].pos[1] < enemies[j].hitBox->getTop()){
                         deleteBullet(i);
                 enemies[j].centerY = enemies[nEnemies-1].centerY;
                 enemies[j].centerX = enemies[nEnemies-1].centerX;
