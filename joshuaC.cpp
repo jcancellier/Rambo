@@ -88,6 +88,15 @@ int HitBox::getLeft() const {
 int HitBox::getRight() const {
     return(this->right);
 }
+
+int HitBox::getTop() const {
+    return(this->top);
+}
+
+int HitBox::getBottom() const {
+    return(this->bottom);
+}
+
 void HitBox::draw()
 {
     glBegin(GL_LINE_LOOP);
@@ -231,7 +240,7 @@ void Character::update()
     }
 
     if (flipped) {
-        if(rambo.prone){
+        if(prone){
             hitBox->updateHitBox(centerY - (height*.45),
                                  centerY - (height*1),
                                  centerX - (height*.5),      //13
@@ -244,7 +253,7 @@ void Character::update()
                                 centerX+(height/2)-(height*.2080)); //12
         }
     } else {
-        if(rambo.prone){
+        if(prone){
             hitBox->updateHitBox(centerY - (height*.45),
                                  centerY - (height*1), 
                                  centerX - (height*.5),  //5
