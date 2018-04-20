@@ -25,6 +25,9 @@ extern int nEnemies;
 extern Character* enemies;
 extern int nbullets;
 extern void deleteBullet(int);
+extern int done;
+
+double menuSelectionDelay = 0.15;
 
 #define JUMP_STRENGTH 12
 #define INGAME 1
@@ -38,7 +41,7 @@ void kuljitS_physics()
                     g.ramboBullets[i].pos[0] < enemies[j].hitBox->getRight() &&
                     g.ramboBullets[i].pos[1] > enemies[j].hitBox->getBottom() &&
                     g.ramboBullets[i].pos[1] < enemies[j].hitBox->getTop()){
-                        deleteBullet(i);
+                deleteBullet(i);
                 enemies[j].centerY = enemies[nEnemies-1].centerY;
                 enemies[j].centerX = enemies[nEnemies-1].centerX;
                 enemies[j].velocityY = enemies[nEnemies-1].velocityY;
@@ -183,6 +186,7 @@ int acceptGameState(int selectedOption)
             //ShellExecute(NULL, "open", "cs.csubak.edu", NULL, NULL, SW_SHOWNORMAL);
             break;
         case 2:
+            done=1;
             return 1;
         default:
             printf("FATAL ERROR IN GAME STATE\n\n");
@@ -198,27 +202,43 @@ void checkMouseMainMenu(XEvent *e)
     }
 }
 
-int checkKeysMainMenu(int key, XEvent *e)
+void checkKeysMainMenu()
 {
-    if (e->type == KeyPress) {
-        switch (key){
-            case XK_Up:
+        if (keys[XK_Up]) {
+            timers.recordTime(&timers.timeCurrent);
+            double timeSpan = timers.timeDiff(&timers.menuSelectionTime,
+                                                &timers.timeCurrent);
+            if (timeSpan > menuSelectionDelay) {
                 selectedOption = ((selectedOption-1)+3)%3;
-                break;
-            case XK_Down:
-                selectedOption = ((selectedOption+1)+3)%3;
-                break;
-            case XK_Return:
-                return acceptGameState(selectedOption);
-                break;
-            case XK_Right:
-                break;
-            case XK_Escape:
-                return 1;
-                break;
+                timers.recordTime(&timers.menuSelectionTime);
+            }
         }
-    }
-    return 0; 
+        
+        if (keys[XK_Down]) {
+            timers.recordTime(&timers.timeCurrent);
+            double timeSpan = timers.timeDiff(&timers.menuSelectionTime,
+                                                &timers.timeCurrent);
+            if (timeSpan > menuSelectionDelay) {
+                selectedOption = ((selectedOption+1)+3)%3;
+                timers.recordTime(&timers.menuSelectionTime);
+            }
+        }
+        
+        if (keys[XK_Return]) {
+            timers.recordTime(&timers.timeCurrent);
+            double timeSpan = timers.timeDiff(&timers.menuSelectionTime,
+                                                &timers.timeCurrent);
+            if (timeSpan > menuSelectionDelay) {
+                acceptGameState(selectedOption);
+                timers.recordTime(&timers.menuSelectionTime);
+            }
+        }
+
+        
+/*        case XK_Down:
+        case XK_Escape:
+            done = 1;
+            break;*/
 }
 
 void renderMainMenu()

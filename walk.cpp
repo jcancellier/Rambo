@@ -38,7 +38,7 @@
 
 //globals
 int nbullets = 0;
-int keys[65365];
+int keys[65536];
 //const float timeslice = 1.0f;
 float gravity = -0.5f;
 float cx = 100; //Sprite x postion
@@ -51,6 +51,7 @@ int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
 int MAX_ENEMIES = 5;
 int nEnemies = 0;
+int done = 0;
 
 #define ALPHA 1
 
@@ -179,7 +180,6 @@ int main(void)
 {
     initOpengl();
     init();
-    int done = 0;
     while (!done)
     {
         while (x11.getXPending())
@@ -354,10 +354,18 @@ int checkKeys(XEvent *e)
 {
 
     int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
+    if (e->type == KeyPress)
+    {
+        keys[key] = 1;
+    }
+    
+    if (e->type == KeyRelease)
+    {
+        keys[key] = 0;
+    }
     switch (gameState)
     {
     case MAINMENU:
-        return checkKeysMainMenu(key, e);
         break;
     case INGAME:
         //keyboard input?
@@ -377,15 +385,6 @@ int checkKeys(XEvent *e)
              }
              */
 
-        if (e->type == KeyPress)
-        {
-            keys[key] = 1;
-        }
-        
-        if (e->type == KeyRelease)
-        {
-            keys[key] = 0;
-        }
 
         //Toggle debug mode
         if (e->type == KeyPress && key == XK_h)
@@ -477,6 +476,7 @@ void physics(void)
     switch (gameState)
     {
     case MAINMENU:
+        checkKeysMainMenu();
         break;
     case INGAME:
         joshuaCInput();

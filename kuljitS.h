@@ -11,7 +11,7 @@ void printKuljitS(int, int, int, int);
 double printRamboCenter();
 double printRamborCenterOpt();
 void checkMouseMainMenu(XEvent*);
-int checkKeysMainMenu(int, XEvent*);
+void checkKeysMainMenu();
 void renderMainMenu();
 int acceptGameState(int);
 #endif
