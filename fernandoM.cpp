@@ -1,7 +1,7 @@
 /*
  Author: Fernando Montes De Oca
  Date: February 23, 2018
- */
+*/
 
 //includes
 #include <X11/keysym.h>
@@ -38,7 +38,7 @@ const int MAX_BULLETS = 30;
 //Bullet Constructor
 Bullet::Bullet() {
 
-    //define values
+    //define starter values
 	pos[0] = rambo.getCenterX();
     pos[1] = rambo.getCenterY();
     vel[0] = 10;
@@ -50,8 +50,9 @@ Bullet::Bullet() {
 
 //Bullet Destructor
 Bullet::~Bullet() {
-        cout << "destructor" << endl;
+
 }
+
 void Bullet::draw() {
      glColor3f(1.0, 1.0, 1.0);
                         glBegin(GL_QUADS);
@@ -62,48 +63,56 @@ void Bullet::draw() {
                         glEnd();
 }
 
-void spaceButton()
-{
+void spaceButton() {
 	if (keys[XK_space]) {
+
+		struct timespec bt;
+		clock_gettime(CLOCK_REALTIME, &bt);
+		double ts = timers.timeDiff(&g.bulletTimer, &bt);
+
+        if (ts > 0.1) {
+			timers.timeCopy(&g.bulletTimer, &bt);
+
 	        if (nbullets < MAX_BULLETS) {
-                        //shoot a bullet...
+                        
+                //shoot a bullet...
+                Bullet *b = &g.ramboBullets[nbullets];
 
-                        Bullet *b = &g.ramboBullets[nbullets];
+                b->pos[0] = rambo.getCenterX();
+                b->pos[1] = rambo.getCenterY();
 
-                        b->pos[0] = rambo.getCenterX();
-                        b->pos[1] = rambo.getCenterY();
-
-                        if (rambo.flipped){
-                            if(!(b->vel[0] < 0.0)){
-                                b->vel[0] *= -1;
-                            }
+                if (rambo.flipped) {
                             
-                        }
-                        else {
-                            if((b->vel[0] < 0.0))
-                            {
-                                b->vel[0] *= -1;
-                            }
-    
-                            }
+                    if(!(b->vel[0] < 0.0)) {
+                                
+                        b->vel[0] *= -1;
 
-                        b->color[0] = 1.0f;
-                        b->color[1] = 1.0f;
-                        b->color[2] = 1.0f; 
-                        nbullets++;
+                    }            
                 }
-        }	
-
+                else {
+                    
+                    if ((b->vel[0] < 0.0)) {
+                        b->vel[0] *= -1;
+                    }
+                }        
+                b->color[0] = 1.0f;
+                b->color[1] = 1.0f;
+                b->color[2] = 1.0f; 
+                nbullets++;
+            }
+        }
+    }	
 }
-void fernandoPhysics()
-{
-        //Update bullet positions
+
+void fernandoPhysics() {
+
 	int i = 0;
+    //Update bullet positions
 	while (i < nbullets) {
 
-		    Bullet *b = &g.ramboBullets[i];
+		Bullet *b = &g.ramboBullets[i];
 
-            b->pos[0] += b->vel[0];
+        b->pos[0] += b->vel[0];
             
         //Check for collision with window edges and deleting if so
         if (b->pos[0] < 0.0) {
@@ -122,9 +131,9 @@ void fernandoPhysics()
 			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
 			nbullets--;
 		}
-		    i++;
-	}
-       
+		
+        i++;
+	}      
 }
 
 void deleteBullet(int n) {
@@ -133,6 +142,7 @@ void deleteBullet(int n) {
     nbullets--;
                 
 }
+
 double printGroupNumber() {
     
     static double td = 0.0; 
@@ -145,9 +155,9 @@ double printGroupNumber() {
     r.left = g.xres/4;
 
     for(int i = 0; i < 100000; i++) {
-
-    r.center = 0;
+        r.center = 0;
     }
+
     ggprint8b(&r, 16, 0xffff47, "Group 2");
 
     clock_gettime(CLOCK_REALTIME, &end);

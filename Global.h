@@ -36,6 +36,7 @@ class Global{
 	int walkFrame;
 	double delay;
 	double drawWeaponDelay;
+	struct timespec bulletTimer;
 	Bullet *ramboBullets;
 	GLuint walkTexture;
 	GLuint ramboLogoTexture;

@@ -10,7 +10,7 @@ Global::Global() {
     drawWeaponDelay = 0.5;
     ramboBullets = new Bullet[30];
     score = 0;    
-
+	clock_gettime(CLOCK_REALTIME, &bulletTimer);
     for (int i=0; i<20; i++) {
 	box[i][0] = rnd() * xres;
 	box[i][1] = rnd() * (yres-220) + 220.0;
