@@ -165,7 +165,7 @@ void Character::draw()
     int iy = 0;
     
     //move to next row of spriteSheet (if available)
-    if(frame >= img[spriteSheetIndex].columns) {
+    if (frame >= img[spriteSheetIndex].columns) {
         iy = 1;
     }
 
@@ -198,8 +198,9 @@ void Character::draw()
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
 
-    if(display_hitbox)
+    if (display_hitbox) {
         hitBox->draw();
+    }
     update();
     
     #ifdef PROFILING
@@ -243,20 +244,20 @@ void Character::update()
     }
 
     if (flipped) {
-        if(prone){
+        if (prone) {
             hitBox->updateHitBox(centerY - (height*.45),
                                  centerY - (height*1),
                                  centerX - (height*.5),      //13
                                  centerX + (height / 2) - (height * .2080));  //12
         }
-        else{ //standing
+        else { //standing
             hitBox->updateHitBox(centerY+(height/2),
                                 centerY-(height/2)-(height*.486111), //28
                                 centerX-(width/2)+(height*.08), //13
                                 centerX+(height/2)-(height*.2080)); //12
         }
     } else {
-        if(prone){
+        if (prone) {
             hitBox->updateHitBox(centerY - (height*.45),
                                  centerY - (height*1), 
                                  centerX - (height*.5),  //5
@@ -366,7 +367,7 @@ void walkLeft()
         
         rambo.flipped = true;
         rambo.velocityX = -4;
-        if(rambo.shooting || keys[XK_space] || keys[XK_Up] || keys[XK_Down])
+        if (rambo.shooting || keys[XK_space] || keys[XK_Up] || keys[XK_Down])
             return;
         timers.recordTime(&timers.timeCurrent);
         //record time between frames
@@ -413,7 +414,7 @@ void jumpAnimation()
     } else {
         rambo.jumping = false;
     }
-    
+
     if (keys[XK_a] || rambo.jumping) {
         
         //check if in walk state
@@ -442,10 +443,11 @@ void shootAndRunAnimation()
     static double timeDifference = 0.0;
     struct timespec start, end;
     clock_gettime(CLOCK_REALTIME, &start);
-    if(keys[XK_space])
+    if (keys[XK_space])
         timeDifference = 0;
-    if((keys[XK_space] && !rambo.jumping && rambo.frame != 0 && !keys[XK_Up] && !keys[XK_Down]) 
-    || (rambo.shooting && !rambo.jumping && !rambo.angleUp && !rambo.angleDown && !rambo.aimUp && !rambo.prone)){
+    if ((keys[XK_space] && !rambo.jumping && rambo.frame != 0 && !keys[XK_Up] && !keys[XK_Down]) 
+        || (rambo.shooting && !rambo.jumping && !rambo.angleUp 
+        && !rambo.angleDown && !rambo.aimUp && !rambo.prone)) {
 
         rambo.shootingStraight = true;
 
@@ -495,7 +497,7 @@ void shootAndRunAnimation()
         //not doing this makes the shooting look glitchy
         clock_gettime(CLOCK_REALTIME, &end);
         timeDifference += timers.timeDiff(&start, &end);
-        if(timeDifference > .00002){
+        if (timeDifference > .00002) {
             rambo.shooting = false;
             timeDifference = 0;
         }   
@@ -508,8 +510,7 @@ void shootAndRunAnimation()
 
 void angleUpAnimation()
 {
-    if (((keys[XK_Right] && keys[XK_Up]) || (keys[XK_Left] && keys[XK_Up])) && !rambo.isJumping())
-    {
+    if (((keys[XK_Right] && keys[XK_Up]) || (keys[XK_Left] && keys[XK_Up])) && !rambo.isJumping()) {
         rambo.angleUp = true;
         //start rambo in correct position
         //TODO: must update this switch statement as more
@@ -544,8 +545,7 @@ void angleUpAnimation()
         //record time between frames
         double timeSpan = timers.timeDiff(&timers.walkTime,
                                           &timers.timeCurrent);
-        if (timeSpan > g.delay)
-        {
+        if (timeSpan > g.delay) {
             //advance frame
             ++rambo.frame;
             if (rambo.frame >= 17)
@@ -554,22 +554,19 @@ void angleUpAnimation()
             }
             timers.recordTime(&timers.walkTime);
         }
-    }
-    else {
+    } else {
         rambo.angleUp = false;
     }
 }
 
 void angleDownAnimation()
 {
-    if (((keys[XK_Right] && keys[XK_Down]) || (keys[XK_Left] && keys[XK_Down])) && !rambo.isJumping())
-    {
+    if (((keys[XK_Right] && keys[XK_Down]) || (keys[XK_Left] && keys[XK_Down])) && !rambo.isJumping()) {
         rambo.angleDown = true;
         //start rambo in correct position
         //TODO: must update this switch statement as more
         //animations are added
-        switch (rambo.frame)
-        {
+        switch (rambo.frame) {
         case 1:
         case 4:
         case 12:
@@ -601,12 +598,10 @@ void angleDownAnimation()
         //record time between frames
         double timeSpan = timers.timeDiff(&timers.walkTime,
                                           &timers.timeCurrent);
-        if (timeSpan > g.delay)
-        {
+        if (timeSpan > g.delay) {
             //advance frame
             ++rambo.frame;
-            if (rambo.frame >= 20)
-            {
+            if (rambo.frame >= 20) {
                 rambo.frame = 17;
             }
             timers.recordTime(&timers.walkTime);
@@ -618,7 +613,10 @@ void angleDownAnimation()
 
 void proneAnimation()
 {
-    if ((rambo.frame == 0 || rambo.prone) && keys[XK_Down] && !keys[XK_Up] && !keys[XK_Left] && !keys[XK_Right] && !rambo.isJumping()) {
+    if ((rambo.frame == 0 || rambo.prone) 
+        && keys[XK_Down] && !keys[XK_Up] && !keys[XK_Left]
+        && !keys[XK_Right] && !rambo.isJumping()) {
+
         rambo.setFrame(20);
         rambo.prone = true;
     } else {
@@ -642,7 +640,8 @@ void aimUpAnimation()
 }
 
 //This function logs rambo's various shooting directions to the debug menu
-void printJoshuaC(int x, int y, int size, int color){
+void printJoshuaC(int x, int y, int size, int color)
+{
     Rect r;
     r.bot = y;
     r.left = x-50;
@@ -651,17 +650,16 @@ void printJoshuaC(int x, int y, int size, int color){
     ggprint8b(&r, size, 0, "Rambo shooting state: ");
     r.left = x;
     r.bot = y-20;
-    if(rambo.jumping)
+    if (rambo.jumping)
         ggprint8b(&r, size, color, "jumping");
-    if(rambo.aimUp)
+    if (rambo.aimUp)
         ggprint8b(&r, size, color, "Aiming up");
-    if(rambo.prone)
+    if (rambo.prone)
         ggprint8b(&r, size, color, "Prone");
-    if(rambo.angleUp)
+    if (rambo.angleUp)
         ggprint8b(&r, size, color, "Angle up");
-    if(rambo.angleDown)
+    if (rambo.angleDown)
         ggprint8b(&r, size, color, "Angle down");
-    if(rambo.shootingStraight)
+    if (rambo.shootingStraight)
         ggprint8b(&r, size, color, "Shooting straight");
-
 }
