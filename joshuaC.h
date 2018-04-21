@@ -10,5 +10,6 @@ void angleUpAnimation();
 void angleDownAnimation();
 void proneAnimation();
 void aimUpAnimation();
+void printJoshuaC(int, int, int, int);
 
 #endif

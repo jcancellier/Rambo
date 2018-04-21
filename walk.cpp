@@ -571,6 +571,8 @@ void render(void)
             ggprint8b(&r, 16, c, "h key to toggle debug mode");
             printKuljitS(g.xres - 100, g.yres - 20, 16, 0);
             printFernandoM(12, 0);
+            printJoshuaC(g.xres/2, g.yres-100, 30, 255);
+
         }
         break;
     default:
