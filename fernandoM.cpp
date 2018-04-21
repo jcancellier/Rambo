@@ -42,7 +42,7 @@ Bullet::Bullet() {
 	pos[0] = rambo.getCenterX();
     pos[1] = rambo.getCenterY();
     vel[0] = 10;
-    vel[1] = 10;
+    vel[1] = 0;
     height = 5.0;
     width = height;
 
@@ -70,7 +70,7 @@ void spaceButton() {
 		clock_gettime(CLOCK_REALTIME, &bt);
 		double ts = timers.timeDiff(&g.bulletTimer, &bt);
 
-        if (ts > 0.1) {
+        if (ts > 0.35) {
 			timers.timeCopy(&g.bulletTimer, &bt);
 
 	        if (nbullets < MAX_BULLETS) {

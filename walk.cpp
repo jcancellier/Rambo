@@ -435,9 +435,6 @@ int checkKeys(XEvent *e)
   //          enemies = NULL;
             return 1;
             break;
-	case XK_space:
-	    spaceButton();
-	    break;
         default:
             break;
         }
@@ -482,6 +479,7 @@ void physics(void)
         joshuaCInput();
         kuljitS_physics();
         fernandoPhysics();
+        spaceButton();
         break;
     default:
         printf("FATAL ERROR IN GAME STATE\n\n");
