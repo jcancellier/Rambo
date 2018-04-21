@@ -38,10 +38,11 @@ const int MAX_BULLETS = 30;
 //Bullet Constructor
 Bullet::Bullet() {
 
+    velocityValue = 10;
     //define starter values
 	pos[0] = rambo.getCenterX();
     pos[1] = rambo.getCenterY();
-    vel[0] = 10;
+    vel[0] = 0;
     vel[1] = 0;
     height = 5.0;
     width = height;
@@ -66,12 +67,12 @@ void Bullet::draw() {
 void spaceButton() {
 	if (keys[XK_space]) {
 
-		struct timespec bt;
-		clock_gettime(CLOCK_REALTIME, &bt);
-		double ts = timers.timeDiff(&g.bulletTimer, &bt);
+		struct timespec newBT;
+		clock_gettime(CLOCK_REALTIME, &newBT);
+		double seconds = timers.timeDiff(&g.bulletTimer, &newBT);
 
-        if (ts > 0.35) {
-			timers.timeCopy(&g.bulletTimer, &bt);
+        if (seconds > 0.35) {
+			timers.timeCopy(&g.bulletTimer, &newBT);
 
 	        if (nbullets < MAX_BULLETS) {
                         
@@ -81,8 +82,69 @@ void spaceButton() {
                 b->pos[0] = rambo.getCenterX();
                 b->pos[1] = rambo.getCenterY();
 
-                if (rambo.flipped) {
-                            
+                    if(rambo.angleUp){ 
+	                    b->vel[0] = b->velocityValue;
+	                    b->vel[1] = b->velocityValue;
+                    }
+                    else if (rambo.angleDown) { 
+                        b->vel[0] = b->velocityValue;
+	                    b->vel[1] = -b->velocityValue;
+
+                    }
+                    else if (rambo.shootingStraight) {
+                        b->vel[0] = b->velocityValue;
+                        b->vel[1] = 0;
+                    }
+                    else if (rambo.jumping) {
+                        	if(keys[XK_Left]){
+		                        if(keys[XK_Up]){
+			                        b->vel[0] = b->velocityValue;
+			                        b->vel[1] = b->velocityValue;
+                                }
+		                        else if (keys[XK_Down]){ 
+			                        b->vel[0] = b->velocityValue;
+			                        b->vel[1] = -b->velocityValue;
+                                }
+		                        else {//shoot straight
+			                        b->vel[0] = b->velocityValue;
+			                        b->vel[1] = 0;
+                                }
+                            }
+                            else if(keys[XK_Right]){
+		                        if (keys[XK_Up]) { 
+			                        b->vel[0] = b->velocityValue;
+			                        b->vel[1] = b->velocityValue;
+                                }
+		                        else if(keys[XK_Down]) {
+			                        b->vel[0] = b->velocityValue;
+			                        b->vel[1] = -b->velocityValue;
+                                }
+		                        else { 
+                                    //shoot straight
+			                        b->vel[0] = b->velocityValue;
+			                        b->vel[1] = 0;
+                                }
+                            }
+                            else if(keys[XK_Up]) {
+		                        b->vel[0] = 0;
+		                        b->vel[1] = b->velocityValue;
+                            }
+                            else if(keys[XK_Down]){ 
+		                        b->vel[0] = 0;
+		                        b->vel[1] = -b->velocityValue;
+                            }
+                            else {
+                                b->vel[0] = b->velocityValue;
+		                        b->vel[1] = 0;
+                            }
+                    }
+                            else { 
+	                            b->vel[0] = b->velocityValue;
+	                            b->vel[1] = 0;
+                            }
+                    
+                    if (rambo.flipped) {
+
                     if(!(b->vel[0] < 0.0)) {
                                 
                         b->vel[0] *= -1;
@@ -104,6 +166,7 @@ void spaceButton() {
     }	
 }
 
+
 void fernandoPhysics() {
 
 	int i = 0;
@@ -113,6 +176,7 @@ void fernandoPhysics() {
 		Bullet *b = &g.ramboBullets[i];
 
         b->pos[0] += b->vel[0];
+        b->pos[1] += b->vel[1];
             
         //Check for collision with window edges and deleting if so
         if (b->pos[0] < 0.0) {

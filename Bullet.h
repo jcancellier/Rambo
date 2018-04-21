@@ -10,6 +10,7 @@ class Bullet {
 	float color[3];
 	float width; 
 	float height;
+	float velocityValue;
 	struct timespec time;
 	
 	void draw();
