@@ -36,8 +36,8 @@ using namespace std;
 const int MAX_BULLETS = 30;
 
 //Bullet Constructor
-Bullet::Bullet() {
-
+Bullet::Bullet() 
+{
     velocityValue = 10;
     //define starter values
 	pos[0] = rambo.getCenterX();
@@ -46,117 +46,93 @@ Bullet::Bullet() {
     vel[1] = 0;
     height = 5.0;
     width = height;
-
 }
 
 //Bullet Destructor
-Bullet::~Bullet() {
-
+Bullet::~Bullet() 
+{
 }
 
-void Bullet::draw() {
+void Bullet::draw() 
+{
      glColor3f(1.0, 1.0, 1.0);
-                        glBegin(GL_QUADS);
-                        glVertex2i(pos[0] - (width / 2), pos[1] + (height/2));
-                        glVertex2i(pos[0] + (width / 2), pos[1] + (height/2));
-                        glVertex2i(pos[0] + (width / 2), pos[1] - (height/2));
-                        glVertex2i(pos[0] - (width / 2), pos[1] - (height/2));
-                        glEnd();
+        glBegin(GL_QUADS);
+        glVertex2i(pos[0] - (width / 2), pos[1] + (height/2));
+        glVertex2i(pos[0] + (width / 2), pos[1] + (height/2));
+        glVertex2i(pos[0] + (width / 2), pos[1] - (height/2));
+        glVertex2i(pos[0] - (width / 2), pos[1] - (height/2));
+        glEnd();
 }
-
 void spaceButton() {
 	if (keys[XK_space]) {
-
 		struct timespec newBT;
 		clock_gettime(CLOCK_REALTIME, &newBT);
 		double seconds = timers.timeDiff(&g.bulletTimer, &newBT);
 
         if (seconds > 0.35) {
 			timers.timeCopy(&g.bulletTimer, &newBT);
-
-	        if (nbullets < MAX_BULLETS) {
-                        
+	        if (nbullets < MAX_BULLETS) {   
                 //shoot a bullet...
                 Bullet *b = &g.ramboBullets[nbullets];
-
                 b->pos[0] = rambo.getCenterX();
                 b->pos[1] = rambo.getCenterY();
 
-                    if(rambo.angleUp){ 
-	                    b->vel[0] = b->velocityValue;
-	                    b->vel[1] = b->velocityValue;
-                    }
-                    else if (rambo.angleDown) { 
+                if(rambo.angleUp){ 
+	                b->vel[0] = b->velocityValue;
+	                b->vel[1] = b->velocityValue;
+                } else if (rambo.angleDown) { 
                         b->vel[0] = b->velocityValue;
 	                    b->vel[1] = -b->velocityValue;
-
-                    }
-                    else if (rambo.shootingStraight) {
+                } else if (rambo.shootingStraight) {
                         b->vel[0] = b->velocityValue;
                         b->vel[1] = 0;
-                    }
-                    else if (rambo.aimUp) {
+                } else if (rambo.aimUp) {
                         b->vel[0] = 0;
                         b->vel[1] = b->velocityValue;
-                    }
-                    else if (rambo.jumping) {
-                        	if(keys[XK_Left]){
-		                        if(keys[XK_Up]){
-			                        b->vel[0] = b->velocityValue;
-			                        b->vel[1] = b->velocityValue;
-                                }
-		                        else if (keys[XK_Down]){ 
-			                        b->vel[0] = b->velocityValue;
-			                        b->vel[1] = -b->velocityValue;
-                                }
-		                        else {//shoot straight
-			                        b->vel[0] = b->velocityValue;
-			                        b->vel[1] = 0;
-                                }
-                            }
-                            else if(keys[XK_Right]){
-		                        if (keys[XK_Up]) { 
-			                        b->vel[0] = b->velocityValue;
-			                        b->vel[1] = b->velocityValue;
-                                }
-		                        else if(keys[XK_Down]) {
+                } else if (rambo.jumping) {
+                    if(keys[XK_Left]){
+		                if(keys[XK_Up]){
+			                b->vel[0] = b->velocityValue;
+			                b->vel[1] = b->velocityValue;
+                        } else if (keys[XK_Down]){ 
+			                b->vel[0] = b->velocityValue;
+			                b->vel[1] = -b->velocityValue;
+                        } else {//shoot straight
+			                b->vel[0] = b->velocityValue;
+			                b->vel[1] = 0;
+                        }
+                    } else if(keys[XK_Right]){
+		                if (keys[XK_Up]) { 
+			                b->vel[0] = b->velocityValue;
+			                b->vel[1] = b->velocityValue;
+                        } else if(keys[XK_Down]) {
 			                        b->vel[0] = b->velocityValue;
 			                        b->vel[1] = -b->velocityValue;
-                                }
-		                        else { 
+                        } else { 
                                     //shoot straight
 			                        b->vel[0] = b->velocityValue;
 			                        b->vel[1] = 0;
-                                }
-                            }
-                            else if(keys[XK_Up]) {
-		                        b->vel[0] = 0;
-		                        b->vel[1] = b->velocityValue;
-                            }
-                            else if(keys[XK_Down]){ 
-		                        b->vel[0] = 0;
-		                        b->vel[1] = -b->velocityValue;
-                            }
-                            else {
-                                b->vel[0] = b->velocityValue;
-		                        b->vel[1] = 0;
-                            }
+                        }
+                    } else if(keys[XK_Up]) {
+		                    b->vel[0] = 0;
+		                    b->vel[1] = b->velocityValue;
+                    } else if(keys[XK_Down]) { 
+		                    b->vel[0] = 0;
+		                    b->vel[1] = -b->velocityValue;
+                    } else {
+                            b->vel[0] = b->velocityValue;
+		                    b->vel[1] = 0;
                     }
-                            else { 
-	                            b->vel[0] = b->velocityValue;
-	                            b->vel[1] = 0;
-                            }
-                    
-                    if (rambo.flipped) {
-
-                    if(!(b->vel[0] < 0.0)) {
-                                
-                        b->vel[0] *= -1;
-
-                    }            
+                } else { 
+	                    b->vel[0] = b->velocityValue;
+	                    b->vel[1] = 0;
                 }
-                else {
-                    
+                
+                if (rambo.flipped) {
+                    if(!(b->vel[0] < 0.0)) {        
+                        b->vel[0] *= -1;
+                    }            
+                } else {
                     if ((b->vel[0] < 0.0)) {
                         b->vel[0] *= -1;
                     }
@@ -170,15 +146,12 @@ void spaceButton() {
     }	
 }
 
-
-void fernandoPhysics() {
-
+void fernandoPhysics() 
+{
 	int i = 0;
     //Update bullet positions
 	while (i < nbullets) {
-
 		Bullet *b = &g.ramboBullets[i];
-
         b->pos[0] += b->vel[0];
         b->pos[1] += b->vel[1];
             
@@ -204,17 +177,17 @@ void fernandoPhysics() {
 	}      
 }
 
-void deleteBullet(int n) {
+void deleteBullet(int n) 
+{
     
     memcpy(&g.ramboBullets[n], &g.ramboBullets[nbullets-1], sizeof(Bullet));
     nbullets--;
                 
 }
 
-double printGroupNumber() {
-    
-
- static double td = 0.0; 
+double printGroupNumber() 
+{
+    static double td = 0.0; 
     #ifdef PROFILING
    //////////////////////////////////////////////
     struct timespec start, end;
@@ -239,7 +212,6 @@ double printGroupNumber() {
 
  
 }
-
 double printGroupNumberOpt(){
  
     static double td = 0.0;
@@ -263,8 +235,8 @@ double printGroupNumberOpt(){
 
 }
 
-void printFernandoM(int size, int color) {
-
+void printFernandoM(int size, int color) 
+{
 	Rect r;
 	r.bot = g.yres - 300;
     	r.left = 30;
