@@ -315,3 +315,65 @@ void renderlevel(){
 	col = (col+1) % lev.ncols;
     }
 }
+/*
+void Lives(int xres, int yres)
+{
+//generate a healthbar on top left of the screen
+//dynamic based on mainChar.health
+	Rect r;
+	unsigned int c = 0x002d88d8;
+	r.bot = yres-30;
+	r.left = (xres/xres) + 70;
+	r.center = 0;
+	ggprint8b(&r, 16, c, "Lives");
+	Shape s;
+	Shape box[200];
+	for (int i = 0; i < mainChar.health; i++) {
+		box[i].width = 3;
+		box[i].height = 10;
+		box[i].center.x = 72 + (i*6);
+		box[i].center.y = 555;
+		box[i].center.z = 0;
+		s = box[i];
+		glPushMatrix();
+		glColor3ub(255, 0, 255);
+		glTranslatef(s.center.x, s.center.y, s.center.z);
+		float w = s.width;
+		float h = s.height;
+		glBegin(GL_QUADS);
+			glVertex2i(-w, -h);
+			glVertex2i(-w, h);
+			glVertex2i(w, h);
+			glVertex2i(w, -h);
+			glEnd();
+		glPopMatrix();
+	}
+}
+
+void renderTimeDisplay()
+{
+	//Renders Time in Seconds and Minutes
+	//Uses timers to keep track
+	Rect r;
+	unsigned int c = 0x002d88d8;
+	r.bot = gl.yres - 30;
+	r.left = (gl.xres/2);
+	r.center = 0;
+	if (gl.state == STATE_GAMEPLAY) {
+		timers.recordTime(&timers.timeCurrent);
+		double timeSpan = timers.timeDiff(&timers.gameTime, &timers.timeCurrent);
+		if (timeSpan > gl.gameDelay) {
+			//advance
+			++gl.gameFrame;
+			timers.recordTime(&timers.gameTime);
+		}
+		if (gl.gameFrame >= 60)
+		{
+			++gl.minutes;
+			gl.gameFrame = 0;
+		}
+	}
+	ggprint16(&r, 20, c, "TIME");
+	ggprint16(&r, 32, c, "%d:%02i", gl.minutes, gl.gameFrame);
+}
+*/ 
