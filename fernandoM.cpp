@@ -1,6 +1,7 @@
 /*
  Author: Fernando Montes De Oca
- Date: February 23, 2018
+ First Modified Date: February 23, 2018
+ Last Modified Date: April 21, 2018
 */
 
 //includes
@@ -55,14 +56,15 @@ Bullet::~Bullet()
 
 void Bullet::draw() 
 {
-     glColor3f(1.0, 1.0, 1.0);
-        glBegin(GL_QUADS);
-        glVertex2i(pos[0] - (width / 2), pos[1] + (height/2));
-        glVertex2i(pos[0] + (width / 2), pos[1] + (height/2));
-        glVertex2i(pos[0] + (width / 2), pos[1] - (height/2));
-        glVertex2i(pos[0] - (width / 2), pos[1] - (height/2));
-        glEnd();
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_QUADS);
+    glVertex2i(pos[0] - (width / 2), pos[1] + (height/2));
+    glVertex2i(pos[0] + (width / 2), pos[1] + (height/2));
+    glVertex2i(pos[0] + (width / 2), pos[1] - (height/2));
+    glVertex2i(pos[0] - (width / 2), pos[1] - (height/2));
+    glEnd();
 }
+
 void spaceButton() {
 	if (keys[XK_space]) {
 		struct timespec newBT;
@@ -77,7 +79,7 @@ void spaceButton() {
                 b->pos[0] = rambo.getCenterX();
                 b->pos[1] = rambo.getCenterY();
 
-                if(rambo.angleUp){ 
+                if (rambo.angleUp) { 
 	                b->vel[0] = b->velocityValue;
 	                b->vel[1] = b->velocityValue;
                 } else if (rambo.angleDown) { 
@@ -90,22 +92,22 @@ void spaceButton() {
                         b->vel[0] = 0;
                         b->vel[1] = b->velocityValue;
                 } else if (rambo.jumping) {
-                    if(keys[XK_Left]){
-		                if(keys[XK_Up]){
+                    if (keys[XK_Left]) {
+		                if (keys[XK_Up]) {
 			                b->vel[0] = b->velocityValue;
 			                b->vel[1] = b->velocityValue;
-                        } else if (keys[XK_Down]){ 
+                        } else if (keys[XK_Down]) { 
 			                b->vel[0] = b->velocityValue;
 			                b->vel[1] = -b->velocityValue;
                         } else {//shoot straight
 			                b->vel[0] = b->velocityValue;
 			                b->vel[1] = 0;
                         }
-                    } else if(keys[XK_Right]){
+                    } else if (keys[XK_Right]) {
 		                if (keys[XK_Up]) { 
 			                b->vel[0] = b->velocityValue;
 			                b->vel[1] = b->velocityValue;
-                        } else if(keys[XK_Down]) {
+                        } else if (keys[XK_Down]) {
 			                        b->vel[0] = b->velocityValue;
 			                        b->vel[1] = -b->velocityValue;
                         } else { 
@@ -113,10 +115,10 @@ void spaceButton() {
 			                        b->vel[0] = b->velocityValue;
 			                        b->vel[1] = 0;
                         }
-                    } else if(keys[XK_Up]) {
+                    } else if (keys[XK_Up]) {
 		                    b->vel[0] = 0;
 		                    b->vel[1] = b->velocityValue;
-                    } else if(keys[XK_Down]) { 
+                    } else if (keys[XK_Down]) { 
 		                    b->vel[0] = 0;
 		                    b->vel[1] = -b->velocityValue;
                     } else {
@@ -159,30 +161,24 @@ void fernandoPhysics()
         if (b->pos[0] < 0.0) {
 			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
 			nbullets--;
-		}
-		else if (b->pos[0] > (float)g.xres) {
+		} else if (b->pos[0] > (float)g.xres) {
+			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
+			nbullets--;
+		} else if (b->pos[1] < 0.0) {
+			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
+			nbullets--;
+		} else if (b->pos[1] > (float)g.yres) {
 			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
 			nbullets--;
 		}
-		else if (b->pos[1] < 0.0) {
-			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
-			nbullets--;
-		}
-		else if (b->pos[1] > (float)g.yres) {
-			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
-			nbullets--;
-		}
-		
         i++;
 	}      
 }
 
 void deleteBullet(int n) 
 {
-    
     memcpy(&g.ramboBullets[n], &g.ramboBullets[nbullets-1], sizeof(Bullet));
-    nbullets--;
-                
+    nbullets--;          
 }
 
 double printGroupNumber() 

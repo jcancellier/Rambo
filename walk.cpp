@@ -83,15 +83,13 @@ class X11_wrapper
         XSetWindowAttributes swa;
         setupScreenRes(g.xres, g.yres);
         dpy = XOpenDisplay(NULL);
-        if (dpy == NULL)
-        {
+        if (dpy == NULL) {
             printf("\n\tcannot connect to X server\n\n");
             exit(EXIT_FAILURE);
         }
         Window root = DefaultRootWindow(dpy);
         XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
-        if (vi == NULL)
-        {
+        if (vi == NULL) {
             printf("\n\tno appropriate visual found\n\n");
             exit(EXIT_FAILURE);
         }
@@ -180,10 +178,8 @@ int main(void)
 {
     initOpengl();
     init();
-    while (!done)
-    {
-        while (x11.getXPending())
-        {
+    while (!done) {
+        while (x11.getXPending()) {
             XEvent e = x11.getXNextEvent();
             x11.checkResize(&e);
             checkMouse(&e);
@@ -305,10 +301,6 @@ void initOpengl(void)
     //-------------------------------------------------------------------------
 }
 
-void init()
-{
-}
-
 void checkMouse(XEvent *e)
 {
     switch (gameState)
@@ -322,23 +314,18 @@ void checkMouse(XEvent *e)
         static int savex = 0;
         static int savey = 0;
         //
-        if (e->type == ButtonRelease)
-        {
+        if (e->type == ButtonRelease) {
             return;
         }
-        if (e->type == ButtonPress)
-        {
-            if (e->xbutton.button == 1)
-            {
+        if (e->type == ButtonPress) {
+            if (e->xbutton.button == 1) {
                 //Left button is down
             }
-            if (e->xbutton.button == 3)
-            {
+            if (e->xbutton.button == 3) {
                 //Right button is down
             }
         }
-        if (savex != e->xbutton.x || savey != e->xbutton.y)
-        {
+        if (savex != e->xbutton.x || savey != e->xbutton.y) {
             //Mouse moved
             savex = e->xbutton.x;
             savey = e->xbutton.y;
@@ -354,13 +341,10 @@ int checkKeys(XEvent *e)
 {
 
     int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
-    if (e->type == KeyPress)
-    {
+    if (e->type == KeyPress) {
         keys[key] = 1;
     }
-    
-    if (e->type == KeyRelease)
-    {
+    if (e->type == KeyRelease) {
         keys[key] = 0;
     }
     switch (gameState)
@@ -455,8 +439,7 @@ Flt VecNormalize(Vec vec)
     Flt ylen = vec[1];
     Flt zlen = vec[2];
     len = xlen * xlen + ylen * ylen + zlen * zlen;
-    if (len == 0.0)
-    {
+    if (len == 0.0) {
         MakeVector(0.0, 0.0, 1.0, vec);
         return 1.0;
     }
@@ -549,8 +532,7 @@ void render(void)
         glVertex3f(rambo.getCenterX(), rambo.getCenterY(), 0);
         glEnd();
 
-        if (debug_mode)
-        {
+        if (debug_mode) {
             unsigned int c = 0x00ffff44;
             r.bot = g.yres - 20;
             r.left = 10;
