@@ -34,12 +34,17 @@ class Global{
 	int xres, yres;
 	int walk;
 	int walkFrame;
+	Flt x[2];
+	Flt y[2];
+	Flt camera[2];
 	double delay;
 	double drawWeaponDelay;
 	struct timespec bulletTimer;
 	Bullet *ramboBullets;
 	GLuint walkTexture;
 	GLuint ramboLogoTexture;
+	GLuint tempBackgroundTexture;
+	GLuint RamboTexture;
 	Vec box[20];
 	Global();
 };

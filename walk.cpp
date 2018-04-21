@@ -20,7 +20,7 @@
 #include "Timers.h"
 #include "Character.h"
 #include "joshuaC.h"
-#include "erikS.cpp"
+#include "erikS.h"
 #include "kuljitS.h"
 #include "fernandoM.h"
 #include "fonts.h"
@@ -61,7 +61,7 @@ SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7),
 
 //Global class
 Global g;
-
+Level lev;
 //Main Character (rambo)
 Character rambo(0);
 Character* enemies = new Character[MAX_ENEMIES];
@@ -544,13 +544,7 @@ void render(void)
                 b->draw();
             }
 
-        {
-            Platform a(0, 0, 0, 20, 20, 20, 20, 0);
-            a.setColor(1, 0, 0);
-            a.drawPlatform();
-        }
-
-        //Rambo hitbox center
+               //Rambo hitbox center
         glPointSize(10);
         glBegin(GL_POINTS);
         glColor3f(0, 0, 0);
