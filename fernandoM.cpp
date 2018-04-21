@@ -95,6 +95,10 @@ void spaceButton() {
                         b->vel[0] = b->velocityValue;
                         b->vel[1] = 0;
                     }
+                    else if (rambo.aimUp) {
+                        b->vel[0] = 0;
+                        b->vel[1] = b->velocityValue;
+                    }
                     else if (rambo.jumping) {
                         	if(keys[XK_Left]){
 		                        if(keys[XK_Up]){
@@ -208,8 +212,10 @@ void deleteBullet(int n) {
 }
 
 double printGroupNumber() {
-    
-    static double td = 0.0; 
+    #ifdef PROFILING
+   //////////////////////////////////////////////
+
+ static double td = 0.0; 
     struct timespec start, end;
     clock_gettime(CLOCK_REALTIME, &start);
 
@@ -229,10 +235,15 @@ double printGroupNumber() {
 
     return td;
 
+   //////////////////////////////////////////////////
+   #endif
+   
+
 }
 
 double printGroupNumberOpt(){
-
+  #ifdef PROFILING
+   //////////////////////////////////////////////
     static double td = 0.0;
     struct timespec start, end;
     clock_gettime(CLOCK_REALTIME, &start);
@@ -248,6 +259,8 @@ double printGroupNumberOpt(){
     td += timers.timeDiff(&start, &end);
 
     return td;
+     //////////////////////////////////////////////////
+   #endif
 }
 
 void printFernandoM(int size, int color) {
