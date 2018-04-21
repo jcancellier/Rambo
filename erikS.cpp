@@ -58,7 +58,6 @@ void renderBackground(int lev)
 void pauseScreen()
 {
 	//Renders Pause Screen
-	//Ability to go back to Menu
 	Rect r; 
 	float h = 100.0;
 	float w = 200.0;
@@ -80,7 +79,9 @@ void pauseScreen()
 	ggprint8b(&r, 16, 0, "PAUSE SCREEN");
 	r.center = 0;
 	r.left = g.xres/2 - 100;
+	// start game timer and clear screen with double buffer for pretty transition
 	ggprint8b(&r, 16, 0, "Press P - Play");
+	// implent with the keys function 
 	ggprint8b(&r, 16, 0, "Press E - Exit to Menu");
 	ggprint8b(&r, 16, 0, "Press Esc - Exit Game");
 }
@@ -259,7 +260,7 @@ class levelGlo {
 
         }
 
-
+// need to design the level with text file
 void renderlevel(){
     //========================
     //Render the tile system
@@ -271,9 +272,7 @@ void renderlevel(){
     int ncols_to_render = g.xres / lev.tilesize[0] + 2;
     int col = (int)(g.camera[0] / dd);
     col = col % lev.ncols;
-    //Partial tile offset must be determined here.
-    //The leftmost tile might be partially off-screen.
-    //cdd: camera position in terms of tiles.
+
     Flt cdd = g.camera[0] / dd;
     //flo: just the integer portion
     Flt flo = floor(cdd);
@@ -319,7 +318,7 @@ void renderlevel(){
 void Lives(int xres, int yres)
 {
 //generate a healthbar on top left of the screen
-//dynamic based on mainChar.health
+//dynamic based on the amount of lives left
 	Rect r;
 	unsigned int c = 0x002d88d8;
 	r.bot = yres-30;
@@ -327,20 +326,15 @@ void Lives(int xres, int yres)
 	r.center = 0;
 	ggprint8b(&r, 16, c, "Lives");
 	Shape s;
-	Shape box[200];
-	for (int i = 0; i < mainChar.health; i++) {
-		box[i].width = 3;
-		box[i].height = 10;
-		box[i].center.x = 72 + (i*6);
-		box[i].center.y = 555;
-		box[i].center.z = 0;
-		s = box[i];
+	Shape box[3];
+	for (int i = 0; i < 3; i++) {
 		glPushMatrix();
 		glColor3ub(255, 0, 255);
 		glTranslatef(s.center.x, s.center.y, s.center.z);
 		float w = s.width;
 		float h = s.height;
 		glBegin(GL_QUADS);
+		// have to texture map rambos head to each quad;
 			glVertex2i(-w, -h);
 			glVertex2i(-w, h);
 			glVertex2i(w, h);
