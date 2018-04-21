@@ -349,31 +349,4 @@ void Lives(int xres, int yres)
 		glPopMatrix();
 	}
 }
-
-void renderTimeDisplay()
-{
-	//Renders Time in Seconds and Minutes
-	//Uses timers to keep track
-	Rect r;
-	unsigned int c = 0x002d88d8;
-	r.bot = gl.yres - 30;
-	r.left = (gl.xres/2);
-	r.center = 0;
-	if (gl.state == STATE_GAMEPLAY) {
-		timers.recordTime(&timers.timeCurrent);
-		double timeSpan = timers.timeDiff(&timers.gameTime, &timers.timeCurrent);
-		if (timeSpan > gl.gameDelay) {
-			//advance
-			++gl.gameFrame;
-			timers.recordTime(&timers.gameTime);
-		}
-		if (gl.gameFrame >= 60)
-		{
-			++gl.minutes;
-			gl.gameFrame = 0;
-		}
-	}
-	ggprint16(&r, 20, c, "TIME");
-	ggprint16(&r, 32, c, "%d:%02i", gl.minutes, gl.gameFrame);
-}
 */ 
