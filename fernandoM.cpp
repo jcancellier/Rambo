@@ -212,10 +212,11 @@ void deleteBullet(int n) {
 }
 
 double printGroupNumber() {
-    #ifdef PROFILING
-   //////////////////////////////////////////////
+    
 
  static double td = 0.0; 
+    #ifdef PROFILING
+   //////////////////////////////////////////////
     struct timespec start, end;
     clock_gettime(CLOCK_REALTIME, &start);
 
@@ -232,19 +233,18 @@ double printGroupNumber() {
 
     clock_gettime(CLOCK_REALTIME, &end);
     td += timers.timeDiff(&start, &end);
-
+  //////////////////////////////////////////////////
+    #endif
     return td;
 
-   //////////////////////////////////////////////////
-   #endif
-   
-
+ 
 }
 
 double printGroupNumberOpt(){
-  #ifdef PROFILING
-   //////////////////////////////////////////////
+ 
     static double td = 0.0;
+     #ifdef PROFILING
+   //////////////////////////////////////////////
     struct timespec start, end;
     clock_gettime(CLOCK_REALTIME, &start);
 
@@ -257,10 +257,10 @@ double printGroupNumberOpt(){
 
     clock_gettime(CLOCK_REALTIME, &end);
     td += timers.timeDiff(&start, &end);
-
-    return td;
      //////////////////////////////////////////////////
    #endif
+    return td;
+
 }
 
 void printFernandoM(int size, int color) {
