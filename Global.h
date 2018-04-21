@@ -43,6 +43,7 @@ class Global{
 	Bullet *ramboBullets;
 	GLuint walkTexture;
 	GLuint ramboLogoTexture;
+	GLuint powerUpTexture;
 	GLuint tempBackgroundTexture;
 	GLuint RamboTexture;
 	Vec box[20];
