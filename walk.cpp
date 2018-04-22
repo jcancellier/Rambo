@@ -45,7 +45,7 @@ float cx = 100; //Sprite x postion
 float cy = 200; //Sprite y postion
 int flipped = 0;
 bool debug_mode = false;
-bool display_hitbox = true;
+bool display_hitbox = false;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
@@ -57,7 +57,9 @@ int done = 0;
 
 //load textures (filename, rows, columns)
 SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7), 
-                    SpriteSheet("images/ramboLogo.gif", 1, 1)};
+                    SpriteSheet("images/ramboLogo.gif", 1, 1),
+                    SpriteSheet("images/background.gif", 1, 1)
+                    };
 
 //Global class
 Global g;
@@ -295,6 +297,19 @@ void initOpengl(void)
     walkData = buildAlphaData(&img[1]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+    //Background texture
+    w = img[2].width;
+    h = img[2].height;
+    glBindTexture(GL_TEXTURE_2D, g.RamboTexture);
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //
+    //must build a new set of data...
+    //This is where the texture is initialized in OpenGL (full sheet)
+    walkData = buildAlphaData(&img[2]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, walkData);
     //free(walkData);
     //unlink("./images/walk.ppm");
     //-------------------------------------------------------------------------
@@ -476,7 +491,7 @@ void render(void)
     case MAINMENU:
         renderMainMenu();
         break;
-    case INGAME:
+    case INGAME:{
         Rect r;
         //Clear the screen
         glClearColor(0.0, 0.5, 1.0, 1.0);
@@ -487,28 +502,67 @@ void render(void)
         //float cy = 200;
         //
         //show ground
+        // glBegin(GL_QUADS);
+        // glColor3f(0.0, 0.5, 0.0);
+        // glVertex2i(0, 220);
+        // glVertex2i(g.xres, 220);
+        // glColor3f(0.0, 0.7, 0.0);
+        // glVertex2i(g.xres, 0);
+        // glVertex2i(0, 0);
+        // glEnd();
+
+        // for (int i = 0; i < 20; i++)
+        // {
+        //     glPushMatrix();
+        //     glTranslated(g.box[i][0], g.box[i][1], g.box[i][2]);
+        //     glColor3f(1.0, 1.0, 1.0);
+        //     glBegin(GL_QUADS);
+        //     glVertex2i(0, 0);
+        //     glVertex2i(0, 30);
+        //     glVertex2i(20, 30);
+        //     glVertex2i(20, 0);
+        //     glEnd();
+        //     glPopMatrix();
+        // }
+
+        //render background//
+        glPushMatrix();
+        glColor3f(1.0, 1.0, 1.0);
+        glBindTexture(GL_TEXTURE_2D, g.RamboTexture);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+        glColor4ub(255, 255, 255, 255);
+
+        float ssWidth = (float)1.0 / img[2].columns;
+        float ssHeight = (float)1.0 / img[2].rows;
+
+        float textureX = 0;
+        float textureY = 0;
+
+        float centerX = g.xres / 2;
+        float centerY = (g.yres / 2) + 150;
+
+        float width = img[2].width/1.4;
+        float height = img[2].height/1.5;
+
         glBegin(GL_QUADS);
-        glColor3f(0.0, 0.5, 0.0);
-        glVertex2i(0, 220);
-        glVertex2i(g.xres, 220);
-        glColor3f(0.0, 0.7, 0.0);
-        glVertex2i(g.xres, 0);
-        glVertex2i(0, 0);
+        glTexCoord2f(textureX, textureY + ssHeight);
+        glVertex2i(centerX - width, centerY - height);
+
+        glTexCoord2f(textureX, textureY);
+        glVertex2i(centerX - width, centerY + height);
+
+        glTexCoord2f(textureX + ssWidth, textureY);
+        glVertex2i(centerX + width, centerY + height);
+
+        glTexCoord2f(textureX + ssWidth, textureY + ssHeight);
+        glVertex2i(centerX + width, centerY - height);
         glEnd();
 
-        for (int i = 0; i < 20; i++)
-        {
-            glPushMatrix();
-            glTranslated(g.box[i][0], g.box[i][1], g.box[i][2]);
-            glColor3f(1.0, 1.0, 1.0);
-            glBegin(GL_QUADS);
-            glVertex2i(0, 0);
-            glVertex2i(0, 30);
-            glVertex2i(20, 30);
-            glVertex2i(20, 0);
-            glEnd();
-            glPopMatrix();
-        }
+        glPopMatrix();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_ALPHA_TEST);
+        //render background end
 
         //draw Rambo
         rambo.draw();
@@ -540,13 +594,15 @@ void render(void)
             ggprint8b(&r, 16, c, "left arrow  <- walk left");
             ggprint8b(&r, 16, c, "minus key to shrink Rambo");
             ggprint8b(&r, 16, c, "u key to expand Rambo");
-            ggprint8b(&r, 16, c, "6 key to toggle hitbox");
+            ggprint8b(&r, 16, c, "6 key to toggle hitboxes");
             ggprint8b(&r, 16, c, "h key to toggle debug mode");
             printKuljitS(g.xres - 100, g.yres - 20, 16, 0);
             printJoshuaC(g.xres/2, g.yres-100, 30, 255);
 
         }
+
         break;
+    }
     default:
         printf("FATAL ERROR IN GAME STATE\n\n");
         exit(1);

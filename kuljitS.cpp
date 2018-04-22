@@ -56,7 +56,7 @@ void kuljitS_physics()
     
     //create new enemies if not at max enemies
     if(nEnemies < MAX_ENEMIES) {
-        enemies[nEnemies].centerY = 200;  
+        enemies[nEnemies].centerY = 100;  
         if(rnd() < .5) {
             enemies[nEnemies].centerX = 0 - rnd()*50; 
             enemies[nEnemies].velocityX = rnd()*2 + 2;  
@@ -100,8 +100,8 @@ void kuljitS_physics()
     }
 
     //velocity == 0 if standing on a platform
-    if(rambo.centerY <= 200){
-        rambo.centerY = 200;
+    if(rambo.centerY <= 100){
+        rambo.centerY = 100;
         rambo.velocityY = 0;
     }
 
@@ -122,7 +122,7 @@ void kuljitS_render(){
     r.bot = g.yres-20;
     r.left = g.xres/2;
     r.center = 1;
-    ggprint8b(&r, 16, 0xffffff, "Score: %i", g.score);
+    ggprint13(&r, 16, 0xffffff, "Score: %i", g.score);
     
 }
 
