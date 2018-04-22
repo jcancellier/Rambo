@@ -22,6 +22,7 @@ class HitBox{
     HitBox(int top, int bottom, int left, int right);
     void updateHitBox(int top, int bottom, int left, int right);
     void draw();
+    void draw(float, float, float);
 };
 
 #endif

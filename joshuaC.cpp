@@ -46,6 +46,7 @@ Character::Character(int ssIdx)
     velocityX = 0;
     velocityY = 0;
     hitBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
+    boundingBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
 }
 
 Character::Character()
@@ -61,11 +62,15 @@ Character::Character()
     shooting = false;
     prone = false;
     aimUp = false;
+    angleUp = false;
+    angleDown = false;
+    shootingStraight = false;
     health = 4;
     spriteSheetIndex = 0;
     velocityX = 0;
     velocityY = 0;
     hitBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
+    boundingBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
 }
 
 HitBox::HitBox(int top, int bottom, int left, int right)
@@ -108,6 +113,20 @@ void HitBox::draw()
 	glVertex2i(left, bottom);
 	glVertex2i(left, top);
     glColor3f(1.0, 1.0, 1.0);
+	glVertex2i(right, top);
+	glVertex2i(right, bottom);
+
+	glEnd();
+}
+
+void HitBox::draw(float r, float g, float b)
+{
+    glBegin(GL_LINE_LOOP);
+
+	glColor3f(r, g, b);
+	glVertex2i(left, bottom);
+	glVertex2i(left, top);
+    glColor3f(r, g, b);
 	glVertex2i(right, top);
 	glVertex2i(right, bottom);
 
@@ -200,6 +219,7 @@ void Character::draw()
 
     if (display_hitbox) {
         hitBox->draw();
+        boundingBox->draw(0.0, 0.0, 0.0);
     }
     update();
     
@@ -228,6 +248,7 @@ void Character::draw()
 //Implements updating of any child components such as the hitbox
 void Character::update()
 {
+    /* **************Hitbox updating***************** */
     if (jumping) {
         if (flipped) {
             hitBox->updateHitBox(centerY+(height/2)-(height*.12),
@@ -240,10 +261,7 @@ void Character::update()
                 centerX-(width/2),
                 centerX+(height/2)-(height*.16));
         }
-        return;
-    }
-
-    if (flipped) {
+    } else if (flipped) {
         if (prone) {
             hitBox->updateHitBox(centerY - (height*.45),
                                  centerY - (height*1),
@@ -269,6 +287,57 @@ void Character::update()
                                 centerX+(height/2)-(height*.2)); //20
         }
     }
+    /* **************End Hitbox Updating************** */
+
+    /* **************Bounding box Updating************ */
+    if (jumping) {
+        if (flipped) {
+            boundingBox->updateHitBox(centerY+(height/2)-(height*.12),
+                centerY-(height/2)+(height*.07),
+                centerX-(width/2),
+                centerX+(height/2)-(height*.16));
+        } else {
+            boundingBox->updateHitBox(centerY+(height/2)-(height*.12),
+                centerY-(height/2)+(height*.07),
+                centerX-(width/2),
+                centerX+(height/2)-(height*.16));
+        }
+    } else if (flipped) {
+        if (prone) {
+            boundingBox->updateHitBox(centerY - (height*.45),
+                                 centerY - (height*1),
+                                 centerX - (height*.5),      //13
+                                 centerX + (height / 2) - (height * .2080));  //12
+        } else if (aimUp) {
+            boundingBox->updateHitBox(centerY + (height),
+                                centerY - (height / 2) - (height * .486111), //28
+                                centerX - (width / 2),      //5
+                                centerX + (width / 2) + (height * .04));     //20
+        } else { //standing
+            boundingBox->updateHitBox(centerY+(height/2),
+                                centerY-(height/2)-(height*.486111), //28
+                                centerX-(width/2)-(height*.35), //13
+                                centerX+(height/2)-(height*.2080)); //12
+        }
+    } else {
+        if (prone) {
+            boundingBox->updateHitBox(centerY - (height*.45),
+                                 centerY - (height*1), 
+                                 centerX - (height*.5),  //5
+                                 centerX + (height / 2) - (height * .2));     //20
+        } else if (aimUp) {
+            boundingBox->updateHitBox(centerY + (height),
+                                centerY - (height / 2) - (height * .486111), //28
+                                centerX - (width / 2) + (height * .07),      //5
+                                centerX + (width / 2));     //20
+        } else { //standing
+            boundingBox->updateHitBox(centerY+(height/2),
+                                centerY-(height/2)-(height*.486111), //28
+                                centerX-(width/2)+(height*.05), //5
+                                centerX+(width/2)+(height*.35)); //20
+        }
+    }
+    /* ************End Bounding Box Updating********** */
 }
 
 void Character::drawOptimized()
@@ -445,7 +514,7 @@ void shootAndRunAnimation()
     clock_gettime(CLOCK_REALTIME, &start);
     if (keys[XK_space])
         timeDifference = 0;
-    if ((keys[XK_space] && !rambo.jumping && rambo.frame != 0 && !keys[XK_Up] && !keys[XK_Down]) 
+    if ((keys[XK_space] && !rambo.jumping && /*rambo.frame != 0 &&*/ !keys[XK_Up] && !keys[XK_Down]) 
         || (rambo.shooting && !rambo.jumping && !rambo.angleUp 
         && !rambo.angleDown && !rambo.aimUp && !rambo.prone)) {
 

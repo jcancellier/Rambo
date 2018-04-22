@@ -23,6 +23,7 @@ class Character{
         float velocityX;
         float velocityY;
 		HitBox *hitBox;
+		HitBox *boundingBox;
       
 	    Character(int);
         Character();
@@ -59,6 +60,7 @@ class Character{
 		void update();
 		~Character(){
 			delete hitBox;
+			delete boundingBox;
 		}
 };
 
