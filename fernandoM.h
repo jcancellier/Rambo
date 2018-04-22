@@ -6,4 +6,5 @@ void fernandoPhysics();
 double printGroupNumberOpt();
 double printGroupNumber();
 void printFernandoM( int, int);
+void renderTheBackground();
 #endif

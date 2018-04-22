@@ -541,45 +541,7 @@ void render(void)
         //     glPopMatrix();
         // }
 
-        //render background//
-        glPushMatrix();
-        glColor3f(1.0, 1.0, 1.0);
-        glBindTexture(GL_TEXTURE_2D, g.RamboTexture);
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.0f);
-        glColor4ub(255, 255, 255, 255);
-
-        float ssWidth = (float)1.0 / img[2].columns;
-        float ssHeight = (float)1.0 / img[2].rows;
-
-        float textureX = 0;
-        float textureY = 0;
-
-        float centerX = g.xres / 2;
-        float centerY = (g.yres / 2) + g.yres*0.20833;
-
-        float width = img[2].width/1.4;
-        float height = img[2].height/1.5;
-
-        glBegin(GL_QUADS);
-        glTexCoord2f(textureX, textureY + ssHeight);
-        glVertex2i(centerX - width, centerY - height);
-
-        glTexCoord2f(textureX, textureY);
-        glVertex2i(centerX - width, centerY + height);
-
-        glTexCoord2f(textureX + ssWidth, textureY);
-        glVertex2i(centerX + width, centerY + height);
-
-        glTexCoord2f(textureX + ssWidth, textureY + ssHeight);
-        glVertex2i(centerX + width, centerY - height);
-        glEnd();
-
-        glPopMatrix();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_ALPHA_TEST);
-        //render background end
-
+        renderTheBackground();
         //draw Rambo
         rambo.draw();
         kuljitS_render();
