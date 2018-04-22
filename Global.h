@@ -46,6 +46,7 @@ class Global{
 	GLuint powerUpTexture;
 	GLuint tempBackgroundTexture;
 	GLuint RamboTexture;
+	GLuint spacePirateTexture;
 	Vec box[20];
 	Global();
 };

@@ -7,6 +7,7 @@
 #include "Timers.h"
 #include "SpriteSheet.h"
 #include "Character.h"
+#include "Enemy1.h"
 #include "fonts.h"
 #include <sstream>
 
@@ -22,7 +23,7 @@ extern int selectedOption;
 extern SpriteSheet img[];
 extern int MAX_ENEMIES;
 extern int nEnemies;
-extern Character* enemies;
+extern Enemy1* enemies;
 extern int nbullets;
 extern void deleteBullet(int);
 extern int done;
@@ -60,11 +61,11 @@ void kuljitS_physics()
         if(rnd() < .5) {
             enemies[nEnemies].centerX = 0 - rnd()*50; 
             enemies[nEnemies].velocityX = rnd()*2 + 2;  
-            enemies[nEnemies].flipped=false;
+            enemies[nEnemies].flipped=true;
         } else {
             enemies[nEnemies].centerX = g.xres + rnd()*50;  
             enemies[nEnemies].velocityX = -1*(rnd()*2 + 2);
-            enemies[nEnemies].flipped=true;  
+            enemies[nEnemies].flipped=false;  
         } 
         nEnemies++;   
     }    
@@ -88,12 +89,12 @@ void kuljitS_physics()
     for(int i=0; i<nEnemies; i++){
         if(enemies[i].centerX < 0 && enemies[i].velocityX<0){
             enemies[i].velocityX *= -1;
-            enemies[i].flipped=false;
+            enemies[i].flipped=true;
         }
 
         if(enemies[i].centerX > g.xres && enemies[i].velocityX>0){
             enemies[i].velocityX *= -1;
-            enemies[i].flipped=true;
+            enemies[i].flipped=false;
         }
         enemies[i].centerX += enemies[i].velocityX;
         enemies[i].centerY += enemies[i].velocityY;

@@ -19,6 +19,7 @@
 #include "SpriteSheet.h"
 #include "Timers.h"
 #include "Character.h"
+#include "Enemy1.h"
 #include "joshuaC.h"
 #include "erikS.h"
 #include "kuljitS.h"
@@ -58,15 +59,15 @@ int done = 0;
 //load textures (filename, rows, columns)
 SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7), 
                     SpriteSheet("images/ramboLogo.gif", 1, 1),
-                    SpriteSheet("images/background.gif", 1, 1)
-                    };
+                    SpriteSheet("images/background.gif", 1, 1),
+                    SpriteSheet("images/spacePirate.gif", 1, 8)};
 
 //Global class
 Global g;
 Level lev;
 //Main Character (rambo)
 Character rambo(0);
-Character* enemies = new Character[MAX_ENEMIES];
+Enemy1* enemies = new Enemy1[MAX_ENEMIES];
 
 //Setup timers
 Timers timers;
@@ -265,6 +266,7 @@ void initOpengl(void)
     glGenTextures(1, &g.walkTexture);
     glGenTextures(1, &g.ramboLogoTexture);
     glGenTextures(1, &g.RamboTexture);
+    glGenTextures(1, &g.spacePirateTexture);
     //-------------------------------------------------------------------------
     //silhouette
     //this is similar to a sprite graphic
@@ -309,6 +311,19 @@ void initOpengl(void)
     //must build a new set of data...
     //This is where the texture is initialized in OpenGL (full sheet)
     walkData = buildAlphaData(&img[2]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+    //Enemy1 Texture (Space Pirate)
+    w = img[3].width;
+    h = img[3].height;
+    glBindTexture(GL_TEXTURE_2D, g.spacePirateTexture);
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //
+    //must build a new set of data...
+    //This is where the texture is initialized in OpenGL (full sheet)
+    walkData = buildAlphaData(&img[3]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
     //free(walkData);
