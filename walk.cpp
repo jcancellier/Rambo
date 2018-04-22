@@ -264,6 +264,7 @@ void initOpengl(void)
     //2nd param: specifies where generated texture names are stored
     glGenTextures(1, &g.walkTexture);
     glGenTextures(1, &g.ramboLogoTexture);
+    glGenTextures(1, &g.RamboTexture);
     //-------------------------------------------------------------------------
     //silhouette
     //this is similar to a sprite graphic
@@ -540,7 +541,7 @@ void render(void)
         float textureY = 0;
 
         float centerX = g.xres / 2;
-        float centerY = (g.yres / 2) + 150;
+        float centerY = (g.yres / 2) + g.yres*0.20833;
 
         float width = img[2].width/1.4;
         float height = img[2].height/1.5;
@@ -578,7 +579,7 @@ void render(void)
                 b->draw();
             }
 
-               //Rambo hitbox center
+        //Rambo hitbox center
         glPointSize(10);
         glBegin(GL_POINTS);
         glColor3f(0, 0, 0);
