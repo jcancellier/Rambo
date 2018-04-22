@@ -478,7 +478,7 @@ void walkRight()
 
 void jumpAnimation()
 {
-    if (rambo.centerY > 200) {
+    if (rambo.centerY > 100) {
         rambo.jumping = true;
     } else {
         rambo.jumping = false;
