@@ -1,7 +1,7 @@
 typedef double Flt;
 typedef double Vec[3];
 typedef Flt     Matrix[4][4];
-void renderBackground(int lev);
+void renderBackground(float s, float sh, float w, float h );
 void pauseScreen();
 void renderlevel();
 
@@ -18,6 +18,6 @@ void renderlevel();
         Level();
 
         void removeCrLf(char *str);
-
+	void renderlevel();
 };
 
