@@ -737,8 +737,8 @@ void printJoshuaC(int x, int y, int size, int color)
 //Enemy1 implementation
 Enemy1::Enemy1()
 {
-    centerX = 100;
-    centerY = 800;
+    centerX = 0;
+    centerY = 0;
     height = .08 * (float)g.yres;
     width = height;
     printf("%f\n", height);

@@ -30,6 +30,14 @@ typedef Flt     Matrix[4][4];
 Timers::Timers() {
     physicsRate = 1.0 / 30.0;
     oobillion = 1.0 / 1e9;
+    recordTime(&timeStart);    
+    recordTime(&timeEnd);    
+    recordTime(&timeCurrent);    
+    recordTime(&walkTime);    
+    recordTime(&ramboWeaponOutTime);    
+    recordTime(&menuSelectionTime);    
+    recordTime(&enemySpawnTime);    
+    recordTime(&ramboCollisionTime);
 }
 
 double Timers::timeDiff(struct timespec *start, struct timespec *end) {
