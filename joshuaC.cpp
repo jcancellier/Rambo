@@ -220,7 +220,7 @@ void Character::draw()
 
     if (display_hitbox) {
         hitBox->draw();
-        boundingBox->draw(0.0, 0.0, 0.0);
+        boundingBox->draw(1.0, 0.431, 0.796);
     }
     update();
     
@@ -305,10 +305,10 @@ void Character::update()
         }
     } else if (flipped) {
         if (prone) {
-            boundingBox->updateHitBox(centerY - (height*.45),
+            boundingBox->updateHitBox(centerY - (height*.3),
                                  centerY - (height*1),
-                                 centerX - (height*.5),      //13
-                                 centerX + (height / 2) - (height * .2080));  //12
+                                 centerX - (width),      //13
+                                 centerX + (width));  //12
         } else if (aimUp) {
             boundingBox->updateHitBox(centerY + (height),
                                 centerY - (height / 2) - (height * .486111), //28
@@ -322,10 +322,10 @@ void Character::update()
         }
     } else {
         if (prone) {
-            boundingBox->updateHitBox(centerY - (height*.45),
+            boundingBox->updateHitBox(centerY - (height*.3),
                                  centerY - (height*1), 
-                                 centerX - (height*.5),  //5
-                                 centerX + (height / 2) - (height * .2));     //20
+                                 centerX - (width),  //5
+                                 centerX + (width));     //20
         } else if (aimUp) {
             boundingBox->updateHitBox(centerY + (height),
                                 centerY - (height / 2) - (height * .486111), //28
@@ -462,6 +462,7 @@ void walkRight()
         rambo.velocityX = 4;
         if(rambo.shooting || keys[XK_space] || keys[XK_Up] || keys[XK_Down])
             return;
+        
         timers.recordTime(&timers.timeCurrent);
         //record time between frames
         double timeSpan = timers.timeDiff(&timers.walkTime,
@@ -737,8 +738,8 @@ void printJoshuaC(int x, int y, int size, int color)
 //Enemy1 implementation
 Enemy1::Enemy1()
 {
-    centerX = 100;
-    centerY = 800;
+    centerX = 0;
+    centerY = 0;
     height = .08 * (float)g.yres;
     width = height;
     printf("%f\n", height);

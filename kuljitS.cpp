@@ -29,19 +29,21 @@ extern void deleteBullet(int);
 extern int done;
 
 double menuSelectionDelay = 0.15;
-
+double enemySpawnDelay = 1.0;
+double ramboCollisionDelay = 1.0;
 #define JUMP_STRENGTH 12
 #define INGAME 1
+#define MAINMENU 0
 
 void kuljitS_physics() 
 {
     //check for bullet collision with enemy
-    for(int i=0; i<nbullets; i++){
-        for(int j=0; j<nEnemies; j++){
-            if(g.ramboBullets[i].pos[0] > enemies[j].hitBox->getLeft() &&
+    for (int i=0; i<nbullets; i++) {
+        for (int j=0; j<nEnemies; j++) {
+            if (g.ramboBullets[i].pos[0] > enemies[j].hitBox->getLeft() &&
                     g.ramboBullets[i].pos[0] < enemies[j].hitBox->getRight() &&
                     g.ramboBullets[i].pos[1] > enemies[j].hitBox->getBottom() &&
-                    g.ramboBullets[i].pos[1] < enemies[j].hitBox->getTop()){
+                    g.ramboBullets[i].pos[1] < enemies[j].hitBox->getTop()) {
                 deleteBullet(i);
                 enemies[j].centerY = enemies[nEnemies-1].centerY;
                 enemies[j].centerX = enemies[nEnemies-1].centerX;
@@ -54,21 +56,50 @@ void kuljitS_physics()
             }
         }
     }
-    
+ 
     //create new enemies if not at max enemies
-    if(nEnemies < MAX_ENEMIES) {
-        enemies[nEnemies].centerY = 100;  
-        if(rnd() < .5) {
-            enemies[nEnemies].centerX = 0 - rnd()*50; 
-            enemies[nEnemies].velocityX = rnd()*2 + 2;  
-            enemies[nEnemies].flipped=true;
-        } else {
-            enemies[nEnemies].centerX = g.xres + rnd()*50;  
-            enemies[nEnemies].velocityX = -1*(rnd()*2 + 2);
-            enemies[nEnemies].flipped=false;  
-        } 
-        nEnemies++;   
+    if (nEnemies < MAX_ENEMIES) {
+        timers.recordTime(&timers.timeCurrent);
+        double timeSpan = timers.timeDiff(&timers.enemySpawnTime,
+                                            &timers.timeCurrent);
+        if (timeSpan > enemySpawnDelay) {
+            enemies[nEnemies].centerY = 100;  
+            if (rnd() < .5) {
+                enemies[nEnemies].centerX = 0 - rnd()*50; 
+                enemies[nEnemies].velocityX = rnd()*2 + 2;  
+                enemies[nEnemies].flipped=true;
+            } else {
+                enemies[nEnemies].centerX = g.xres + rnd()*50;  
+                enemies[nEnemies].velocityX = -1*(rnd()*2 + 2);
+                enemies[nEnemies].flipped=false;  
+            }
+            timers.recordTime(&timers.enemySpawnTime); 
+            nEnemies++; 
+        }  
     }    
+
+    //check for enemy collisions
+    for (int i=0; i<nEnemies; i++) {
+        if (enemies[i].hitBox->getLeft() <= rambo.hitBox->getRight() &&
+                    enemies[i].hitBox->getRight() >= rambo.hitBox->getLeft() &&
+                    enemies[i].hitBox->getTop() >= rambo.hitBox->getBottom() &&
+                    enemies[i].hitBox->getBottom() <= rambo.hitBox->getTop()) {
+            timers.recordTime(&timers.timeCurrent);
+            double timeSpan = timers.timeDiff(&timers.ramboCollisionTime,
+                                                &timers.timeCurrent);
+            if (timeSpan > ramboCollisionDelay) {
+                printf("Enemy Collision\n");
+                rambo.health--;
+                if (rambo.health<=0) {
+                    printf("RAMBO DEAD\n");
+                    //temporary until death menu exists
+                    gameState=MAINMENU; 
+                }
+                timers.recordTime(&timers.ramboCollisionTime);
+            }
+
+        }
+    } 
 
     //check for a jump
     if (keys[XK_a] && !rambo.jumping) {
@@ -86,13 +117,13 @@ void kuljitS_physics()
     rambo.centerX +=rambo.velocityX;
 
     //update enemy positions
-    for(int i=0; i<nEnemies; i++){
-        if(enemies[i].centerX < 0 && enemies[i].velocityX<0){
+    for (int i=0; i<nEnemies; i++) {
+        if (enemies[i].centerX < 0 && enemies[i].velocityX<0) {
             enemies[i].velocityX *= -1;
             enemies[i].flipped=true;
         }
 
-        if(enemies[i].centerX > g.xres && enemies[i].velocityX>0){
+        if (enemies[i].centerX > g.xres && enemies[i].velocityX>0) {
             enemies[i].velocityX *= -1;
             enemies[i].flipped=false;
         }
@@ -101,7 +132,7 @@ void kuljitS_physics()
     }
 
     //velocity == 0 if standing on a platform
-    if(rambo.centerY <= 100){
+    if (rambo.centerY <= 100) {
         rambo.centerY = 100;
         rambo.velocityY = 0;
     }
@@ -112,7 +143,7 @@ void kuljitS_render(){
     Rect r;
     
     //draw enemies + enemy ID's
-    for(int i=0; i<nEnemies; i++){
+    for (int i=0; i<nEnemies; i++) {
         enemies[i].draw();
         r.left = enemies[i].centerX;
         r.bot = enemies[i].centerY + 100;
@@ -177,7 +208,7 @@ void printKuljitS(int x, int y, int size, int color){
 int acceptGameState(int selectedOption)
 {
     //update game state to selected option in main menu
-    switch(selectedOption){
+    switch (selectedOption) {
         case 0:
             gameState = INGAME;
             break;
@@ -235,7 +266,6 @@ void checkKeysMainMenu()
             }
         }
 
-        
 /*        case XK_Down:
         case XK_Escape:
             done = 1;
