@@ -34,56 +34,77 @@ using namespace std;
 
 
 
-void renderBackground(int lev)
+void renderBackground(float s , float sh, float w, float h)
 {
-//background image
-	if (lev == 1)
-		g.tempBackgroundTexture = g.RamboTexture;
-	//if (lev == 2)
-		//g.tempBackgroundTexture = g.LATexture;
+    //background image
+    glPushMatrix();
+    glColor3f(1.0,1.0,1.0);
+    glBindTexture(GL_TEXTURE_2D, g.RamboTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glColor4ub(255,255,255,255);
 
-	glPushMatrix();
-	glColor3f(1.0,1.0,1.0);
-	glBindTexture(GL_TEXTURE_2D, g.tempBackgroundTexture);
-	glBegin(GL_QUADS);
-		glTexCoord2f(g.x[0], g.y[1]); glVertex2i(0,0);
-		glTexCoord2f(g.x[0], g.y[0]); glVertex2i(0, g.yres);
-		glTexCoord2f(g.x[1], g.y[0]); glVertex2i(g.xres, g.yres);
-		glTexCoord2f(g.x[1], g.y[1]); glVertex2i(g.xres, 0);
-	glEnd();
-	glPopMatrix();
-	glBindTexture(GL_TEXTURE_2D, 0);
-}
+	    float ssWidth = s;
+	    float ssHeight =sh;
+
+	    float textureX = 0;
+	    float textureY = 0;
+
+	    float centerX = g.xres / 2;
+	    float centerY = (g.yres / 2) + g.yres*0.20833;
+
+	    float width = w;
+	    float height = h;
+
+	    glBegin(GL_QUADS);
+	    glTexCoord2f(textureX, textureY + ssHeight);
+	    glVertex2i(centerX - width, centerY - height);
+
+	    glTexCoord2f(textureX, textureY);
+	    glVertex2i(centerX - width, centerY + height);
+
+	    glTexCoord2f(textureX + ssWidth, textureY);
+	    glVertex2i(centerX + width, centerY + height);
+
+	    glTexCoord2f(textureX + ssWidth, textureY + ssHeight);
+	    glVertex2i(centerX + width, centerY - height);
+	    glEnd();
+
+	    glPopMatrix();
+	    glBindTexture(GL_TEXTURE_2D, 0);
+	    glDisable(GL_ALPHA_TEST);
+	    //render background end
+	    }
 
 void pauseScreen()
 {
-	//Renders Pause Screen
-	Rect r; 
-	float h = 100.0;
-	float w = 200.0;
-	glPushMatrix();
-	glEnable(GL_BLEND);
-	glColor4f(0.58,0.58,0.72,0.8);
-	glTranslated(g.xres/2, g.yres/2, 0);
-	glBegin(GL_QUADS);
-		glVertex2i(-w, -h);
-		glVertex2i(-w,  h);
-		glVertex2i(w,   h);
-		glVertex2i(w,  -h);
-	glEnd();
-	glDisable(GL_BLEND);
-	glPopMatrix();
-	r.bot = g.yres/2 + 80;
-	r.left = g.xres/2;
-	r.center = 1; 
-	ggprint8b(&r, 16, 0, "PAUSE SCREEN");
-	r.center = 0;
-	r.left = g.xres/2 - 100;
-	// start game timer and clear screen with double buffer for pretty transition
-	ggprint8b(&r, 16, 0, "Press P - Play");
-	// implent with the keys function 
-	ggprint8b(&r, 16, 0, "Press E - Exit to Menu");
-	ggprint8b(&r, 16, 0, "Press Esc - Exit Game");
+    //Renders Pause Screen
+    Rect r; 
+    float h = 100.0;
+    float w = 200.0;
+    glPushMatrix();
+    glEnable(GL_BLEND);
+    glColor4f(0.58,0.58,0.72,0.8);
+    glTranslated(g.xres/2, g.yres/2, 0);
+    glBegin(GL_QUADS);
+    glVertex2i(-w, -h);
+    glVertex2i(-w,  h);
+    glVertex2i(w,   h);
+    glVertex2i(w,  -h);
+    glEnd();
+    glDisable(GL_BLEND);
+    glPopMatrix();
+    r.bot = g.yres/2 + 80;
+    r.left = g.xres/2;
+    r.center = 1; 
+    ggprint8b(&r, 16, 0, "PAUSE SCREEN");
+    r.center = 0;
+    r.left = g.xres/2 - 100;
+    // start game timer and clear screen with double buffer for pretty transition
+    ggprint8b(&r, 16, 0, "Press P - Play");
+    // implent with the keys function 
+    ggprint8b(&r, 16, 0, "Press E - Exit to Menu");
+    ggprint8b(&r, 16, 0, "Press Esc - Exit Game");
 }
 
 
@@ -114,7 +135,7 @@ class Platform {
 
 
     Platform(float xpos ,float ypos,float xpos2 ,float ypos2,float xpos3 ,float
-     ypos3,float xpos4 ,float ypos4)
+	    ypos3,float xpos4 ,float ypos4)
     {
 	// set the ranges for physics
 	top = greatest(ypos,ypos2,ypos3,ypos4);
@@ -190,75 +211,75 @@ class levelGlo {
 	}
 };
 
-        Level::Level() {
-            for (int i=0; i < 180; i++) {
+Level::Level() {
+    for (int i=0; i < 180; i++) {
 
-                dynamicHeight[i] = -1;
+	dynamicHeight[i] = -1;
 
-            }
+    }
 
-            tilesize[0] = 32;
+    tilesize[0] = 32;
 
-            tilesize[1] = 32;
+    tilesize[1] = 32;
 
-            ftsz[0] = (Flt)tilesize[0];
+    ftsz[0] = (Flt)tilesize[0];
 
-            ftsz[1] = (Flt)tilesize[1];
+    ftsz[1] = (Flt)tilesize[1];
 
-            tile_base = (g.yres/g.yres);
+    tile_base = (g.yres/g.yres);
 
-            //read level
-                FILE *fpi = fopen("level.txt","r");
+    //read level
+    FILE *fpi = fopen("level.txt","r");
 
-                if (fpi) {
+    if (fpi) {
 
-                    nrows=0;
+	nrows=0;
 
-                    char line[700];
+	char line[700];
 
-                    while (fgets(line, 700, fpi) != NULL) {
+	while (fgets(line, 700, fpi) != NULL) {
 
-                        removeCrLf(line);
+	    removeCrLf(line);
 
-                        int slen = strlen(line);
+	    int slen = strlen(line);
 
-                        ncols = slen;
-                        for (int j=0; j<slen; j++) {
+	    ncols = slen;
+	    for (int j=0; j<slen; j++) {
 
-                            arr[nrows][j] = line[j];
+		arr[nrows][j] = line[j];
 
-                        }
+	    }
 
-                        ++nrows;
+	    ++nrows;
 
-                    }
+	}
 
-                    fclose(fpi);
+	fclose(fpi);
 
-                }
+    }
 
-            
 
-        }
 
-        void Level::removeCrLf(char *str) {
-            char *p = str;
+}
 
-            while (*p) {
+void Level::removeCrLf(char *str) {
+    char *p = str;
 
-                if (*p == 10 || *p == 13) {
+    while (*p) {
 
-                    *p = '\0';
+	if (*p == 10 || *p == 13) {
 
-                    break;
+	    *p = '\0';
 
-                }
+	    break;
 
-                ++p;
+	}
 
-            }
+	++p;
 
-        }
+    }
+
+}
 
 // need to design the level with text file
 void renderlevel(){
@@ -314,33 +335,34 @@ void renderlevel(){
 	col = (col+1) % lev.ncols;
     }
 }
+
 /*
-void Lives(int xres, int yres)
-{
+   void Lives(int xres, int yres)
+   {
 //generate a healthbar on top left of the screen
 //dynamic based on the amount of lives left
-	Rect r;
-	unsigned int c = 0x002d88d8;
-	r.bot = yres-30;
-	r.left = (xres/xres) + 70;
-	r.center = 0;
-	ggprint8b(&r, 16, c, "Lives");
-	Shape s;
-	Shape box[3];
-	for (int i = 0; i < 3; i++) {
-		glPushMatrix();
-		glColor3ub(255, 0, 255);
-		glTranslatef(s.center.x, s.center.y, s.center.z);
-		float w = s.width;
-		float h = s.height;
-		glBegin(GL_QUADS);
-		// have to texture map rambos head to each quad;
-			glVertex2i(-w, -h);
-			glVertex2i(-w, h);
-			glVertex2i(w, h);
-			glVertex2i(w, -h);
-			glEnd();
-		glPopMatrix();
-	}
+Rect r;
+unsigned int c = 0x002d88d8;
+r.bot = yres-30;
+r.left = (xres/xres) + 70;
+r.center = 0;
+ggprint8b(&r, 16, c, "Lives");
+Shape s;
+Shape box[3];
+for (int i = 0; i < 3; i++) {
+glPushMatrix();
+glColor3ub(255, 0, 255);
+glTranslatef(s.center.x, s.center.y, s.center.z);
+float w = s.width;
+float h = s.height;
+glBegin(GL_QUADS);
+// have to texture map rambos head to each quad;
+glVertex2i(-w, -h);
+glVertex2i(-w, h);
+glVertex2i(w, h);
+glVertex2i(w, -h);
+glEnd();
+glPopMatrix();
+}
 }
 */ 

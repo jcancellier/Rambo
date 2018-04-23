@@ -752,6 +752,7 @@ Enemy1::Enemy1()
     velocityY = 0;
     hitBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
     boundingBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
+    walkTime = timers.timeCurrent;
 }
 
 void Enemy1::draw()
