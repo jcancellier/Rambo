@@ -3,6 +3,7 @@
 //Edited By: Rafael Noriega
 //2015 - 2018
 
+#define USE_OPEN_SOUND true
 #include <X11/keysym.h>
 #include "Global.h"
 #include "Timers.h"
@@ -15,11 +16,11 @@
 #include <string.h>
 #include <math.h>
 #include <unistd.h>
+#include "rafaelN.h"
 #include <fcntl.h>
 #include <sys/stat.h>
 #ifdef USE_OPENAL_SOUND
 #include </usr/include/AL/alut.h>
-#include "rafaelN.h"
 #endif //USE_OPENAL_SOUND
 
 extern Timers timers;
@@ -44,7 +45,7 @@ void sound()
     //
     //Buffer holds the sound information.
     ALuint alBuffer;
-    alBuffer = alutCreateBufferFromFile("Migos_gun.wav");
+    alBuffer = alutCreateBufferFromFile("./Migos_gun.wav");
     //
     //Source refers to the sound.
     ALuint alSource;
