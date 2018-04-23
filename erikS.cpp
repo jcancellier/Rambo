@@ -44,37 +44,37 @@ void renderBackground(float s , float sh, float w, float h)
     glAlphaFunc(GL_GREATER, 0.0f);
     glColor4ub(255,255,255,255);
 
-	    float ssWidth = s;
-	    float ssHeight =sh;
+    float ssWidth = s;
+    float ssHeight =sh;
 
-	    float textureX = 0;
-	    float textureY = 0;
+    float textureX = 0;
+    float textureY = 0;
 
-	    float centerX = g.xres / 2;
-	    float centerY = (g.yres / 2) + g.yres*0.20833;
+    float centerX = g.xres / 2;
+    float centerY = (g.yres / 2) + g.yres*0.20833;
 
-	    float width = w;
-	    float height = h;
+    float width = w;
+    float height = h;
 
-	    glBegin(GL_QUADS);
-	    glTexCoord2f(textureX, textureY + ssHeight);
-	    glVertex2i(centerX - width, centerY - height);
+    glBegin(GL_QUADS);
+    glTexCoord2f(textureX, textureY + ssHeight);
+    glVertex2i(centerX - width, centerY - height);
 
-	    glTexCoord2f(textureX, textureY);
-	    glVertex2i(centerX - width, centerY + height);
+    glTexCoord2f(textureX, textureY);
+    glVertex2i(centerX - width, centerY + height);
 
-	    glTexCoord2f(textureX + ssWidth, textureY);
-	    glVertex2i(centerX + width, centerY + height);
+    glTexCoord2f(textureX + ssWidth, textureY);
+    glVertex2i(centerX + width, centerY + height);
 
-	    glTexCoord2f(textureX + ssWidth, textureY + ssHeight);
-	    glVertex2i(centerX + width, centerY - height);
-	    glEnd();
+    glTexCoord2f(textureX + ssWidth, textureY + ssHeight);
+    glVertex2i(centerX + width, centerY - height);
+    glEnd();
 
-	    glPopMatrix();
-	    glBindTexture(GL_TEXTURE_2D, 0);
-	    glDisable(GL_ALPHA_TEST);
-	    //render background end
-	    }
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
+    //render background end
+}
 
 void pauseScreen()
 {
@@ -107,89 +107,78 @@ void pauseScreen()
     ggprint8b(&r, 16, 0, "Press Esc - Exit Game");
 }
 
+Platform::Platform(
+	float xpos ,float ypos,
+	float xpos2 ,float ypos2,
+	float xpos3 ,float ypos3,
+	float xpos4 ,float ypos4)
+{
+    // set the ranges for physics
+    top = greatest(ypos,ypos2,ypos3,ypos4);
 
-class Platform {
+    one.x = xpos;
+    one.y = ypos;
 
-    class point{
-	public: 
-	    float x,y;
+    two.x = xpos2;
+    two.y = ypos2;
 
+    three.x = xpos3;
+    three.y = ypos3;
 
-    };
+    four.x = xpos4;
+    four.y = ypos4;
+}
 
-    class color{
-	public:	
-	    float r,g,b;
-    };
-
-
-
-    private:
-    point one,two,three,four;
-    color set;
-
-    public:
-    int top;
-    int left;
-    int right;
-
-
-    Platform(float xpos ,float ypos,float xpos2 ,float ypos2,float xpos3 ,float
-	    ypos3,float xpos4 ,float ypos4)
-    {
-	// set the ranges for physics
-	top = greatest(ypos,ypos2,ypos3,ypos4);
-
-	one.x = xpos;
-	one.y = ypos;
-
-	two.x = xpos2;
-	two.y = ypos2;
-
-	three.x = xpos3;
-	three.y = ypos3;
-
-	four.x = xpos4;
-	four.y = ypos4;
-    }
-
-    void drawPlatform()
-    {
-	glBegin(GL_QUADS);
-	glColor3f(set.r,set.g,set.b);
-	glVertex2i(one.x,	one.y);
-	glVertex2i(two.x,	two.y);
-	glColor3f(set.r,set.g,set.b);
-	glVertex2i(three.x,	three.y);
-	glVertex2i(four.x,	four.y);
-
+void Platform::drawPlatform()
+{
+    glColor3f(0.8, 0.8, 0.6);
+    glPushMatrix();
+    glBindTexture(GL_TEXTURE_2D, g.walkTexture);
+    /*	glBegin(GL_QUADS);
+	glTexCoord2f(0.0, 1.0); glVertex2i( 0,  0);
+	glTexCoord2f(0.0, 0.0); glVertex2i( 0, ty);
+	glTexCoord2f(1.0, 0.0); glVertex2i(tx, ty);
+	glTexCoord2f(1.0, 1.0); glVertex2i(tx,  0);
 	glEnd();
-    }
-    void setColor(float r, float g, float b)
+	*/
+    glBegin(GL_QUADS);
+    glVertex2i(one.x,	one.y);
+    glVertex2i(two.x,	two.y);
+    glColor3f(set.r,set.g,set.b);
+    glVertex2i(three.x,	three.y);
+    glVertex2i(four.x,	four.y);
+
+    glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Platform::setColor(float r, float g, float b)
+{
+    set.r =r;
+    set.g =g;
+    set.b = b;
+
+
+}
+
+float Platform::greatest(float one,float two,float three,float four)
+{
+    float g= greatest( one,two);
+    float b= greatest(three,four);
+    return greatest(g,b);
+
+}
+
+float Platform::greatest(float one,float two)
+{
+    if(one < two)
     {
-	set.r =r;
-	set.g =g;
-	set.b = b;
-
-
+	return two;
     }
-    float greatest(float one,float two,float three,float four)
-    {
-	float g= greatest( one,two);
-	float b= greatest(three,four);
-	return greatest(g,b);
+    else return one;
 
-    }
-    float greatest(float one,float two)
-    {
-	if(one < two)
-	{
-	    return two;
-	}
-	else return one;
-
-    }
-};
+}
 
 class levelGlo {
     public:
@@ -336,33 +325,30 @@ void renderlevel(){
     }
 }
 
-/*
-   void Lives(int xres, int yres)
-   {
-//generate a healthbar on top left of the screen
-//dynamic based on the amount of lives left
-Rect r;
-unsigned int c = 0x002d88d8;
-r.bot = yres-30;
-r.left = (xres/xres) + 70;
-r.center = 0;
-ggprint8b(&r, 16, c, "Lives");
-Shape s;
-Shape box[3];
-for (int i = 0; i < 3; i++) {
-glPushMatrix();
-glColor3ub(255, 0, 255);
-glTranslatef(s.center.x, s.center.y, s.center.z);
-float w = s.width;
-float h = s.height;
-glBegin(GL_QUADS);
-// have to texture map rambos head to each quad;
-glVertex2i(-w, -h);
-glVertex2i(-w, h);
-glVertex2i(w, h);
-glVertex2i(w, -h);
-glEnd();
-glPopMatrix();
+void Lives(int xres, int yres)
+{
+    //generate a healthbar on top left of the screen
+    //dynamic based on the amount of lives left
+    Rect r;
+    unsigned int c = 0x002d88d8;
+    r.bot = yres-30;
+    r.left = (xres/xres)+70 ;
+    r.center = 0;
+    ggprint8b(&r, 16, c, "Lives");
+
+    for (int i = 0; i < 3; i++) {
+	glPushMatrix();
+	glColor3ub(255, 0, 255);
+	glTranslatef(g.xres/2, g.yres/2, 0);
+	float w = g.xres;
+	float h = g.yres;
+	glBegin(GL_QUADS);
+	// have to texture map rambos head to each quad;
+	glVertex2i(-w, -h);
+	glVertex2i(-w, h);
+	glVertex2i(w, h);
+	glVertex2i(w, -h);
+	glEnd();
+	glPopMatrix();
+    }
 }
-}
-*/ 

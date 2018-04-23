@@ -513,39 +513,20 @@ void render(void)
         glClearColor(0.0, 0.5, 1.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        //the position of the sprite on the screen
-        //float cx = 100;
-        //float cy = 200;
-        //
-        //show ground
-        // glBegin(GL_QUADS);
-        // glColor3f(0.0, 0.5, 0.0);
-        // glVertex2i(0, 220);
-        // glVertex2i(g.xres, 220);
-        // glColor3f(0.0, 0.7, 0.0);
-        // glVertex2i(g.xres, 0);
-        // glVertex2i(0, 0);
-        // glEnd();
-
-        // for (int i = 0; i < 20; i++)
-        // {
-        //     glPushMatrix();
-        //     glTranslated(g.box[i][0], g.box[i][1], g.box[i][2]);
-        //     glColor3f(1.0, 1.0, 1.0);
-        //     glBegin(GL_QUADS);
-        //     glVertex2i(0, 0);
-        //     glVertex2i(0, 30);
-        //     glVertex2i(20, 30);
-        //     glVertex2i(20, 0);
-        //     glEnd();
-        //     glPopMatrix();
-        // }
-
-        renderTheBackground();
+	// inits 
+	float ws = (float)1/img[2].columns;
+        float hs = (float)1/img[2].rows;
+	float w  = img[2].width/1.4;
+	float h  = img[2].height/1.5;
+	
+	renderBackground(ws,hs,w,h);
+	//Lives(g.xres, g.yres);	
         //draw Rambo
         rambo.draw();
         kuljitS_render();
 
+	Platform a(50,,50,200,100,200,100,);
+	a.drawPlatform();	
         //rambo.drawOptimized();
         
             //DRAW BULLET 
