@@ -46,7 +46,7 @@ float cx = 100; //Sprite x postion
 float cy = 200; //Sprite y postion
 int flipped = 0;
 bool debug_mode = false;
-bool display_hitbox = true;
+bool display_hitbox = false;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
@@ -525,7 +525,7 @@ void render(void)
         rambo.draw();
         kuljitS_render();
 
-	Platform a(50,,50,200,100,200,100,);
+	Platform a(50,0,50,200,100,200,100,0);
 	a.drawPlatform();	
         //rambo.drawOptimized();
         
