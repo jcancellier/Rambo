@@ -24,6 +24,9 @@ extern int keys[];
 extern Character rambo;
 extern SpriteSheet img[];
 extern bool display_hitbox;
+extern bool activateRamboFlicker;
+extern double ramboCollisionDelay;
+bool ramboFlicker = false;
 
 //Constructors
 Character::Character(int ssIdx)
@@ -200,6 +203,13 @@ void Character::draw()
     float textureX = (float)ix / img[spriteSheetIndex].columns;
     float textureY = (float)iy / img[spriteSheetIndex].rows;
     
+    //Checks if rambo should flicker.
+    //He should flicker when attacked
+    //to show his invulnerability period.
+    checkRamboFlicker();
+
+    if(!activateRamboFlicker || ramboFlicker){
+        ramboFlicker = !ramboFlicker;
     glBegin(GL_QUADS);
     glTexCoord2f(textureX, textureY+ssHeight);
     glVertex2i(flipped ? centerX+width : centerX-width, centerY-height);
@@ -217,7 +227,9 @@ void Character::draw()
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
-
+    } else {
+        ramboFlicker = true;
+    }
     if (display_hitbox) {
         hitBox->draw();
         boundingBox->draw(1.0, 0.431, 0.796);
@@ -904,4 +916,12 @@ hitBox->updateHitBox(centerY + (height / 2),
 //     //     }
 //     // }
 //     // /* ************End Bounding Box Updating********** */
+}
+
+void checkRamboFlicker() 
+{
+    double timeSpan = timers.timeDiff(&timers.ramboCollisionTime,
+                                    &timers.timeCurrent);
+    if(timeSpan > ramboCollisionDelay)
+        activateRamboFlicker = false;
 }

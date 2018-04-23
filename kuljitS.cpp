@@ -35,6 +35,8 @@ double ramboCollisionDelay = 1.0;
 #define INGAME 1
 #define MAINMENU 0
 
+bool activateRamboFlicker = false;
+
 void kuljitS_physics() 
 {
     //check for bullet collision with enemy
@@ -88,6 +90,7 @@ void kuljitS_physics()
             double timeSpan = timers.timeDiff(&timers.ramboCollisionTime,
                                                 &timers.timeCurrent);
             if (timeSpan > ramboCollisionDelay) {
+                activateRamboFlicker = true;
                 printf("Enemy Collision\n");
                 rambo.health--;
                 if (rambo.health<=0) {
@@ -155,7 +158,7 @@ void kuljitS_render(){
     r.left = g.xres/2;
     r.center = 1;
     ggprint13(&r, 16, 0xffffff, "Score: %i", g.score);
-    
+
 }
 
 double printRamboCenter(){

@@ -11,5 +11,6 @@ void angleDownAnimation();
 void proneAnimation();
 void aimUpAnimation();
 void printJoshuaC(int, int, int, int);
+void checkRamboFlicker();
 
 #endif
