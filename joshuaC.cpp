@@ -765,6 +765,7 @@ Enemy1::Enemy1()
     hitBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
     boundingBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
     walkTime = timers.timeCurrent;
+    animationSpeedFactor = 3;
 }
 
 void Enemy1::draw()
@@ -813,10 +814,10 @@ void Enemy1::draw()
     //record time between frames
     double timeSpan = timers.timeDiff(&this->walkTime,
                                       &timers.timeCurrent);
-    if (timeSpan > g.delay/abs(velocityX)*3) {
+    if (timeSpan > g.delay/abs(velocityX)*animationSpeedFactor) {
         //advance frame
         frame++;
-        if(frame >= 8)
+        if(frame >= img[spriteSheetIndex].columns)
             frame = 0;
         timers.recordTime(&this->walkTime);
     }

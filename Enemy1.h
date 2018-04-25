@@ -19,6 +19,7 @@ class Enemy1{
 		HitBox *hitBox;
 		HitBox *boundingBox;
         struct timespec walkTime;
+		float animationSpeedFactor;
       
         Enemy1();
         void draw();
