@@ -47,6 +47,7 @@ class Global{
 	GLuint tempBackgroundTexture;
 	GLuint RamboTexture;
 	GLuint spacePirateTexture;
+	GLuint batEnemyTexture;
 	Vec box[20];
 	Global();
 };

@@ -60,7 +60,9 @@ int done = 0;
 SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7), 
                     SpriteSheet("images/ramboLogo.gif", 1, 1),
                     SpriteSheet("images/background.gif", 1, 1),
-                    SpriteSheet("images/spacePirate.gif", 1, 8)};
+                    SpriteSheet("images/spacePirate.gif", 1, 8),
+                    SpriteSheet("images/bat.gif", 1, 6),
+                    };
 
 //Global class
 Global g;
@@ -267,6 +269,7 @@ void initOpengl(void)
     glGenTextures(1, &g.ramboLogoTexture);
     glGenTextures(1, &g.RamboTexture);
     glGenTextures(1, &g.spacePirateTexture);
+    glGenTextures(1, &g.batEnemyTexture);
     //-------------------------------------------------------------------------
     //silhouette
     //this is similar to a sprite graphic
@@ -324,6 +327,20 @@ void initOpengl(void)
     //must build a new set of data...
     //This is where the texture is initialized in OpenGL (full sheet)
     walkData = buildAlphaData(&img[3]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+
+    // Bat enemy Texture 
+    w = img[4].width;
+    h = img[4].height;
+    glBindTexture(GL_TEXTURE_2D, g.batEnemyTexture);
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //
+    //must build a new set of data...
+    //This is where the texture is initialized in OpenGL (full sheet)
+    walkData = buildAlphaData(&img[4]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
     //free(walkData);
