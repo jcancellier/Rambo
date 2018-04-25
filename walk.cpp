@@ -50,7 +50,7 @@ bool display_hitbox = false;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
-int MAX_ENEMIES = 5;
+int MAX_ENEMIES = 0;
 int nEnemies = 0;
 int done = 0;
 

@@ -68,11 +68,11 @@ void Bullet::draw()
 void spaceButton() {
 	if (keys[XK_space]) {
 		struct timespec newBT;
-		clock_gettime(CLOCK_REALTIME, &newBT);
-		double seconds = timers.timeDiff(&g.bulletTimer, &newBT);
+		// clock_gettime(CLOCK_REALTIME, &newBT);
+		// double seconds = timers.timeDiff(&g.bulletTimer, &newBT);
 
-        if (seconds > 0.35) {
-			timers.timeCopy(&g.bulletTimer, &newBT);
+        // if (seconds > 0.35) {
+			// timers.timeCopy(&g.bulletTimer, &newBT);
 	        if (nbullets < MAX_BULLETS) {   
                 //shoot a bullet...
                 Bullet *b = &g.ramboBullets[nbullets];
@@ -144,7 +144,7 @@ void spaceButton() {
                 b->color[2] = 1.0f; 
                 nbullets++;
             }
-        }
+        // }
     }	
 }
 
