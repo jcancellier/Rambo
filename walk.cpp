@@ -20,6 +20,7 @@
 #include "Timers.h"
 #include "Character.h"
 #include "Enemy1.h"
+#include "Bat.h"
 #include "joshuaC.h"
 #include "erikS.h"
 #include "kuljitS.h"
@@ -50,8 +51,8 @@ bool display_hitbox = false;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
-int MAX_PIRATES = 0;
-int MAX_BATS = 1;
+int MAX_PIRATES = 5;
+int MAX_BATS = 5;
 int nPirates = 0;
 int nBats = 0;
 int done = 0;
@@ -64,6 +65,7 @@ SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7),
                     SpriteSheet("images/background.gif", 1, 1),
                     SpriteSheet("images/spacePirate.gif", 1, 8),
                     SpriteSheet("images/bat.gif", 1, 6),
+                    SpriteSheet("images/batShiny.gif", 1, 6)
                     };
 
 //Global class
@@ -74,7 +76,7 @@ Character rambo(0);
 //should rename enemy1 to pirates
 Enemy1* pirates = new Enemy1[MAX_PIRATES];
 //bats
-Enemy1* bats = new Enemy1[MAX_BATS];
+Bat* bats = new Bat[MAX_BATS];
 //Setup timers
 Timers timers;
 
@@ -274,6 +276,7 @@ void initOpengl(void)
     glGenTextures(1, &g.RamboTexture);
     glGenTextures(1, &g.spacePirateTexture);
     glGenTextures(1, &g.batEnemyTexture);
+    glGenTextures(1, &g.batEnemyShinyTexture);
     //-------------------------------------------------------------------------
     //silhouette
     //this is similar to a sprite graphic
@@ -345,6 +348,20 @@ void initOpengl(void)
     //must build a new set of data...
     //This is where the texture is initialized in OpenGL (full sheet)
     walkData = buildAlphaData(&img[4]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+
+    // Bat enemy Texture 
+    w = img[5].width;
+    h = img[5].height;
+    glBindTexture(GL_TEXTURE_2D, g.batEnemyShinyTexture);
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //
+    //must build a new set of data...
+    //This is where the texture is initialized in OpenGL (full sheet)
+    walkData = buildAlphaData(&img[5]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
     //free(walkData);

@@ -8,6 +8,7 @@
 #include "SpriteSheet.h"
 #include "Character.h"
 #include "Enemy1.h"
+#include "Bat.h"
 #include "fonts.h"
 #include <sstream>
 #include <cmath>
@@ -27,7 +28,7 @@ extern int nPirates;
 extern Enemy1* pirates;
 extern int MAX_BATS;
 extern int nBats;
-extern Enemy1* bats;
+extern Bat* bats;
 extern int nbullets;
 extern void deleteBullet(int);
 extern int done;

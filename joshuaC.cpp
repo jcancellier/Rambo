@@ -17,6 +17,8 @@
 #include "fonts.h"
 #include "HitBox.h"
 #include <sstream>
+#include "Bat.h"
+
 extern float cx;
 extern Timers timers;
 extern Global g;
@@ -919,6 +921,189 @@ hitBox->updateHitBox(centerY + (height / 2),
 //     // /* ************End Bounding Box Updating********** */
 }
 
+//Enemy1 implementation
+Bat::Bat()
+{
+    centerX = 0;
+    centerY = 0;
+    height = .06 * (float)g.yres;
+    width = height;
+    printf("%f\n", height);
+    frame = 0;
+    flipped = false;
+    jumping = false;
+    health = 4;
+    spriteSheetIndex = 4;
+    velocityX = 0;
+    velocityY = 0;
+    hitBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
+    boundingBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
+    walkTime = timers.timeCurrent;
+    animationSpeedFactor = 2;
+    shiny = false;
+}
+
+void Bat::draw()
+{
+    if(shiny) {
+        spriteSheetIndex = 5;
+    } else {
+        spriteSheetIndex = 4;
+    }
+    glPushMatrix();
+    glColor3f(1.0, 1.0, 1.0);
+    
+    if(shiny) {
+        glBindTexture(GL_TEXTURE_2D, g.batEnemyShinyTexture);
+    } else {
+        glBindTexture(GL_TEXTURE_2D, g.batEnemyTexture);
+    }        
+    
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glColor4ub(255,255,255,255);
+    
+    float ssWidth = (float)1.0/img[spriteSheetIndex].columns;
+    float ssHeight = (float)1.0/img[spriteSheetIndex].rows;
+    
+    int ix = this->frame % img[spriteSheetIndex].columns;
+    int iy = 0;
+    
+    float textureX = (float)ix / img[spriteSheetIndex].columns;
+    float textureY = (float)iy / img[spriteSheetIndex].rows;
+    
+    glBegin(GL_QUADS);
+    glTexCoord2f(textureX, textureY+ssHeight);
+    glVertex2i(flipped ? centerX+width : centerX-width, centerY-height);
+    
+    glTexCoord2f(textureX, textureY);
+    glVertex2i(flipped ? centerX+width : centerX-width, centerY+height);
+    
+    glTexCoord2f(textureX+ssWidth, textureY);
+    glVertex2i(flipped ? centerX-width : centerX+width, centerY+height);
+    
+    glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+    glVertex2i(flipped ? centerX-width : centerX+width, centerY-height);
+    glEnd();
+    
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
+
+    if (display_hitbox) {
+        hitBox->draw();
+        boundingBox->draw(0.0, 0.0, 0.0);
+    }
+    update();
+    /////update animation////////
+    timers.recordTime(&timers.timeCurrent);
+    //record time between frames
+    double timeSpan = timers.timeDiff(&this->walkTime,
+                                      &timers.timeCurrent);
+    if (timeSpan > g.delay/abs(velocityX)*animationSpeedFactor) {
+        //advance frame
+        frame++;
+        if(frame >= img[spriteSheetIndex].columns)
+            frame = 0;
+        timers.recordTime(&this->walkTime);
+    }
+
+    //////end update animation/////////
+}
+
+void Bat::update()
+{
+//     // /* **************Hitbox updating***************** */
+//     // if (jumping) {
+//     //     if (flipped) {
+//     //         hitBox->updateHitBox(centerY+(height/2)-(height*.12),
+//     //             centerY-(height/2)+(height*.07),
+//     //             centerX-(width/2),
+//     //             centerX+(height/2)-(height*.16));
+//     //     } else {
+//     //         hitBox->updateHitBox(centerY+(height/2)-(height*.12),
+//     //             centerY-(height/2)+(height*.07),
+//     //             centerX-(width/2),
+//     //             centerX+(height/2)-(height*.16));
+//     //     }
+//     // } else if (flipped) {
+//     //     if (prone) {
+//     //         hitBox->updateHitBox(centerY - (height*.45),
+//     //                              centerY - (height*1),
+//     //                              centerX - (height*.5),      //13
+//     //                              centerX + (height / 2) - (height * .2080));  //12
+//     //     }
+//     //     else { //standing
+//     //         hitBox->updateHitBox(centerY+(height/2),
+//     //                             centerY-(height/2)-(height*.486111), //28
+//     //                             centerX-(width/2)+(height*.08), //13
+//     //                             centerX+(height/2)-(height*.2080)); //12
+//     //     }
+//     // } else {
+//     //     if (prone) {
+//     //         hitBox->updateHitBox(centerY - (height*.45),
+//     //                              centerY - (height*1), 
+//     //                              centerX - (height*.5),  //5
+//     //                              centerX + (height / 2) - (height * .2));     //20
+//     //     } else { //standing
+hitBox->updateHitBox(centerY + (height / 2),
+                    centerY - (height / 2) - (height * .486111), //28
+                    centerX - (width / 2) + (height * .086805),  //5
+                    centerX + (height / 2) - (height * .2));     //20
+//     //     }
+//     // }
+//     // /* **************End Hitbox Updating************** */
+
+//     // /* **************Bounding box Updating************ */
+//     // if (jumping) {
+//     //     if (flipped) {
+//     //         boundingBox->updateHitBox(centerY+(height/2)-(height*.12),
+//     //             centerY-(height/2)+(height*.07),
+//     //             centerX-(width/2),
+//     //             centerX+(height/2)-(height*.16));
+//     //     } else {
+//     //         boundingBox->updateHitBox(centerY+(height/2)-(height*.12),
+//     //             centerY-(height/2)+(height*.07),
+//     //             centerX-(width/2),
+//     //             centerX+(height/2)-(height*.16));
+//     //     }
+//     // } else if (flipped) {
+//     //     if (prone) {
+//     //         boundingBox->updateHitBox(centerY - (height*.45),
+//     //                              centerY - (height*1),
+//     //                              centerX - (height*.5),      //13
+//     //                              centerX + (height / 2) - (height * .2080));  //12
+//     //     } else if (aimUp) {
+//     //         boundingBox->updateHitBox(centerY + (height),
+//     //                             centerY - (height / 2) - (height * .486111), //28
+//     //                             centerX - (width / 2),      //5
+//     //                             centerX + (width / 2) + (height * .04));     //20
+//     //     } else { //standing
+//     //         boundingBox->updateHitBox(centerY+(height/2),
+//     //                             centerY-(height/2)-(height*.486111), //28
+//     //                             centerX-(width/2)-(height*.35), //13
+//     //                             centerX+(height/2)-(height*.2080)); //12
+//     //     }
+//     // } else {
+//     //     if (prone) {
+//     //         boundingBox->updateHitBox(centerY - (height*.45),
+//     //                              centerY - (height*1), 
+//     //                              centerX - (height*.5),  //5
+//     //                              centerX + (height / 2) - (height * .2));     //20
+//     //     } else if (aimUp) {
+//     //         boundingBox->updateHitBox(centerY + (height),
+//     //                             centerY - (height / 2) - (height * .486111), //28
+//     //                             centerX - (width / 2) + (height * .07),      //5
+//     //                             centerX + (width / 2));     //20
+//     //     } else { //standing
+            // boundingBox->updateHitBox(centerY+(height/2),
+            //                     centerY-(height/2)-(height*.486111), //28
+            //                     centerX-(width/2)+(height*.05), //5
+            //                     centerX+(width/2)+(height*.35)); //20
+//     //     }
+//     // }
+//     // /* ************End Bounding Box Updating********** */
+}
 void checkRamboFlicker() 
 {
     double timeSpan = timers.timeDiff(&timers.ramboCollisionTime,
