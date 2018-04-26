@@ -59,6 +59,11 @@ void kuljitS_physics()
                 pirates[j].velocityX = pirates[nPirates-1].velocityX;
                 pirates[j].flipped = pirates[nPirates-1].flipped;
                 pirates[j].health = pirates[nPirates-1].health;
+                pirates[j].hitBox->updateHitBox(
+                                        pirates[nPirates-1].hitBox->getTop(),
+                                        pirates[nPirates-1].hitBox->getBottom(),
+                                        pirates[nPirates-1].hitBox->getLeft(),
+                                        pirates[nPirates-1].hitBox->getRight());
                 g.score+=50;
                 nPirates--;
             }
@@ -76,6 +81,7 @@ void kuljitS_physics()
                 bats[j].velocityX = bats[nBats-1].velocityX;
                 bats[j].flipped = bats[nBats-1].flipped;
                 bats[j].health = bats[nBats-1].health;
+                bats[j].shiny = bats[nBats-1].shiny;
                 g.score+=50;
                 nBats--;
             }
@@ -98,6 +104,7 @@ void kuljitS_physics()
                 pirates[nPirates].velocityX = -1*(rnd()*2 + 2);
                 pirates[nPirates].flipped=false;  
             }
+            pirates[nPirates].hitBox->updateHitBox(0,0,0,0);
             timers.recordTime(&timers.pirateSpawnTime); 
             nPirates++; 
         }  
@@ -108,7 +115,12 @@ void kuljitS_physics()
         double timeSpan = timers.timeDiff(&timers.batSpawnTime,
                                             &timers.timeCurrent);
         if (timeSpan > batSpawnDelay) {
-            bats[nBats].centerY = 500;  
+            bats[nBats].centerY = 500; 
+            if (rnd() < .5) {
+                bats[nBats].shiny = true;
+            } else {
+                bats[nBats].shiny = false;
+            } 
             if (rnd() < .5) {
                 bats[nBats].centerX = 0 - rnd()*50; 
                 bats[nBats].velocityX = rnd()*2 + 2;  
