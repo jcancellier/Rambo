@@ -10,6 +10,7 @@
 #include "Enemy1.h"
 #include "fonts.h"
 #include <sstream>
+#include <cmath>
 
 extern int flipped;
 extern float cx;
@@ -21,71 +22,135 @@ extern float gravity;
 extern int gameState;
 extern int selectedOption;
 extern SpriteSheet img[];
-extern int MAX_ENEMIES;
-extern int nEnemies;
-extern Enemy1* enemies;
+extern int MAX_PIRATES;
+extern int nPirates;
+extern Enemy1* pirates;
+extern int MAX_BATS;
+extern int nBats;
+extern Enemy1* bats;
 extern int nbullets;
 extern void deleteBullet(int);
 extern int done;
 
 double menuSelectionDelay = 0.15;
-double enemySpawnDelay = 1.0;
+double pirateSpawnDelay = 1.0;
+double batSpawnDelay = 2.0;
 double ramboCollisionDelay = 1.0;
 #define JUMP_STRENGTH 12
 #define INGAME 1
 #define MAINMENU 0
-
+#define PI 3.1415
 bool activateRamboFlicker = false;
 
 void kuljitS_physics() 
 {
     //check for bullet collision with enemy
     for (int i=0; i<nbullets; i++) {
-        for (int j=0; j<nEnemies; j++) {
-            if (g.ramboBullets[i].pos[0] > enemies[j].hitBox->getLeft() &&
-                    g.ramboBullets[i].pos[0] < enemies[j].hitBox->getRight() &&
-                    g.ramboBullets[i].pos[1] > enemies[j].hitBox->getBottom() &&
-                    g.ramboBullets[i].pos[1] < enemies[j].hitBox->getTop()) {
+        for (int j=0; j<nPirates; j++) {
+            if (g.ramboBullets[i].pos[0] > pirates[j].hitBox->getLeft() &&
+                    g.ramboBullets[i].pos[0] < pirates[j].hitBox->getRight() &&
+                    g.ramboBullets[i].pos[1] > pirates[j].hitBox->getBottom() &&
+                    g.ramboBullets[i].pos[1] < pirates[j].hitBox->getTop()) {
                 deleteBullet(i);
-                enemies[j].centerY = enemies[nEnemies-1].centerY;
-                enemies[j].centerX = enemies[nEnemies-1].centerX;
-                enemies[j].velocityY = enemies[nEnemies-1].velocityY;
-                enemies[j].velocityX = enemies[nEnemies-1].velocityX;
-                enemies[j].flipped = enemies[nEnemies-1].flipped;
-                enemies[j].health = enemies[nEnemies-1].health;
+                pirates[j].centerY = pirates[nPirates-1].centerY;
+                pirates[j].centerX = pirates[nPirates-1].centerX;
+                pirates[j].velocityY = pirates[nPirates-1].velocityY;
+                pirates[j].velocityX = pirates[nPirates-1].velocityX;
+                pirates[j].flipped = pirates[nPirates-1].flipped;
+                pirates[j].health = pirates[nPirates-1].health;
                 g.score+=50;
-                nEnemies--;
+                nPirates--;
+            }
+        }
+
+        for (int j=0; j<nBats; j++) {
+            if (g.ramboBullets[i].pos[0] > bats[j].hitBox->getLeft() &&
+                    g.ramboBullets[i].pos[0] < bats[j].hitBox->getRight() &&
+                    g.ramboBullets[i].pos[1] > bats[j].hitBox->getBottom() &&
+                    g.ramboBullets[i].pos[1] < bats[j].hitBox->getTop()) {
+                deleteBullet(i);
+                bats[j].centerY = bats[nBats-1].centerY;
+                bats[j].centerX = bats[nBats-1].centerX;
+                bats[j].velocityY = bats[nBats-1].velocityY;
+                bats[j].velocityX = bats[nBats-1].velocityX;
+                bats[j].flipped = bats[nBats-1].flipped;
+                bats[j].health = bats[nBats-1].health;
+                g.score+=50;
+                nBats--;
             }
         }
     }
  
-    //create new enemies if not at max enemies
-    if (nEnemies < MAX_ENEMIES) {
+    //create new piratesif not at maxpirates 
+    if (nPirates< MAX_PIRATES) {
         timers.recordTime(&timers.timeCurrent);
-        double timeSpan = timers.timeDiff(&timers.enemySpawnTime,
+        double timeSpan = timers.timeDiff(&timers.pirateSpawnTime,
                                             &timers.timeCurrent);
-        if (timeSpan > enemySpawnDelay) {
-            enemies[nEnemies].centerY = 100;  
+        if (timeSpan > pirateSpawnDelay) {
+            pirates[nPirates].centerY = 100;  
             if (rnd() < .5) {
-                enemies[nEnemies].centerX = 0 - rnd()*50; 
-                enemies[nEnemies].velocityX = rnd()*2 + 2;  
-                enemies[nEnemies].flipped=true;
+                pirates[nPirates].centerX = 0 - rnd()*50; 
+                pirates[nPirates].velocityX = rnd()*2 + 2;  
+                pirates[nPirates].flipped=true;
             } else {
-                enemies[nEnemies].centerX = g.xres + rnd()*50;  
-                enemies[nEnemies].velocityX = -1*(rnd()*2 + 2);
-                enemies[nEnemies].flipped=false;  
+                pirates[nPirates].centerX = g.xres + rnd()*50;  
+                pirates[nPirates].velocityX = -1*(rnd()*2 + 2);
+                pirates[nPirates].flipped=false;  
             }
-            timers.recordTime(&timers.enemySpawnTime); 
-            nEnemies++; 
+            timers.recordTime(&timers.pirateSpawnTime); 
+            nPirates++; 
+        }  
+    }    
+
+    if (nBats< MAX_BATS) {
+        timers.recordTime(&timers.timeCurrent);
+        double timeSpan = timers.timeDiff(&timers.batSpawnTime,
+                                            &timers.timeCurrent);
+        if (timeSpan > batSpawnDelay) {
+            bats[nBats].centerY = 500;  
+            if (rnd() < .5) {
+                bats[nBats].centerX = 0 - rnd()*50; 
+                bats[nBats].velocityX = rnd()*2 + 2;  
+                bats[nBats].flipped=true;
+            } else {
+                bats[nBats].centerX = g.xres + rnd()*50;  
+                bats[nBats].velocityX = -1*(rnd()*2 + 2);
+                bats[nBats].flipped=false;  
+            }
+            timers.recordTime(&timers.batSpawnTime); 
+            nBats++; 
         }  
     }    
 
     //check for enemy collisions
-    for (int i=0; i<nEnemies; i++) {
-        if (enemies[i].hitBox->getLeft() <= rambo.hitBox->getRight() &&
-                    enemies[i].hitBox->getRight() >= rambo.hitBox->getLeft() &&
-                    enemies[i].hitBox->getTop() >= rambo.hitBox->getBottom() &&
-                    enemies[i].hitBox->getBottom() <= rambo.hitBox->getTop()) {
+    for (int i=0; i<nPirates; i++) {
+        if (pirates[i].hitBox->getLeft() <= rambo.hitBox->getRight() &&
+                    pirates[i].hitBox->getRight() >= rambo.hitBox->getLeft() &&
+                    pirates[i].hitBox->getTop() >= rambo.hitBox->getBottom() &&
+                    pirates[i].hitBox->getBottom() <= rambo.hitBox->getTop()) {
+            timers.recordTime(&timers.timeCurrent);
+            double timeSpan = timers.timeDiff(&timers.ramboCollisionTime,
+                                                &timers.timeCurrent);
+            if (timeSpan > ramboCollisionDelay) {
+                activateRamboFlicker = true;
+                printf("Enemy Collision\n");
+                rambo.health--;
+                if (rambo.health<=0) {
+                    printf("RAMBO DEAD\n");
+                    //temporary until death menu exists
+                    gameState=MAINMENU; 
+                }
+                timers.recordTime(&timers.ramboCollisionTime);
+            }
+
+        }
+    } 
+    
+    for (int i=0; i<nBats; i++) {
+        if (bats[i].hitBox->getLeft() <= rambo.hitBox->getRight() &&
+                    bats[i].hitBox->getRight() >= rambo.hitBox->getLeft() &&
+                    bats[i].hitBox->getTop() >= rambo.hitBox->getBottom() &&
+                    bats[i].hitBox->getBottom() <= rambo.hitBox->getTop()) {
             timers.recordTime(&timers.timeCurrent);
             double timeSpan = timers.timeDiff(&timers.ramboCollisionTime,
                                                 &timers.timeCurrent);
@@ -120,20 +185,52 @@ void kuljitS_physics()
     rambo.centerX +=rambo.velocityX;
 
     //update enemy positions
-    for (int i=0; i<nEnemies; i++) {
-        if (enemies[i].centerX < 0 && enemies[i].velocityX<0) {
-            enemies[i].velocityX *= -1;
-            enemies[i].flipped=true;
+    for (int i=0; i<nPirates; i++) {
+        if (pirates[i].centerX < 0 && pirates[i].velocityX<0) {
+            pirates[i].velocityX *= -1;
+            pirates[i].flipped=true;
         }
 
-        if (enemies[i].centerX > g.xres && enemies[i].velocityX>0) {
-            enemies[i].velocityX *= -1;
-            enemies[i].flipped=false;
+        if (pirates[i].centerX > g.xres && pirates[i].velocityX>0) {
+            pirates[i].velocityX *= -1;
+            pirates[i].flipped=false;
         }
-        enemies[i].centerX += enemies[i].velocityX;
-        enemies[i].centerY += enemies[i].velocityY;
+        pirates[i].centerX += pirates[i].velocityX;
+        pirates[i].centerY += pirates[i].velocityY;
     }
 
+    for (int i=0; i<nBats; i++) {
+        if (bats[i].centerX < 0 && bats[i].velocityX<0) {
+            bats[i].velocityX *= -1;
+            bats[i].flipped=true;
+        }
+
+        if (bats[i].centerX > g.xres && bats[i].velocityX>0) {
+            bats[i].velocityX *= -1;
+            bats[i].flipped=false;
+        }
+        
+        if (bats[i].centerY >= 500) {
+            bats[i].centerY = 500;
+            bats[i].velocityY = 0;
+            float angle = 0;
+            if (abs(bats[i].centerX - rambo.centerX) != 0) {
+                angle = atan(400/abs(bats[i].centerX - rambo.centerX));
+                angle = angle*180/PI;
+            }
+            if (angle > 42 && angle < 48) {
+                if ((bats[i].velocityX>0 && rambo.centerX>bats[i].centerX) || 
+                      (bats[i].velocityX<0 && rambo.centerX<bats[i].centerX)) {
+                    bats[i].velocityY = -5;    
+                }
+            }
+        } else if (bats[i].centerY <= 100) {
+            bats[i].velocityY = 3;
+        }
+               
+        bats[i].centerX += bats[i].velocityX;
+        bats[i].centerY += bats[i].velocityY;
+    }
     //velocity == 0 if standing on a platform
     if (rambo.centerY <= 100) {
         rambo.centerY = 100;
@@ -145,14 +242,20 @@ void kuljitS_physics()
 void kuljitS_render(){
     Rect r;
     
-    //draw enemies + enemy ID's
-    for (int i=0; i<nEnemies; i++) {
-        enemies[i].draw();
-        r.left = enemies[i].centerX;
-        r.bot = enemies[i].centerY + 100;
+    //draw pirates+ enemy ID's
+    for (int i=0; i<nPirates; i++) {
+        pirates[i].draw();
+        r.left = pirates[i].centerX;
+        r.bot = pirates[i].centerY + 100;
         ggprint8b(&r, 16, 0xffffff, "%i", i);
     }
 
+    for (int i=0; i<nBats; i++) {
+        bats[i].draw();
+        r.left = bats[i].centerX;
+        r.bot = bats[i].centerY + 100;
+        ggprint8b(&r, 16, 0xffffff, "%i", i);
+    }
     //print score
     r.bot = g.yres-20;
     r.left = g.xres/2;

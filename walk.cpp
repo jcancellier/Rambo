@@ -50,8 +50,10 @@ bool display_hitbox = false;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
-int MAX_ENEMIES = 5;
-int nEnemies = 0;
+int MAX_PIRATES = 0;
+int MAX_BATS = 1;
+int nPirates = 0;
+int nBats = 0;
 int done = 0;
 
 #define ALPHA 1
@@ -69,8 +71,10 @@ Global g;
 Level lev;
 //Main Character (rambo)
 Character rambo(0);
-Enemy1* enemies = new Enemy1[MAX_ENEMIES];
-
+//should rename enemy1 to pirates
+Enemy1* pirates = new Enemy1[MAX_PIRATES];
+//bats
+Enemy1* bats = new Enemy1[MAX_BATS];
 //Setup timers
 Timers timers;
 

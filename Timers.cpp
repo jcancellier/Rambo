@@ -36,7 +36,8 @@ Timers::Timers() {
     recordTime(&walkTime);    
     recordTime(&ramboWeaponOutTime);    
     recordTime(&menuSelectionTime);    
-    recordTime(&enemySpawnTime);    
+    recordTime(&pirateSpawnTime);    
+    recordTime(&batSpawnTime);    
     recordTime(&ramboCollisionTime);
 }
 
