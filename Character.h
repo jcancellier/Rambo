@@ -18,6 +18,7 @@ class Character{
 		bool angleUp;
 		bool angleDown;
 		bool shootingStraight;
+		bool runningNoShooting;
 	    float health;
         int spriteSheetIndex;
         float velocityX;

@@ -233,7 +233,7 @@ void Character::draw()
         ramboFlicker = true;
     }
     if (display_hitbox) {
-        hitBox->draw();
+        //hitBox->draw();
         boundingBox->draw(1.0, 0.431, 0.796);
     }
     update();
@@ -327,7 +327,12 @@ void Character::update()
             boundingBox->updateHitBox(centerY + (height),
                                 centerY - (height / 2) - (height * .486111), //28
                                 centerX - (width / 2),      //5
-                                centerX + (width / 2) + (height * .04));     //20
+                                centerX + (width/2) - (width*.1));     //20
+        } else if(runningNoShooting){
+            boundingBox->updateHitBox(centerY+(height/2),
+                                centerY-(height/2)-(height*.486111), //28
+                                centerX-(width/2)-(height*.35), //13
+                                centerX+(height/2)-(height*.2080)); //12
         } else { //standing
             boundingBox->updateHitBox(centerY+(height/2),
                                 centerY-(height/2)-(height*.486111), //28
@@ -345,6 +350,11 @@ void Character::update()
                                 centerY - (height / 2) - (height * .486111), //28
                                 centerX - (width / 2) + (height * .07),      //5
                                 centerX + (width / 2));     //20
+        } else if (runningNoShooting) {
+            boundingBox->updateHitBox(centerY+(height/2),
+                                centerY-(height/2)-(height*.486111), //28
+                                centerX-(width/2)+(height*.05), //5
+                                centerX+(width/2)+(height*.35)); //20
         } else { //standing
             boundingBox->updateHitBox(centerY+(height/2),
                                 centerY-(height/2)-(height*.486111), //28
@@ -442,6 +452,7 @@ void joshuaCInput()
     shootAndRunAnimation();
     proneAnimation();
     aimUpAnimation();
+    checkOnlyRunning();
 }
 
 //function that makes character walk left
@@ -724,6 +735,16 @@ void aimUpAnimation()
     return;
 }
 
+//checks if rambo's in a pure running state (no shooting)
+//and sets his boolean accordingly
+void checkOnlyRunning(){
+    if (!rambo.aimUp && !rambo.prone && !rambo.angleUp && !rambo.angleDown
+         && !rambo.jumping && !rambo.shootingStraight && rambo.frame != 0)
+        rambo.runningNoShooting = true;
+    else 
+        rambo.runningNoShooting = false;
+}
+
 //This function logs rambo's various shooting directions to the debug menu
 void printJoshuaC(int x, int y, int size, int color)
 {
@@ -747,6 +768,8 @@ void printJoshuaC(int x, int y, int size, int color)
         ggprint8b(&r, size, color, "Angle down");
     if (rambo.shootingStraight)
         ggprint8b(&r, size, color, "Shooting straight");
+    if(rambo.runningNoShooting)
+        ggprint8b(&r, size, color, "running & not shooting");
 }
 
 //Enemy1 implementation
