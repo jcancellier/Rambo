@@ -50,6 +50,7 @@ class Global{
 	GLuint batEnemyTexture;
 	GLuint batEnemyShinyTexture;
 	Vec box[20];
+	int shootingKey;
 	Global();
 };
 #endif

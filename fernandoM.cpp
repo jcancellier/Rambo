@@ -66,7 +66,7 @@ void Bullet::draw()
 }
 
 void spaceButton() {
-	if (keys[XK_space]) {
+	if (keys[g.shootingKey]) {
 		struct timespec newBT;
 		clock_gettime(CLOCK_REALTIME, &newBT);
 		double seconds = timers.timeDiff(&g.bulletTimer, &newBT);
