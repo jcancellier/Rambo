@@ -500,7 +500,7 @@ void jumpAnimation()
         rambo.jumping = false;
     }
 
-    if (keys[XK_a] || rambo.jumping) {
+    if (keys[XK_d] || rambo.jumping) {
         
         //check if in walk state
         if ((rambo.frame >= 0 && rambo.frame <= 6) || (rambo.frame >= 11 && rambo.frame <= 13)) {
