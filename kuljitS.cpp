@@ -37,10 +37,6 @@ double menuSelectionDelay = 0.15;
 double pirateSpawnDelay = 1.0;
 double batSpawnDelay = 2.0;
 double ramboCollisionDelay = 1.0;
-#define JUMP_STRENGTH 12
-#define INGAME 1
-#define MAINMENU 0
-#define PI 3.1415
 bool activateRamboFlicker = false;
 
 void kuljitS_physics() 
@@ -339,6 +335,9 @@ int acceptGameState(int selectedOption)
         case 2:
             done=1;
             return 1;
+        case 3:
+            gameState = INGAME;
+            break;
         default:
             printf("FATAL ERROR IN GAME STATE\n\n");
             exit(1);
@@ -391,12 +390,153 @@ void checkKeysMainMenu()
             break;*/
 }
 
+void checkKeysPauseMenu()
+{
+        if (keys[XK_Up]) {
+            timers.recordTime(&timers.timeCurrent);
+            double timeSpan = timers.timeDiff(&timers.menuSelectionTime,
+                                                &timers.timeCurrent);
+            if (timeSpan > menuSelectionDelay) {
+                selectedOption = ((selectedOption-1)+4)%4;
+                timers.recordTime(&timers.menuSelectionTime);
+            }
+        }
+        
+        if (keys[XK_Down]) {
+            timers.recordTime(&timers.timeCurrent);
+            double timeSpan = timers.timeDiff(&timers.menuSelectionTime,
+                                                &timers.timeCurrent);
+            if (timeSpan > menuSelectionDelay) {
+                selectedOption = ((selectedOption+1)+4)%4;
+                timers.recordTime(&timers.menuSelectionTime);
+            }
+        }
+        
+        if (keys[XK_Return]) {
+            timers.recordTime(&timers.timeCurrent);
+            double timeSpan = timers.timeDiff(&timers.menuSelectionTime,
+                                                &timers.timeCurrent);
+            if (timeSpan > menuSelectionDelay) {
+                acceptGameState(selectedOption);
+                timers.recordTime(&timers.menuSelectionTime);
+            }
+        }
+
+/*        case XK_Down:
+        case XK_Escape:
+            done = 1;
+            break;*/
+}
 void renderMainMenu()
 {
-    //set background to black
-    glClearColor(0.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    //set background to game background
+	glPushMatrix();
+	glColor3f(1.0, 1.0, 1.0);
+	glBindTexture(GL_TEXTURE_2D, g.RamboTexture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255, 255, 255, 255);
 
+	float ssWidth = (float)1.0 / img[2].columns;
+	float ssHeight = (float)1.0 / img[2].rows;
+
+	float textureX = 0;
+	float textureY = 0;
+
+	float centerX = g.xres / 2;
+	float centerY = (g.yres / 2) + g.yres*0.20833;
+
+	float width = img[2].width/1.4;
+	float height = img[2].height/1.5;
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(textureX, textureY + ssHeight);
+	glVertex2i(centerX - width, centerY - height);
+
+	glTexCoord2f(textureX, textureY);
+	glVertex2i(centerX - width, centerY + height);
+
+	glTexCoord2f(textureX + ssWidth, textureY);
+	glVertex2i(centerX + width, centerY + height);
+
+	glTexCoord2f(textureX + ssWidth, textureY + ssHeight);
+	glVertex2i(centerX + width, centerY - height);
+	glEnd();
+
+	glPopMatrix();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_ALPHA_TEST);	
+
+    //draw rambo logo //////////////////////////////////////
+    glPushMatrix();
+    glColor3f(1.0, 1.0, 1.0);
+    glBindTexture(GL_TEXTURE_2D, g.ramboLogoTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glColor4ub(255,255,255,255);
+
+    ssWidth = (float)1.0/img[1].columns;
+    ssHeight = (float)1.0/img[1].rows;
+
+    textureX = 0;
+    textureY = 0;
+
+    centerX = g.xres/2;
+    centerY = g.yres*2/3; 
+
+    width = floor(((float)g.xres/1280)*img[1].width);
+    height = floor(((float)g.yres/720)*img[1].height);
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(textureX, textureY+ssHeight);
+    glVertex2i(centerX-width, centerY-height);
+
+    glTexCoord2f(textureX, textureY);
+    glVertex2i(centerX-width, centerY+height);
+
+    glTexCoord2f(textureX+ssWidth, textureY);
+    glVertex2i(centerX+width, centerY+height);
+
+    glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+    glVertex2i(centerX+width, centerY-height);
+    glEnd();
+
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
+
+    ////////////////////////////////////////////
+
+    //display meny options
+    Rect r;
+    r.bot = g.yres/3;
+    r.left = g.xres/2;
+    r.center = 1;
+    
+    switch (selectedOption) {
+        case 0:
+            ggprint8b(&r, 16, 0x123fff, "NEW GAME");
+            ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
+            ggprint8b(&r, 16, 0xffffff, "EXIT");
+            break;
+        case 1:
+            ggprint8b(&r, 16, 0xffffff, "NEW GAME");
+            ggprint8b(&r, 16, 0x123fff, "LEADERBOARD");
+            ggprint8b(&r, 16, 0xffffff, "EXIT");
+            break;
+        case 2:
+            ggprint8b(&r, 16, 0xffffff, "NEW GAME");
+            ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
+            ggprint8b(&r, 16, 0x123fff, "EXIT");
+            break;
+        default:
+//            printf("FATAL GAME ERROR\n\n");
+            break;
+    }
+}
+
+void renderPauseMenu()
+{
     //draw rambo logo //////////////////////////////////////
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
@@ -442,22 +582,39 @@ void renderMainMenu()
     r.bot = g.yres/3;
     r.left = g.xres/2;
     r.center = 1;
-
+    
     switch (selectedOption) {
         case 0:
+            if (rambo.centerY!=800) {
+                ggprint8b(&r, 16, 0xffffff, "RESUME GAME");
+            }
             ggprint8b(&r, 16, 0x123fff, "NEW GAME");
             ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
             ggprint8b(&r, 16, 0xffffff, "EXIT");
             break;
         case 1:
+            if (rambo.centerY!=800) {
+                ggprint8b(&r, 16, 0xffffff, "RESUME GAME");
+            }
             ggprint8b(&r, 16, 0xffffff, "NEW GAME");
             ggprint8b(&r, 16, 0x123fff, "LEADERBOARD");
             ggprint8b(&r, 16, 0xffffff, "EXIT");
             break;
         case 2:
+            if (rambo.centerY!=800) {
+                ggprint8b(&r, 16, 0xffffff, "RESUME GAME");
+            }
             ggprint8b(&r, 16, 0xffffff, "NEW GAME");
             ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
             ggprint8b(&r, 16, 0x123fff, "EXIT");
+            break;
+        case 3:
+            if (rambo.centerY!=800) {
+                ggprint8b(&r, 16, 0x123fff, "RESUME GAME");
+            }
+            ggprint8b(&r, 16, 0xffffff, "NEW GAME");
+            ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
+            ggprint8b(&r, 16, 0xffffff, "EXIT");
             break;
         default:
 //            printf("FATAL GAME ERROR\n\n");

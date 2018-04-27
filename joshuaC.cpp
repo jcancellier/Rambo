@@ -61,7 +61,6 @@ Character::Character()
     centerY = 800;
     height = .08 * (float)g.yres;
     width = height * 0.7;
-    printf("%f\n", height);
     frame = 0;
     flipped = false;
     jumping = false;
