@@ -450,7 +450,7 @@ void walkLeft()
         
         rambo.flipped = true;
         rambo.velocityX = -4;
-        if (rambo.shooting || keys[XK_space] || keys[XK_Up] || keys[XK_Down])
+        if (rambo.shooting || keys[g.shootingKey] || keys[XK_Up] || keys[XK_Down])
             return;
         timers.recordTime(&timers.timeCurrent);
         //record time between frames
@@ -473,7 +473,7 @@ void walkRight()
     if (keys[XK_Right]) {
         rambo.flipped = false;
         rambo.velocityX = 4;
-        if(rambo.shooting || keys[XK_space] || keys[XK_Up] || keys[XK_Down])
+        if(rambo.shooting || keys[g.shootingKey] || keys[XK_Up] || keys[XK_Down])
             return;
         
         timers.recordTime(&timers.timeCurrent);
@@ -499,7 +499,7 @@ void jumpAnimation()
         rambo.jumping = false;
     }
 
-    if (keys[XK_a] || rambo.jumping) {
+    if (keys[XK_d] || rambo.jumping) {
         
         //check if in walk state
         if ((rambo.frame >= 0 && rambo.frame <= 6) || (rambo.frame >= 11 && rambo.frame <= 13)) {
@@ -527,9 +527,9 @@ void shootAndRunAnimation()
     static double timeDifference = 0.0;
     struct timespec start, end;
     clock_gettime(CLOCK_REALTIME, &start);
-    if (keys[XK_space])
+    if (keys[g.shootingKey])
         timeDifference = 0;
-    if ((keys[XK_space] && !rambo.jumping && /*rambo.frame != 0 &&*/ !keys[XK_Up] && !keys[XK_Down]) 
+    if ((keys[g.shootingKey] && !rambo.jumping && /*rambo.frame != 0 &&*/ !keys[XK_Up] && !keys[XK_Down]) 
         || (rambo.shooting && !rambo.jumping && !rambo.angleUp 
         && !rambo.angleDown && !rambo.aimUp && !rambo.prone)) {
 

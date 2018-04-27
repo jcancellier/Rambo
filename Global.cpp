@@ -1,4 +1,5 @@
 #include "Global.h"
+#include <X11/keysym.h>
 
 Global::Global() {
     done=0;
@@ -15,6 +16,7 @@ Global::Global() {
 	box[i][0] = rnd() * xres;
 	box[i][1] = rnd() * (yres-220) + 220.0;
 	box[i][2] = 0.0;
+    shootingKey = XK_f;
     }
 }
 

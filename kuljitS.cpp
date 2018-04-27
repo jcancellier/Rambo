@@ -179,7 +179,7 @@ void kuljitS_physics()
     } 
 
     //check for a jump
-    if (keys[XK_a] && !rambo.jumping) {
+    if (keys[XK_d] && !rambo.jumping) {
         rambo.jumping = true;
         rambo.velocityY=JUMP_STRENGTH;
     }
