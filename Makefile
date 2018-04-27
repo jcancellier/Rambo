@@ -15,6 +15,7 @@ walk: walk.cpp joshuaC.cpp rafaelN.cpp erikS.cpp fernandoM.cpp kuljitS.cpp
 	SpriteSheet.cpp \
 	Timers.cpp \
 	libggfonts.a \
+    -g \
 	/usr/lib/x86_64-linux-gnu/libopenal.so  \
 	/usr/lib/x86_64-linux-gnu/libalut.so \
 	-Wall -Wextra $(LFLAGS) -owalk

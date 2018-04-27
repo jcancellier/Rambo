@@ -29,15 +29,6 @@
 #include "Bullet.h"
 #include "rafaelN.h"
 
-//GAME STATES
-#define MAINMENU 0
-#define INGAME 1
-
-//OPTIONS
-#define NEWGAME 0
-#define LEADERBOARD 1
-#define EXIT 2
-
 //globals
 int nbullets = 0;
 int keys[65536];
@@ -376,6 +367,8 @@ void checkMouse(XEvent *e)
     case MAINMENU:
         checkMouseMainMenu(e);
         break;
+    case PAUSEMENU:
+        break;
     case INGAME:
         //Did the mouse move?
         //Was a mouse button clicked?
@@ -418,6 +411,8 @@ int checkKeys(XEvent *e)
     switch (gameState)
     {
     case MAINMENU:
+        break;
+    case PAUSEMENU:
         break;
     case INGAME:
         //keyboard input?
@@ -482,10 +477,12 @@ int checkKeys(XEvent *e)
             rambo.setWidth(rambo.getWidth() * 2);
             break;
         case XK_Escape:
-            printf("EXITING GAME\n");
+            gameState = PAUSEMENU;
+            selectedOption = RESUMEGAME;
+            //printf("EXITING GAME\n");
 //            delete [] enemies;
   //          enemies = NULL;
-            return 1;
+            //return 1;
             break;
         default:
             break;
@@ -526,6 +523,9 @@ void physics(void)
     case MAINMENU:
         checkKeysMainMenu();
         break;
+    case PAUSEMENU:
+        checkKeysPauseMenu();
+        break;
     case INGAME:
         joshuaCInput();
         kuljitS_physics();
@@ -544,6 +544,9 @@ void render(void)
     {
     case MAINMENU:
         renderMainMenu();
+        break;
+    case PAUSEMENU:
+        renderPauseMenu();
         break;
     case INGAME:{
         Rect r;

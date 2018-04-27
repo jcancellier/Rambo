@@ -27,6 +27,21 @@ typedef Flt     Matrix[4][4];
                       (c)[1]=(a)[1]-(b)[1]; \
                       (c)[2]=(a)[2]-(b)[2]
 
+//GAME STATES
+#define MAINMENU 0
+#define INGAME 1
+#define PAUSEMENU 2
+
+//OPTIONS
+#define NEWGAME 0
+#define LEADERBOARD 1
+#define EXIT 2
+#define RESUMEGAME 3
+
+//CONSTANTS
+#define JUMP_STRENGTH 12
+#define PI 3.1415
+
 class Global{
     public:
 	int done;
