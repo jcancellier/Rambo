@@ -147,7 +147,7 @@ void kuljitS_physics()
                 if (rambo.health<=0) {
                     printf("RAMBO DEAD\n");
                     //temporary until death menu exists
-                    gameState=MAINMENU; 
+                    gameState=PAUSEMENU; 
                 }
                 timers.recordTime(&timers.ramboCollisionTime);
             }
@@ -170,7 +170,7 @@ void kuljitS_physics()
                 if (rambo.health<=0) {
                     printf("RAMBO DEAD\n");
                     //temporary until death menu exists
-                    gameState=MAINMENU; 
+                    gameState=PAUSEMENU; 
                 }
                 timers.recordTime(&timers.ramboCollisionTime);
             }
