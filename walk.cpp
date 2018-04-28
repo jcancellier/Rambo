@@ -43,7 +43,7 @@ int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
 int MAX_PIRATES = 0;
-int MAX_BATS = 2;
+int MAX_BATS = 0;
 int nPirates = 0;
 int nBats = 0;
 int done = 0;
@@ -562,21 +562,21 @@ void render(void)
 	
 	renderBackground(ws,hs,w,h);
 	//Lives(g.xres, g.yres);	
+
+        //DRAW BULLET 
+        Bullet *b; 
+        for (int i = 0; i < nbullets; i++) {
+            b = &g.ramboBullets[i];
+            b->draw();
+        }
+        
         //draw Rambo
         rambo.draw();
         kuljitS_render();
 
-	Platform a(50,0,50,200,100,200,100,0);
-	a.drawPlatform();	
+	//Platform a(50,0,50,200,100,200,100,0);
+	//a.drawPlatform();	
         //rambo.drawOptimized();
-        
-            //DRAW BULLET 
-            Bullet *b; 
-
-            for (int i = 0; i < nbullets; i++) {
-                b = &g.ramboBullets[i];
-                b->draw();
-            }
 
         //Rambo hitbox center
         glPointSize(10);

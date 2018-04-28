@@ -17,7 +17,8 @@
 #include "fernandoM.h"
 #include "Bullet.h" 
 #include "fonts.h"
- 
+#include "Bat.h"
+
 //extern variables
 extern int flipped;
 extern float cx;
@@ -30,6 +31,9 @@ extern int nbullets;
 extern int MAX_ENEMIES;
 extern int nEnemies;
 extern Character* enemies;
+extern int MAX_BATS;
+extern int nBats;
+extern Bat* bats;
 
 using namespace std; 
 
@@ -76,19 +80,27 @@ void spaceButton() {
 	        if (nbullets < MAX_BULLETS) {   
                 //shoot a bullet...
                 Bullet *b = &g.ramboBullets[nbullets];
-                b->pos[0] = rambo.getCenterX();
-                b->pos[1] = rambo.getCenterY();
+                    b->pos[1] = rambo.getCenterY();
 
                 if (rambo.angleUp) { 
+                    b->pos[1] = rambo.boundingBox->getTop();
 	                b->vel[0] = b->velocityValue;
 	                b->vel[1] = b->velocityValue;
                 } else if (rambo.angleDown) { 
+                     if (rambo.flipped) {
+                        b->pos[0] = rambo.boundingBox->getLeft();
+                        b->pos[1] = rambo.boundingBox->getBottom() + 30;
+                    } else { 
+                        b->pos[0] = rambo.boundingBox->getRight();
+                        b->pos[1] = rambo.boundingBox->getBottom() + 30;
+                    }
                         b->vel[0] = b->velocityValue;
 	                    b->vel[1] = -b->velocityValue;
                 } else if (rambo.shootingStraight) {
                         b->vel[0] = b->velocityValue;
                         b->vel[1] = 0;
                 } else if (rambo.aimUp) {
+                        b->pos[1] = rambo.boundingBox->getTop();
                         b->vel[0] = 0;
                         b->vel[1] = b->velocityValue;
                 } else if (rambo.jumping) {
@@ -108,12 +120,12 @@ void spaceButton() {
 			                b->vel[0] = b->velocityValue;
 			                b->vel[1] = b->velocityValue;
                         } else if (keys[XK_Down]) {
-			                        b->vel[0] = b->velocityValue;
-			                        b->vel[1] = -b->velocityValue;
+			                b->vel[0] = b->velocityValue;
+			                b->vel[1] = -b->velocityValue;
                         } else { 
                                     //shoot straight
-			                        b->vel[0] = b->velocityValue;
-			                        b->vel[1] = 0;
+			                b->vel[0] = b->velocityValue;
+			                b->vel[1] = 0;
                         }
                     } else if (keys[XK_Up]) {
 		                    b->vel[0] = 0;
@@ -129,14 +141,29 @@ void spaceButton() {
 	                    b->vel[0] = b->velocityValue;
 	                    b->vel[1] = 0;
                 }
-                
                 if (rambo.flipped) {
-                    if(!(b->vel[0] < 0.0)) {        
+                    b->pos[0] = rambo.boundingBox->getLeft();
+                    if (!(b->vel[0] < 0.0)) {        
                         b->vel[0] *= -1;
                     }            
+                    if (rambo.aimUp) {
+                        b->pos[0] = rambo.boundingBox->getLeft() + 11;
+                    } else if (rambo.prone) { 
+                        b->pos[1] = rambo.boundingBox->getBottom() + 22;
+                    } else if (rambo.angleUp) {
+                        b->pos[0] = rambo.boundingBox->getLeft() + 12;
+                    }
                 } else {
+                    b->pos[0] = rambo.boundingBox->getRight();
                     if ((b->vel[0] < 0.0)) {
                         b->vel[0] *= -1;
+                    }
+                    if (rambo.aimUp) {
+                        b->pos[0] = rambo.boundingBox->getRight() - 9;
+                    } else if (rambo.prone) { 
+                        b->pos[1] = rambo.boundingBox->getBottom() + 22;
+                    } else if (rambo.angleUp) {
+                        b->pos[0] = rambo.boundingBox->getRight() - 12;
                     }
                 }        
                 b->color[0] = 1.0f;
