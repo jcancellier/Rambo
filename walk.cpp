@@ -621,6 +621,8 @@ void render(void)
             r.center = 0;
             ggprint8b(&r, 16, c, "right arrow -> walk right");
             ggprint8b(&r, 16, c, "left arrow  <- walk left");
+            ggprint8b(&r, 16, c, "f key to shoot");
+            ggprint8b(&r, 16, c, "d key to jump");
             ggprint8b(&r, 16, c, "minus key to shrink Rambo");
             ggprint8b(&r, 16, c, "u key to expand Rambo");
             ggprint8b(&r, 16, c, "6 key to toggle hitboxes");
