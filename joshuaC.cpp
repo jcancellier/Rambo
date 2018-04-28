@@ -18,6 +18,8 @@
 #include "HitBox.h"
 #include <sstream>
 #include "Bat.h"
+#include "Explosion.h"
+#include <vector>
 
 extern float cx;
 extern Timers timers;
@@ -28,6 +30,8 @@ extern SpriteSheet img[];
 extern bool display_hitbox;
 extern bool activateRamboFlicker;
 extern double ramboCollisionDelay;
+extern std::vector<Explosion> explosions;
+
 bool ramboFlicker = false;
 
 //Constructors
@@ -1126,6 +1130,124 @@ hitBox->updateHitBox(centerY + (height / 2),
 //     // }
 //     // /* ************End Bounding Box Updating********** */
 }
+
+Explosion::Explosion(float x, float y)
+{
+    	centerX = x;
+	    centerY = y;
+	    height = .1* (float)g.yres;
+	    width = height;
+        spriteSheetIndex = 6;
+        frame = 0;
+        done = false;
+        // animationTime = timers.timeCurrent;
+		// animationSpeedFactor = 1;
+}
+
+void Explosion::draw()
+{
+    glPushMatrix();
+    glColor3f(1.0, 1.0, 1.0);
+    glBindTexture(GL_TEXTURE_2D, g.explosionTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glColor4ub(255,255,255,255);
+    
+    float ssWidth = (float)1.0/img[spriteSheetIndex].columns;
+    float ssHeight = (float)1.0/img[spriteSheetIndex].rows;
+    
+    int ix = this->frame % img[spriteSheetIndex].columns;
+    int iy = 0;
+
+    if (frame >= img[spriteSheetIndex].columns) {
+        iy = 1;
+    }
+
+    if (frame >= (img[spriteSheetIndex].columns*2)) {
+        iy = 2;
+    }
+
+    if (frame >= (img[spriteSheetIndex].columns*3)) {
+        iy = 3;
+    }
+
+    if (frame >= img[spriteSheetIndex].columns*4) {
+        iy = 4;
+    }
+
+    if (frame >= (img[spriteSheetIndex].columns*5)) {
+        iy = 5;
+    }
+
+    if (frame >= (img[spriteSheetIndex].columns*6)) {
+        iy = 6;
+    }
+
+    if (frame >= img[spriteSheetIndex].columns*7) {
+        iy = 7;
+    }
+
+    if (frame >= img[spriteSheetIndex].columns*8) {
+        iy = 8;
+    }
+    
+    float textureX = (float)ix / img[spriteSheetIndex].columns;
+    float textureY = (float)iy / img[spriteSheetIndex].rows;
+    
+    glBegin(GL_QUADS);
+    glTexCoord2f(textureX, textureY+ssHeight);
+    glVertex2i(centerX-width, centerY-height);
+    
+    glTexCoord2f(textureX, textureY);
+    glVertex2i(centerX-width, centerY+height);
+    
+    glTexCoord2f(textureX+ssWidth, textureY);
+    glVertex2i(centerX+width, centerY+height);
+    
+    glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+    glVertex2i(centerX+width, centerY-height);
+    glEnd();
+    
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
+
+    /////update animation////////
+    // timers.recordTime(&timers.timeCurrent);
+    //record time between frames
+    // double timeSpan = timers.timeDiff(&this->animationTme,
+    //                                   &timers.timeCurrent);
+    if (true) {
+        //advance frame
+        frame++;
+        if(frame >= img[spriteSheetIndex].columns*8){
+            frame = 0;
+            done = true;
+        }
+        // timers.recordTime(&this->walkTime);
+    }
+}
+
+void createExplosion(float x, float y)
+{
+    //create temporary explosion
+    Explosion temp(x, y);
+
+    //push temp explosion to actual
+    //vector defined in main
+    explosions.push_back(temp);
+}
+
+void cleanExplosions()
+{
+    //must loop backwards since size is changing
+    for (int x = explosions.size()-1; x >= 0; x--){
+        if(explosions[x].done){
+            explosions.erase(explosions.begin() + x);
+        }
+    }
+}
+
 void checkRamboFlicker() 
 {
     double timeSpan = timers.timeDiff(&timers.ramboCollisionTime,

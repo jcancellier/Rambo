@@ -13,5 +13,6 @@ void aimUpAnimation();
 void printJoshuaC(int, int, int, int);
 void checkRamboFlicker();
 void checkOnlyRunning();
-
+void createExplosion(float, float);
+void cleanExplosions();
 #endif

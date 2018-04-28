@@ -64,6 +64,7 @@ class Global{
 	GLuint spacePirateTexture;
 	GLuint batEnemyTexture;
 	GLuint batEnemyShinyTexture;
+	GLuint explosionTexture;
 	Vec box[20];
 	int shootingKey;
 	Global();

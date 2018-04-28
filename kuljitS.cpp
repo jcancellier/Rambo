@@ -11,6 +11,7 @@
 #include "Bat.h"
 #include "fonts.h"
 #include <sstream>
+#include "joshuaC.h"
 #include <cmath>
 
 extern int flipped;
@@ -49,6 +50,7 @@ void kuljitS_physics()
                     g.ramboBullets[i].pos[1] > pirates[j].hitBox->getBottom() &&
                     g.ramboBullets[i].pos[1] < pirates[j].hitBox->getTop()) {
                 deleteBullet(i);
+                createExplosion(pirates[j].centerX, pirates[j].centerY);
                 pirates[j].centerY = pirates[nPirates-1].centerY;
                 pirates[j].centerX = pirates[nPirates-1].centerX;
                 pirates[j].velocityY = pirates[nPirates-1].velocityY;

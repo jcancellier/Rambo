@@ -21,6 +21,7 @@
 #include "Character.h"
 #include "Enemy1.h"
 #include "Bat.h"
+#include "Explosion.h"
 #include "joshuaC.h"
 #include "erikS.h"
 #include "kuljitS.h"
@@ -28,6 +29,7 @@
 #include "fonts.h"
 #include "Bullet.h"
 #include "rafaelN.h"
+#include <vector>
 
 //globals
 int nbullets = 0;
@@ -42,8 +44,8 @@ bool display_hitbox = false;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
-int MAX_PIRATES = 0;
-int MAX_BATS = 0;
+int MAX_PIRATES = 1;
+int MAX_BATS = 1;
 int nPirates = 0;
 int nBats = 0;
 int done = 0;
@@ -56,7 +58,8 @@ SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7),
                     SpriteSheet("images/background.gif", 1, 1),
                     SpriteSheet("images/spacePirate.gif", 1, 8),
                     SpriteSheet("images/bat.gif", 1, 6),
-                    SpriteSheet("images/batShiny.gif", 1, 6)
+                    SpriteSheet("images/batShiny.gif", 1, 6),
+                    SpriteSheet("images/explosion.gif", 9, 9)
                     };
 
 //Global class
@@ -68,6 +71,9 @@ Character rambo(0);
 Enemy1* pirates = new Enemy1[MAX_PIRATES];
 //bats
 Bat* bats = new Bat[MAX_BATS];
+
+std::vector<Explosion> explosions;
+
 //Setup timers
 Timers timers;
 
@@ -268,6 +274,8 @@ void initOpengl(void)
     glGenTextures(1, &g.spacePirateTexture);
     glGenTextures(1, &g.batEnemyTexture);
     glGenTextures(1, &g.batEnemyShinyTexture);
+    glGenTextures(1, &g.explosionTexture);
+    
     //-------------------------------------------------------------------------
     //silhouette
     //this is similar to a sprite graphic
@@ -342,7 +350,7 @@ void initOpengl(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
 
-    // Bat enemy Texture 
+    // Bat shiny enemy Texture 
     w = img[5].width;
     h = img[5].height;
     glBindTexture(GL_TEXTURE_2D, g.batEnemyShinyTexture);
@@ -353,6 +361,21 @@ void initOpengl(void)
     //must build a new set of data...
     //This is where the texture is initialized in OpenGL (full sheet)
     walkData = buildAlphaData(&img[5]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+
+
+    // explosion texture 
+    w = img[6].width;
+    h = img[6].height;
+    glBindTexture(GL_TEXTURE_2D, g.explosionTexture);
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //
+    //must build a new set of data...
+    //This is where the texture is initialized in OpenGL (full sheet)
+    walkData = buildAlphaData(&img[6]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
     //free(walkData);
@@ -563,6 +586,12 @@ void render(void)
 	renderBackground(ws,hs,w,h);
 	//Lives(g.xres, g.yres);	
 
+        //draw explosions
+        cleanExplosions();
+        for(unsigned int i = 0; i < explosions.size(); i++){
+            explosions[i].draw();
+        }
+
         //DRAW BULLET 
         Bullet *b; 
         for (int i = 0; i < nbullets; i++) {
@@ -574,8 +603,8 @@ void render(void)
         rambo.draw();
         kuljitS_render();
 
-	//Platform a(50,0,50,200,100,200,100,0);
-	//a.drawPlatform();	
+	    //Platform a(50,0,50,200,100,200,100,0);
+	    //a.drawPlatform();	
         //rambo.drawOptimized();
 
         //Rambo hitbox center
