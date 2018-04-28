@@ -81,7 +81,7 @@ void spaceButton() {
                 //shoot a bullet...
                 Bullet *b = &g.ramboBullets[nbullets];
                     b->pos[1] = rambo.getCenterY();
-
+                    
                 if (rambo.angleUp) { 
                     b->pos[1] = rambo.boundingBox->getTop();
 	                b->vel[0] = b->velocityValue;
@@ -104,6 +104,8 @@ void spaceButton() {
                         b->vel[0] = 0;
                         b->vel[1] = b->velocityValue;
                 } else if (rambo.jumping) {
+                    b->pos[0] = rambo.getCenterX();
+
                     if (keys[XK_Left]) {
 		                if (keys[XK_Up]) {
 			                b->vel[0] = b->velocityValue;
