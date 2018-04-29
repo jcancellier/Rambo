@@ -264,7 +264,7 @@ PowerUp::PowerUp(float x, float y, float velX, float velY)
         velocityY = velY;
 	    height = .1* (float)g.yres;
 	    width = height;
-        spriteSheetIndex = 6;
+        spriteSheetIndex = 8;
         frame = 0;
         done = false;
         // animationTime = timers.timeCurrent;
@@ -280,14 +280,14 @@ void PowerUp::draw()
     glAlphaFunc(GL_GREATER, 0.0f);
     glColor4ub(255,255,255,255);
     
-	float ssWidth = (float)1.0/img[8].columns;
-	float ssHeight = (float)1.0/img[8].rows;
+	float ssWidth = (float)1.0/img[spriteSheetIndex].columns;
+	float ssHeight = (float)1.0/img[spriteSheetIndex].rows;
 
 	float textureX = 0;
 	float textureY = 0;
 
-	float centerX = g.xres/2;
-	float centerY = g.yres*2/3; 
+//	float centerX;
+	//float centerY = g.yres*2/3; 
 
 	float height = .03 * (float)g.yres;
 	float width = height;
