@@ -49,6 +49,7 @@ int MAX_BATS = 1;
 int nPirates = 0;
 int nBats = 0;
 int done = 0;
+int cursorPosition[2];
 
 #define ALPHA 1
 
@@ -59,8 +60,10 @@ SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7),
                     SpriteSheet("images/spacePirate.gif", 1, 8),
                     SpriteSheet("images/bat.gif", 1, 6),
                     SpriteSheet("images/batShiny.gif", 1, 6),
-                    SpriteSheet("images/explosion.gif", 9, 9)
-                    };
+                    SpriteSheet("images/explosion.gif", 9, 9),
+                    SpriteSheet("images/aimCursor.gif", 3, 1)
+                    
+					};
 
 //Global class
 Global g;
@@ -104,13 +107,14 @@ class X11_wrapper
         Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
         swa.colormap = cmap;
         swa.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask |
-                         StructureNotifyMask | SubstructureNotifyMask;
+            PointerMotionMask | MotionNotify | ButtonPress | ButtonRelease |             
+			StructureNotifyMask | SubstructureNotifyMask;
         win = XCreateWindow(dpy, root, 0, 0, g.xres, g.yres, 0,
                             vi->depth, InputOutput, vi->visual,
                             CWColormap | CWEventMask, &swa);
         GLXContext glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
         glXMakeCurrent(dpy, win, glc);
-
+        show_mouse_cursor(0);
         //disable autorepeat on key presses
         int mCheck;
         XkbSetDetectableAutoRepeat(dpy, false, &mCheck);
@@ -170,6 +174,29 @@ class X11_wrapper
     void swapBuffers()
     {
         glXSwapBuffers(dpy, win);
+    }
+	void show_mouse_cursor(const int onoff) {
+        if (onoff) {
+            //this removes our own blank cursor.
+            XUndefineCursor(dpy, win);
+            return;
+        }
+        //vars to make blank cursor
+        Pixmap blank;
+        XColor dummy;
+        char data[1] = {0};
+        Cursor cursor;
+        //make a blank cursor
+        blank = XCreateBitmapFromData (dpy, win, data, 1, 1);
+        if (blank == None)
+            std::cout << "error: out of memory." << std::endl;
+        cursor = XCreatePixmapCursor(dpy, blank, blank, &dummy, &dummy, 0, 0);
+        XFreePixmap(dpy, blank);
+        //this makes you the cursor. then set it using this function
+        XDefineCursor(dpy, win, cursor);
+        //after you do not need the cursor anymore use this function.
+        //it will undo the last change done by XDefineCursor
+        //(thus do only use ONCE XDefineCursor and then XUndefineCursor):
     }
 
 } x11;
@@ -275,6 +302,7 @@ void initOpengl(void)
     glGenTextures(1, &g.batEnemyTexture);
     glGenTextures(1, &g.batEnemyShinyTexture);
     glGenTextures(1, &g.explosionTexture);
+    glGenTextures(1, &g.cursorTexture);
     
     //-------------------------------------------------------------------------
     //silhouette
@@ -378,6 +406,21 @@ void initOpengl(void)
     walkData = buildAlphaData(&img[6]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+
+    // cursor texture 
+    w = img[7].width;
+    h = img[7].height;
+    glBindTexture(GL_TEXTURE_2D, g.cursorTexture);
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //
+    //must build a new set of data...
+    //This is where the texture is initialized in OpenGL (full sheet)
+    walkData = buildAlphaData(&img[7]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+
     //free(walkData);
     //unlink("./images/walk.ppm");
     //-------------------------------------------------------------------------
@@ -414,6 +457,9 @@ void checkMouse(XEvent *e)
             savex = e->xbutton.x;
             savey = e->xbutton.y;
         }
+        cursorPosition[0] = savex;
+        cursorPosition[1] = savey;
+
         break;
     default:
         printf("Fatal Error in game state\n\n");
@@ -631,7 +677,7 @@ void render(void)
             printJoshuaC(g.xres/2, g.yres-100, 30, 255);
 
         }
-
+        
         break;
     }
     default:

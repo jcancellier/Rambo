@@ -65,6 +65,7 @@ class Global{
 	GLuint batEnemyTexture;
 	GLuint batEnemyShinyTexture;
 	GLuint explosionTexture;
+	GLuint cursorTexture;
 	Vec box[20];
 	int shootingKey;
 	Global();
