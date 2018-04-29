@@ -4,6 +4,8 @@ typedef Flt     Matrix[4][4];
 void renderBackground(float s, float sh, float w, float h );
 void pauseScreen();
 void renderlevel();
+void teleportCheck();
+void erikRender();
 void Lives(int xres, int yres);
  class Level {
 
