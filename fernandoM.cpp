@@ -262,7 +262,7 @@ PowerUp::PowerUp(float x, float y, float velX, float velY)
 	    centerY = y;
         velocityX = velX;
         velocityY = velY;
-	    height = .1* (float)g.yres;
+	    height = .03* (float)g.yres;
 	    width = height;
         spriteSheetIndex = 8;
         frame = 0;
@@ -285,13 +285,7 @@ void PowerUp::draw()
 
 	float textureX = 0;
 	float textureY = 0;
-
-//	float centerX;
-	//float centerY = g.yres*2/3; 
-
-	float height = .03 * (float)g.yres;
-	float width = height;
-
+    
 	glBegin(GL_QUADS);
 	glTexCoord2f(textureX, textureY+ssHeight);
 	glVertex2i(centerX-width, centerY-height);
