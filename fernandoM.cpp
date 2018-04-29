@@ -10,6 +10,9 @@
 #include <GL/glx.h>
 #include <iostream>
 #include <cmath>
+#include <string>
+#include <sstream>
+#include <vector>
 #include "Global.h"
 #include "Timers.h"
 #include "SpriteSheet.h"
@@ -18,6 +21,7 @@
 #include "Bullet.h" 
 #include "fonts.h"
 #include "Bat.h"
+#include "PowerUp.h"
 
 //extern variables
 extern int flipped;
@@ -34,6 +38,7 @@ extern Character* enemies;
 extern int MAX_BATS;
 extern int nBats;
 extern Bat* bats;
+extern std::vector<PowerUp> powerUps;
 
 using namespace std; 
 
@@ -250,6 +255,84 @@ void renderTheBackground() {
         glDisable(GL_ALPHA_TEST);
         //render background end
 }
+
+PowerUp::PowerUp(float x, float y, float velX, float velY)
+{
+    	centerX = x;
+	    centerY = y;
+        velocityX = velX;
+        velocityY = velY;
+	    height = .1* (float)g.yres;
+	    width = height;
+        spriteSheetIndex = 6;
+        frame = 0;
+        done = false;
+        // animationTime = timers.timeCurrent;
+		// animationSpeedFactor = 1;
+}
+
+void PowerUp::draw()
+{
+    glPushMatrix();
+    glColor3f(1.0, 1.0, 1.0);
+    glBindTexture(GL_TEXTURE_2D, g.powerUpTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glColor4ub(255,255,255,255);
+    
+	float ssWidth = (float)1.0/img[8].columns;
+	float ssHeight = (float)1.0/img[8].rows;
+
+	float textureX = 0;
+	float textureY = 0;
+
+	float centerX = g.xres/2;
+	float centerY = g.yres*2/3; 
+
+	float height = .03 * (float)g.yres;
+	float width = height;
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(textureX, textureY+ssHeight);
+	glVertex2i(centerX-width, centerY-height);
+
+	glTexCoord2f(textureX, textureY);
+	glVertex2i(centerX-width, centerY+height);
+
+	glTexCoord2f(textureX+ssWidth, textureY);
+	glVertex2i(centerX+width, centerY+height);
+
+	glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+	glVertex2i(centerX+width, centerY-height);
+	glEnd();
+
+	glPopMatrix();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_ALPHA_TEST);
+    
+}
+
+void createPowerUp(float x, float y, float velX, float velY)
+{
+    //create temporary powerUp
+    PowerUp temp(x, y, velX, velY);
+
+    //push temp powerUp to actual
+    //vector defined in main
+    powerUps.push_back(temp);
+}
+
+void cleanPowerUps()
+{
+    //must loop backwards since size is changing
+    for (int x = powerUps.size()-1; x >= 0; x--){
+        if(powerUps[x].done){
+            powerUps.erase(powerUps.begin() + x);
+        }
+    }
+}
+
+
 double printGroupNumber() 
 {
     static double td = 0.0; 

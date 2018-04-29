@@ -3,7 +3,7 @@
 //authors: Joshua Cancellier, Kuljit Singh, Fernando Montes de Oca, Erik Soto, Rafael Noriega
 //walk Framework by:  Gordon Griesel
 //date:    summer 2017 - 2018
-//
+// 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,6 +28,7 @@
 #include "fernandoM.h"
 #include "fonts.h"
 #include "Bullet.h"
+#include "PowerUp.h"
 #include "rafaelN.h"
 #include <vector>
 
@@ -44,8 +45,8 @@ bool display_hitbox = false;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
-int MAX_PIRATES = 1;
-int MAX_BATS = 1;
+int MAX_PIRATES = 5;
+int MAX_BATS = 3;
 int nPirates = 0;
 int nBats = 0;
 int done = 0;
@@ -61,8 +62,8 @@ SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7),
                     SpriteSheet("images/bat.gif", 1, 6),
                     SpriteSheet("images/batShiny.gif", 1, 6),
                     SpriteSheet("images/explosion.gif", 9, 9),
-                    SpriteSheet("images/aimCursor.gif", 3, 1)
-                    
+                    SpriteSheet("images/aimCursor.gif", 3, 1),
+                    SpriteSheet("images/mushroomHead.gif", 1, 1)
 					};
 
 //Global class
@@ -76,6 +77,7 @@ Enemy1* pirates = new Enemy1[MAX_PIRATES];
 Bat* bats = new Bat[MAX_BATS];
 
 std::vector<Explosion> explosions;
+std::vector<PowerUp> powerUps;
 
 //Setup timers
 Timers timers;
@@ -303,6 +305,7 @@ void initOpengl(void)
     glGenTextures(1, &g.batEnemyShinyTexture);
     glGenTextures(1, &g.explosionTexture);
     glGenTextures(1, &g.cursorTexture);
+    glGenTextures(1, &g.powerUpTexture);
     
     //-------------------------------------------------------------------------
     //silhouette
@@ -418,6 +421,21 @@ void initOpengl(void)
     //must build a new set of data...
     //This is where the texture is initialized in OpenGL (full sheet)
     walkData = buildAlphaData(&img[7]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+
+
+    // power up texture 
+    w = img[8].width;
+    h = img[8].height;
+    glBindTexture(GL_TEXTURE_2D, g.powerUpTexture);
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //
+    //must build a new set of data...
+    //This is where the texture is initialized in OpenGL (full sheet)
+    walkData = buildAlphaData(&img[8]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
 
@@ -638,6 +656,11 @@ void render(void)
             explosions[i].draw();
         }
 
+        //draw powerUps
+       // cleanPowerUps();
+        for(unsigned int i = 0; i < powerUps.size(); i++){
+            powerUps[i].draw();
+        }
         //DRAW BULLET 
         Bullet *b; 
         for (int i = 0; i < nbullets; i++) {
