@@ -45,8 +45,8 @@ bool display_hitbox = false;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
-int MAX_PIRATES = 5;
-int MAX_BATS = 3;
+int MAX_PIRATES = 0;
+int MAX_BATS = 10;
 int nPirates = 0;
 int nBats = 0;
 int done = 0;
@@ -657,7 +657,7 @@ void render(void)
         }
 
         //draw powerUps
-       // cleanPowerUps();
+        cleanPowerUps();
         for(unsigned int i = 0; i < powerUps.size(); i++){
             powerUps[i].draw();
         }
