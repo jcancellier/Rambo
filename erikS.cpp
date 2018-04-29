@@ -19,8 +19,10 @@
 #include "fonts.h"
 #include "erikS.h"
 #include "Global.h"
+#include "Character.h"
 extern Global g;
 extern Level lev;
+extern Character rambo;
 using namespace std;
 
 //macros
@@ -30,10 +32,18 @@ using namespace std;
 #define VecDot(a,b)	((a)[0]*(b)[0]+(a)[1]*(b)[1]+(a)[2]*(b)[2])
 #define VecSub(a,b,c) (c)[0]=(a)[0]-(b)[0]; \
 			     (c)[1]=(a)[1]-(b)[1]; \
-(c)[2]=(a)[2]-(b)[2]
-
-
-
+    (c)[2]=(a)[2]-(b)[2]
+void teleportCheck()
+{
+    if(rambo.centerX < 0)
+    {   
+	rambo.centerX = g.xres;
+    }
+    if(rambo.centerX > g.xres)
+    {
+	rambo.centerX = 0;
+    } 
+}
 void renderBackground(float s , float sh, float w, float h)
 {
     //background image
@@ -352,3 +362,16 @@ void Lives(int xres, int yres)
 	glPopMatrix();
     }
 }
+void erikRender()
+{
+    Platform a(0,200,0,210,150,210,150,200);
+    Platform c(g.xres,200,g.xres,210,g.xres-150,210,g.xres-150,200);
+    Platform d((g.xres/3)+25,200,(g.xres/3)+25,210,(g.xres/3)-170+25,210,(g.xres/3)-170+25,200);
+    Platform e((g.xres/1.3)+25,200,(g.xres/1.3)+25,210,(g.xres/1.3)-170+25,210,(g.xres/1.3)-170+25,200);
+    a.drawPlatform();   
+    c.drawPlatform();   
+    d.drawPlatform();   
+    e.drawPlatform();  
+}
+
+
