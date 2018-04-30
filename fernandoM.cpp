@@ -230,7 +230,7 @@ void fernandoPhysics()
         i++;
 	}  
     
-    for (unsigned int j=0; j<powerUps.size(); j++) {
+    for (unsigned int j = 0; j < powerUps.size(); j++) {
         if (powerUps[j].hitBox->getLeft() <= rambo.hitBox->getRight() &&
 				powerUps[j].hitBox->getRight() >= rambo.hitBox->getLeft() &&
 				powerUps[j].hitBox->getTop() >= rambo.hitBox->getBottom() &&
