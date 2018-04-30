@@ -23,6 +23,7 @@ class PowerUp{
             delete hitBox;
         }*/
         void draw();
+        void update();
 };
 
 #endif

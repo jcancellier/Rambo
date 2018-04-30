@@ -45,11 +45,12 @@ bool display_hitbox = false;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
-int MAX_PIRATES = 5;
+int MAX_PIRATES = 0;
 int MAX_BATS = 5;
 int nPirates = 0;
 int nBats = 0;
 int done = 0;
+int nPowerUps = 0;
 int cursorPosition[2];
 
 #define ALPHA 1

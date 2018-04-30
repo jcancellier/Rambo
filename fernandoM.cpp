@@ -41,6 +41,8 @@ extern int nBats;
 extern Bat* bats;
 extern std::vector<PowerUp> powerUps;
 extern bool display_hitbox;
+extern float gravity;
+extern int nPowerUps;
 
 using namespace std; 
 
@@ -95,6 +97,7 @@ void shootFaster() {
     }
 }
 void spaceButton() {
+
 	if (keys[g.shootingKey]) {
 		struct timespec newBT;
 		clock_gettime(CLOCK_REALTIME, &newBT);
@@ -239,8 +242,14 @@ void fernandoPhysics()
 
         }  
     }
-}
+    //update powerUp position
+    for (int i = 0; i < nPowerUps; i++) {
 
+        if (powerUps[i].centerY > 60) {
+            powerUps[i].centerY += gravity;
+        }
+    }
+}
 
 void deleteBullet(int n) 
 {
@@ -342,9 +351,18 @@ void PowerUp::draw()
     if (display_hitbox) {
         hitBox->draw();
     }
+    update();
     
 }
 
+void PowerUp::update() {
+
+    hitBox->updateHitBox(centerY + (height / 2),
+                    centerY - (height / 2) - (height * .486111), //28
+                    centerX,  
+                    centerX);     
+
+}
 void createPowerUp(float x, float y, float velX, float velY)
 {
     //create temporary powerUp
