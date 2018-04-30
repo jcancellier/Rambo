@@ -45,7 +45,7 @@ bool display_hitbox = false;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
-int MAX_PIRATES = 5;
+int MAX_PIRATES = 2;
 int MAX_BATS = 0;
 int nPirates = 0;
 int nBats = 0;
@@ -64,7 +64,8 @@ SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7),
                     SpriteSheet("images/explosion.gif", 9, 9),
                     SpriteSheet("images/aimCursor.gif", 3, 1),
                     SpriteSheet("images/mushroomHead.gif", 1, 1),
-                    SpriteSheet("images/healthBar.gif", 1, 5)
+                    SpriteSheet("images/healthBar.gif", 1, 5),
+                    SpriteSheet("images/enemyHealthBars.gif", 4, 4)
 					};
 
 //Global class
@@ -309,6 +310,7 @@ void initOpengl(void)
     glGenTextures(1, &g.cursorTexture);
     glGenTextures(1, &g.powerUpTexture);
     glGenTextures(1, &g.healthBarTexture);
+    glGenTextures(1, &g.enemyHealthBarTexture);
 
     
     //-------------------------------------------------------------------------
@@ -457,6 +459,18 @@ void initOpengl(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
     
+    w = img[10].width;
+    h = img[10].height;
+    glBindTexture(GL_TEXTURE_2D, g.enemyHealthBarTexture);
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //
+    //must build a new set of data...
+    //This is where the texture is initialized in OpenGL (full sheet)
+    walkData = buildAlphaData(&img[10]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, walkData);
     //free(walkData);
     //unlink("./images/walk.ppm");
     //-------------------------------------------------------------------------

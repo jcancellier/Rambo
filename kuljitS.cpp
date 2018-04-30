@@ -51,21 +51,25 @@ void kuljitS_physics()
 					g.ramboBullets[i].pos[0] < pirates[j].hitBox->getRight() &&
 					g.ramboBullets[i].pos[1] > pirates[j].hitBox->getBottom() &&
 					g.ramboBullets[i].pos[1] < pirates[j].hitBox->getTop()) {
-				deleteBullet(i);
-				createExplosion(pirates[j].centerX, pirates[j].centerY);
-				pirates[j].centerY = pirates[nPirates-1].centerY;
-				pirates[j].centerX = pirates[nPirates-1].centerX;
-				pirates[j].velocityY = pirates[nPirates-1].velocityY;
-				pirates[j].velocityX = pirates[nPirates-1].velocityX;
-				pirates[j].flipped = pirates[nPirates-1].flipped;
-				pirates[j].health = pirates[nPirates-1].health;
-				pirates[j].hitBox->updateHitBox(
-						pirates[nPirates-1].hitBox->getTop(),
-						pirates[nPirates-1].hitBox->getBottom(),
-						pirates[nPirates-1].hitBox->getLeft(),
-						pirates[nPirates-1].hitBox->getRight());
-				g.score+=50;
-				nPirates--;
+				pirates[j].health--;
+				//pirates[j].health--;
+                deleteBullet(i);
+                if (pirates[j].health <= 0) {
+                    createExplosion(pirates[j].centerX, pirates[j].centerY);
+                    pirates[j].centerY = pirates[nPirates-1].centerY;
+                    pirates[j].centerX = pirates[nPirates-1].centerX;
+                    pirates[j].velocityY = pirates[nPirates-1].velocityY;
+                    pirates[j].velocityX = pirates[nPirates-1].velocityX;
+                    pirates[j].flipped = pirates[nPirates-1].flipped;
+                    pirates[j].health = pirates[nPirates-1].health;
+                    pirates[j].hitBox->updateHitBox(
+                            pirates[nPirates-1].hitBox->getTop(),
+                            pirates[nPirates-1].hitBox->getBottom(),
+                            pirates[nPirates-1].hitBox->getLeft(),
+                            pirates[nPirates-1].hitBox->getRight());
+                    g.score+=50;
+                    nPirates--;
+                }
 			}
 		}
 
@@ -108,7 +112,8 @@ void kuljitS_physics()
 				pirates[nPirates].flipped=false;  
 			}
 			pirates[nPirates].hitBox->updateHitBox(0,0,0,0);
-			timers.recordTime(&timers.pirateSpawnTime); 
+			pirates[nPirates].health = 4;
+            timers.recordTime(&timers.pirateSpawnTime); 
 			nPirates++; 
 		}  
 	}    
@@ -265,6 +270,76 @@ void kuljitS_render(){
 		r.left = pirates[i].centerX;
 		r.bot = pirates[i].centerY + 100;
 		ggprint8b(&r, 16, 0xffffff, "%i", i);
+        
+        //draw enemy health bar //////////////////////////////////////
+        glPushMatrix();
+        glColor3f(1.0, 1.0, 1.0);
+        glBindTexture(GL_TEXTURE_2D, g.enemyHealthBarTexture);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+        glColor4ub(255,255,255,255);
+
+        float ssWidth = (float)1.0/img[10].columns;
+        float ssHeight = (float)1.0/img[10].rows;
+
+        int ix = 0;
+        int iy = 0;
+
+        switch(pirates[i].health) {
+            case 4:
+                ix = 0;
+                iy = 0;
+                break;
+            case 3:
+                ix = 0;
+                iy = 1;
+                break;
+            case 2:
+                ix = 3;
+                iy = 1;
+                break;
+            case 1:
+                ix = 2;
+                iy = 2;
+                break;
+            case 0:
+                ix = 3;
+                iy = 3;
+                break;
+            default:
+                ix = 2;
+                iy = 3;
+                break;
+        };
+
+        float textureX = (float)ix / img[10].columns;
+        float textureY = (float)iy / img[10].rows;
+
+        float centerX = pirates[i].centerX;
+        float centerY = pirates[i].centerY + 150;
+
+        float width = img[10].width*.1;
+        float height = img[10].height*.1;
+
+        glBegin(GL_QUADS);
+        glTexCoord2f(textureX, textureY+ssHeight);
+        glVertex2i(centerX-width, centerY-height);
+
+        glTexCoord2f(textureX, textureY);
+        glVertex2i(centerX-width, centerY+height);
+
+        glTexCoord2f(textureX+ssWidth, textureY);
+        glVertex2i(centerX+width, centerY+height);
+
+        glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+        glVertex2i(centerX+width, centerY-height);
+        glEnd();
+
+        glPopMatrix();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_ALPHA_TEST);
+
+        ////////////////////////////////////////////
 	}
 
 	for (int i=0; i<nBats; i++) {

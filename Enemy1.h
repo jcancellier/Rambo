@@ -12,7 +12,7 @@ class Enemy1{
 	    int frame;
 	    bool flipped;
         bool jumping;
-	    float health;
+	    int health;
         int spriteSheetIndex;
         float velocityX;
         float velocityY;

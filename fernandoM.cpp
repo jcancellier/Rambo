@@ -230,7 +230,7 @@ void fernandoPhysics()
         i++;
 	}  
     
-    for (int j=0; j<powerUps.size(); j++) {
+    for (unsigned int j=0; j<powerUps.size(); j++) {
         if (powerUps[j].hitBox->getLeft() <= rambo.hitBox->getRight() &&
 				powerUps[j].hitBox->getRight() >= rambo.hitBox->getLeft() &&
 				powerUps[j].hitBox->getTop() >= rambo.hitBox->getBottom() &&
@@ -242,7 +242,7 @@ void fernandoPhysics()
         }  
     }
     //update powerUp position
-    for (int i = 0; i < powerUps.size(); i++) {
+    for (unsigned int i = 0; i < powerUps.size(); i++) {
 
         if (powerUps[i].centerY > 60) {
             powerUps[i].centerY += gravity;
