@@ -6,6 +6,7 @@ void pauseScreen();
 void renderlevel();
 void teleportCheck();
 void erikRender();
+void erikInit();
 void Lives(int xres, int yres);
  class Level {
 
@@ -35,6 +36,7 @@ class Platform {
 	point one,two,three,four;
 	color set;
 	int top;
+	int bottom;
 	int left;
 	int right;
 	Platform(
@@ -46,5 +48,7 @@ class Platform {
 	void setColor(float r, float g, float b);
 	float greatest(float one,float two, float three, float four);
 	float greatest(float one, float two);
+	float least(float one,float two, float three, float four);
+	float least(float one, float two);
 };
 

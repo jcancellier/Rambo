@@ -45,7 +45,7 @@ bool display_hitbox = false;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
-int MAX_PIRATES = 0;
+int MAX_PIRATES = 5;
 int MAX_BATS = 0;
 int nPirates = 0;
 int nBats = 0;
@@ -214,6 +214,7 @@ void render(void);
 int main(void)
 {
     initOpengl();
+    erikInit();
     while (!done) {
         while (x11.getXPending()) {
             XEvent e = x11.getXNextEvent();
@@ -672,8 +673,10 @@ void render(void)
         //draw Rambo
         rambo.draw();
         kuljitS_render();
+
 	erikRender();
-        //rambo.drawOptimized();
+        
+	//rambo.drawOptimized();
 
         //Rambo hitbox center
         glPointSize(10);

@@ -32,7 +32,12 @@ using namespace std;
 #define VecDot(a,b)	((a)[0]*(b)[0]+(a)[1]*(b)[1]+(a)[2]*(b)[2])
 #define VecSub(a,b,c) (c)[0]=(a)[0]-(b)[0]; \
 			     (c)[1]=(a)[1]-(b)[1]; \
-    (c)[2]=(a)[2]-(b)[2]
+(c)[2]=(a)[2]-(b)[2]
+
+void erikInit(){
+    }
+
+
 void teleportCheck()
 {
     if(rambo.centerX < 0)
@@ -44,6 +49,7 @@ void teleportCheck()
 	rambo.centerX = 0;
     } 
 }
+
 void renderBackground(float s , float sh, float w, float h)
 {
     //background image
@@ -125,7 +131,7 @@ Platform::Platform(
 {
     // set the ranges for physics
     top = greatest(ypos,ypos2,ypos3,ypos4);
-
+    bottom = least(ypos,ypos2,ypos3,ypos4);
     one.x = xpos;
     one.y = ypos;
 
@@ -189,6 +195,25 @@ float Platform::greatest(float one,float two)
     else return one;
 
 }
+float Platform::least(float one,float two,float three,float four)
+{
+    float g= least(one,two);
+    float b= least(three,four);
+    return least(g,b);
+
+}
+
+float Platform::least(float one,float two)
+{
+    if(one > two)
+    {
+	return two;
+    }
+    else return one;
+
+}
+
+
 
 class levelGlo {
     public:
@@ -368,10 +393,14 @@ void erikRender()
     Platform c(g.xres,200,g.xres,210,g.xres-150,210,g.xres-150,200);
     Platform d((g.xres/3)+25,200,(g.xres/3)+25,210,(g.xres/3)-170+25,210,(g.xres/3)-170+25,200);
     Platform e((g.xres/1.3)+25,200,(g.xres/1.3)+25,210,(g.xres/1.3)-170+25,210,(g.xres/1.3)-170+25,200);
+    Platform f((g.xres/1.87)+25,300,(g.xres/1.87)+25,310,(g.xres/1.87)-170+25,310,(g.xres/1.87)-170+25,300);
+
+
     a.drawPlatform();   
     c.drawPlatform();   
     d.drawPlatform();   
     e.drawPlatform();  
+    f.drawPlatform();  
 }
 
 
