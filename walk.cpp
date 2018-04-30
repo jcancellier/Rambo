@@ -1,7 +1,7 @@
 //3350
 //program: rambo.cpp
 //authors: Joshua Cancellier, Kuljit Singh, Fernando Montes de Oca, Erik Soto, Rafael Noriega
-//walk Framework by:  Gordon Griesel
+//walk Framework byd:  Gordon Griesel
 //date:    summer 2017 - 2018
 // 
 #include <stdio.h>
@@ -45,8 +45,8 @@ bool display_hitbox = false;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
-int MAX_PIRATES = 5;
-int MAX_BATS = 3;
+int MAX_PIRATES = 0;
+int MAX_BATS = 5;
 int nPirates = 0;
 int nBats = 0;
 int done = 0;
@@ -632,6 +632,7 @@ void physics(void)
         joshuaCInput();
         kuljitS_physics();
         fernandoPhysics();
+	teleportCheck();
         spaceButton();
         break;
     default:
@@ -672,7 +673,7 @@ void render(void)
         }
 
         //draw powerUps
-       // cleanPowerUps();
+        cleanPowerUps();
         for(unsigned int i = 0; i < powerUps.size(); i++){
             powerUps[i].draw();
         }
@@ -686,9 +687,7 @@ void render(void)
         //draw Rambo
         rambo.draw();
         kuljitS_render();
-
-	    //Platform a(50,0,50,200,100,200,100,0);
-	    //a.drawPlatform();	
+	erikRender();
         //rambo.drawOptimized();
 
         //Rambo hitbox center

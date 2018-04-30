@@ -1,3 +1,5 @@
+#include "HitBox.h"
+
 #ifndef POWERUP_H
 #define POWERUP_H
 
@@ -12,11 +14,16 @@ class PowerUp{
         bool done;
         float velocityX;
         float velocityY;
+        HitBox *hitBox;
+  
         // struct timespec animationTime;
-		// float animationSpeedFactor;
-    
+		// float animationSpeedFactor;        
         PowerUp(float, float, float, float);
+       /* ~PowerUp() {
+            delete hitBox;
+        }*/
         void draw();
+        void update();
 };
 
 #endif
