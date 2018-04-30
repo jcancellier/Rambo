@@ -50,7 +50,6 @@ int MAX_BATS = 5;
 int nPirates = 0;
 int nBats = 0;
 int done = 0;
-int nPowerUps = 0;
 int cursorPosition[2];
 
 #define ALPHA 1

@@ -35,7 +35,6 @@ extern int nbullets;
 extern void deleteBullet(int);
 extern int done;
 extern int cursorPosition[];
-extern int nPowerUps;
 
 double menuSelectionDelay = 0.15;
 double pirateSpawnDelay = 1.0;
@@ -78,7 +77,6 @@ void kuljitS_physics()
 				deleteBullet(i);
 				if(bats[j].shiny) {
 					createPowerUp(bats[j].centerX, bats[j].centerY, 0.1, 0.1);
-					nPowerUps++;
 				}
 				bats[j].centerY = bats[nBats-1].centerY;
 				bats[j].centerX = bats[nBats-1].centerX;

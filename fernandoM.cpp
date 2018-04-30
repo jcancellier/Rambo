@@ -42,7 +42,6 @@ extern Bat* bats;
 extern std::vector<PowerUp> powerUps;
 extern bool display_hitbox;
 extern float gravity;
-extern int nPowerUps;
 
 using namespace std; 
 
@@ -243,7 +242,7 @@ void fernandoPhysics()
         }  
     }
     //update powerUp position
-    for (int i = 0; i < nPowerUps; i++) {
+    for (int i = 0; i < powerUps.size(); i++) {
 
         if (powerUps[i].centerY > 60) {
             powerUps[i].centerY += gravity;
