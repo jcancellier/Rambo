@@ -274,11 +274,71 @@ void kuljitS_render(){
 		ggprint8b(&r, 16, 0xffffff, "%i", i);
 	}
 	//print score
-	r.bot = cursorPosition[1];
-	r.left = cursorPosition[0];
+	r.bot = g.yres - 20;
+	r.left = g.xres/2;
 	r.center = 1;
 	ggprint13(&r, 16, 0xffffff, "Score: %i", g.score);
 
+
+	//draw rambo logo //////////////////////////////////////
+	glPushMatrix();
+	glColor3f(1.0, 1.0, 1.0);
+	glBindTexture(GL_TEXTURE_2D, g.healthBarTexture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
+
+	float ssWidth = (float)1.0/img[9].columns;
+	float ssHeight = (float)1.0/img[9].rows;
+
+    int ix = 0;
+
+    switch(rambo.health) {
+        case 4:
+            ix = 0;
+            break;
+        case 3:
+            ix = 1;
+            break;
+        case 2:
+            ix = 2;
+            break;
+        case 1:
+            ix = 3;
+            break;
+        default:
+            ix = 4;
+            break;
+    };
+
+	float textureX = (float)ix / img[9].columns;
+	float textureY = 0;
+
+	float centerX = g.xres/2;
+	float centerY = g.yres*2/3; 
+
+	float width = img[9].width*0.25;
+	float height = img[9].height*0.25;
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(textureX, textureY+ssHeight);
+	glVertex2i(centerX-width, centerY-height);
+
+	glTexCoord2f(textureX, textureY);
+	glVertex2i(centerX-width, centerY+height);
+
+	glTexCoord2f(textureX+ssWidth, textureY);
+	glVertex2i(centerX+width, centerY+height);
+
+	glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+	glVertex2i(centerX+width, centerY-height);
+	glEnd();
+
+	glPopMatrix();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_ALPHA_TEST);
+
+	////////////////////////////////////////////
 }
 
 double printRamboCenter(){
