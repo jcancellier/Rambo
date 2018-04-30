@@ -366,7 +366,6 @@ void createPowerUp(float x, float y, float velX, float velY)
 {
     //create temporary powerUp
     PowerUp temp(x, y, velX, velY);
-
     //push temp powerUp to actual
     //vector defined in main
     powerUps.push_back(temp);
@@ -375,13 +374,12 @@ void createPowerUp(float x, float y, float velX, float velY)
 void cleanPowerUps()
 {
     //must loop backwards since size is changing
-    for (int x = powerUps.size()-1; x >= 0; x--){
-        if(powerUps[x].done){
+    for (int x = powerUps.size()-1; x >= 0; x--) {
+        if (powerUps[x].done){
             powerUps.erase(powerUps.begin() + x);
         }
     }
 }
-
 
 double printGroupNumber() 
 {
