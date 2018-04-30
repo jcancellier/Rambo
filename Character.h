@@ -19,7 +19,7 @@ class Character{
 		bool angleDown;
 		bool shootingStraight;
 		bool runningNoShooting;
-	    float health;
+	    int health;
         int spriteSheetIndex;
         float velocityX;
         float velocityY;

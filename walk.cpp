@@ -63,7 +63,8 @@ SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7),
                     SpriteSheet("images/batShiny.gif", 1, 6),
                     SpriteSheet("images/explosion.gif", 9, 9),
                     SpriteSheet("images/aimCursor.gif", 3, 1),
-                    SpriteSheet("images/mushroomHead.gif", 1, 1)
+                    SpriteSheet("images/mushroomHead.gif", 1, 1),
+                    SpriteSheet("images/healthBar.gif", 1, 5)
 					};
 
 //Global class
@@ -293,7 +294,7 @@ void initOpengl(void)
     //
     int w = img[0].width;
     int h = img[0].height;
-    printf("width: %d \n height: %d\n", w, h);
+    //printf("width: %d \n height: %d\n", w, h);
     //
     //create opengl texture elements
     //1st param: # of textures
@@ -440,6 +441,20 @@ void initOpengl(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
 
+    // health bar texture 
+    w = img[9].width;
+    h = img[9].height;
+    glBindTexture(GL_TEXTURE_2D, g.healthBarTexture);
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //
+    //must build a new set of data...
+    //This is where the texture is initialized in OpenGL (full sheet)
+    walkData = buildAlphaData(&img[9]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+    
     //free(walkData);
     //unlink("./images/walk.ppm");
     //-------------------------------------------------------------------------
@@ -659,7 +674,7 @@ void render(void)
         }
 
         //draw powerUps
-       // cleanPowerUps();
+        cleanPowerUps();
         for(unsigned int i = 0; i < powerUps.size(); i++){
             powerUps[i].draw();
         }
@@ -684,6 +699,8 @@ void render(void)
         glColor3f(0, 0, 0);
         glVertex3f(rambo.getCenterX(), rambo.getCenterY(), 0);
         glEnd();
+        
+        //Lives(g.xres, g.yres);
 
         if (debug_mode) {
             unsigned int c = 0x00ffff44;

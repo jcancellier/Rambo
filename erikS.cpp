@@ -360,7 +360,7 @@ void renderlevel(){
     }
 }
 
-void Lives(int xres, int yres)
+void Live(int xres, int yres)
 {
     //generate a healthbar on top left of the screen
     //dynamic based on the amount of lives left
@@ -375,8 +375,8 @@ void Lives(int xres, int yres)
 	glPushMatrix();
 	glColor3ub(255, 0, 255);
 	glTranslatef(g.xres/2, g.yres/2, 0);
-	float w = g.xres;
-	float h = g.yres;
+	float w = g.xres/100;
+	float h = g.yres/100;
 	glBegin(GL_QUADS);
 	// have to texture map rambos head to each quad;
 	glVertex2i(-w, -h);

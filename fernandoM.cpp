@@ -22,6 +22,7 @@
 #include "fonts.h"
 #include "Bat.h"
 #include "PowerUp.h"
+#include "HitBox.h"
 
 //extern variables
 extern int flipped;
@@ -39,12 +40,14 @@ extern int MAX_BATS;
 extern int nBats;
 extern Bat* bats;
 extern std::vector<PowerUp> powerUps;
+extern bool display_hitbox;
+extern float gravity;
 
 using namespace std; 
 
 //constants 
 const int MAX_BULLETS = 30;
-
+float fireRate = 0.35;
 //Bullet Constructor
 Bullet::Bullet() 
 {
@@ -74,13 +77,32 @@ void Bullet::draw()
     glEnd();
 }
 
+void shootFaster() {
+  
+    /*struct timespec powerUpTimer;
+		    clock_gettime(CLOCK_REALTIME, &powerUpTimer);
+		    double powerUpSeconds = timers.timeDiff(&g.bulletTimer, &powerUpTimer);
+            cout << "FIRERATE BEFORE: " << fireRate << endl;
+            
+            if (powerUpSeconds < 10) {
+                fireRate = 0.10;
+            }
+            cout << "FIRERATE AFTER: " << fireRate << endl;
+            cout << "POWER UP SECONFS" << powerUpSeconds << endl;
+            */
+    
+    if (fireRate > 0.09) {
+        fireRate = fireRate - 0.07;
+    }
+}
 void spaceButton() {
+
 	if (keys[g.shootingKey]) {
 		struct timespec newBT;
 		clock_gettime(CLOCK_REALTIME, &newBT);
 		double seconds = timers.timeDiff(&g.bulletTimer, &newBT);
 
-        if (seconds > 0.35) {
+        if (seconds > fireRate) {
 			timers.timeCopy(&g.bulletTimer, &newBT);
 	        if (nbullets < MAX_BULLETS) {   
                 //shoot a bullet...
@@ -206,7 +228,26 @@ void fernandoPhysics()
 			nbullets--;
 		}
         i++;
-	}      
+	}  
+    
+    for (int j=0; j<powerUps.size(); j++) {
+        if (powerUps[j].hitBox->getLeft() <= rambo.hitBox->getRight() &&
+				powerUps[j].hitBox->getRight() >= rambo.hitBox->getLeft() &&
+				powerUps[j].hitBox->getTop() >= rambo.hitBox->getBottom() &&
+				powerUps[j].hitBox->getBottom() <= rambo.hitBox->getTop()) {
+
+            shootFaster();
+            powerUps[j].done = true;
+
+        }  
+    }
+    //update powerUp position
+    for (int i = 0; i < powerUps.size(); i++) {
+
+        if (powerUps[i].centerY > 60) {
+            powerUps[i].centerY += gravity;
+        }
+    }
 }
 
 void deleteBullet(int n) 
@@ -267,6 +308,8 @@ PowerUp::PowerUp(float x, float y, float velX, float velY)
         spriteSheetIndex = 8;
         frame = 0;
         done = false;
+        hitBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
+
         // animationTime = timers.timeCurrent;
 		// animationSpeedFactor = 1;
 }
@@ -285,7 +328,7 @@ void PowerUp::draw()
 
 	float textureX = 0;
 	float textureY = 0;
-    
+
 	glBegin(GL_QUADS);
 	glTexCoord2f(textureX, textureY+ssHeight);
 	glVertex2i(centerX-width, centerY-height);
@@ -304,13 +347,25 @@ void PowerUp::draw()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_ALPHA_TEST);
     
+    if (display_hitbox) {
+        hitBox->draw();
+    }
+    update();
+    
 }
 
+void PowerUp::update() {
+
+    hitBox->updateHitBox(centerY + (height / 2),
+                    centerY - (height / 2) - (height * .486111), //28
+                    centerX,  
+                    centerX);     
+
+}
 void createPowerUp(float x, float y, float velX, float velY)
 {
     //create temporary powerUp
     PowerUp temp(x, y, velX, velY);
-
     //push temp powerUp to actual
     //vector defined in main
     powerUps.push_back(temp);
@@ -319,13 +374,12 @@ void createPowerUp(float x, float y, float velX, float velY)
 void cleanPowerUps()
 {
     //must loop backwards since size is changing
-    for (int x = powerUps.size()-1; x >= 0; x--){
-        if(powerUps[x].done){
+    for (int x = powerUps.size()-1; x >= 0; x--) {
+        if (powerUps[x].done){
             powerUps.erase(powerUps.begin() + x);
         }
     }
 }
-
 
 double printGroupNumber() 
 {

@@ -41,7 +41,7 @@ Character::Character(int ssIdx)
     centerY = 800;
     height = .08 * (float)g.yres;
     width = height * 0.7;
-    printf("%f\n", height);
+    //printf("%f\n", height);
     frame = 0;
     flipped = false;
     jumping = false;
@@ -782,7 +782,7 @@ Enemy1::Enemy1()
     centerY = 0;
     height = .08 * (float)g.yres;
     width = height;
-    printf("%f\n", height);
+    //printf("%f\n", height);
     frame = 0;
     flipped = false;
     jumping = false;
@@ -954,7 +954,7 @@ Bat::Bat()
     centerY = 0;
     height = .06 * (float)g.yres;
     width = height;
-    printf("%f\n", height);
+    //printf("%f\n", height);
     frame = 0;
     flipped = false;
     jumping = false;
