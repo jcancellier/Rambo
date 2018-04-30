@@ -308,6 +308,8 @@ void initOpengl(void)
     glGenTextures(1, &g.explosionTexture);
     glGenTextures(1, &g.cursorTexture);
     glGenTextures(1, &g.powerUpTexture);
+    glGenTextures(1, &g.healthBarTexture);
+
     
     //-------------------------------------------------------------------------
     //silhouette
