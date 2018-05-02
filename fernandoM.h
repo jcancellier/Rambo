@@ -7,6 +7,6 @@ double printGroupNumberOpt();
 double printGroupNumber();
 void printFernandoM( int, int);
 void renderTheBackground();
-void createPowerUp(float, float, float, float);
+void createPowerUp(float, float, float, float, int);
 void cleanPowerUps();
 #endif

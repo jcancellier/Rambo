@@ -23,6 +23,9 @@
 #include "Bat.h"
 #include "PowerUp.h"
 #include "HitBox.h"
+#include <stdio.h>  
+#include <stdlib.h>     
+#include <time.h>  
 
 //extern variables
 extern int flipped;
@@ -34,7 +37,7 @@ extern Character rambo;
 extern SpriteSheet img[];
 extern int nbullets;
 extern int MAX_ENEMIES;
-extern int nEnemies;
+extern int nPirates;
 extern Character* enemies;
 extern int MAX_BATS;
 extern int nBats;
@@ -235,8 +238,26 @@ void fernandoPhysics()
 				powerUps[j].hitBox->getRight() >= rambo.hitBox->getLeft() &&
 				powerUps[j].hitBox->getTop() >= rambo.hitBox->getBottom() &&
 				powerUps[j].hitBox->getBottom() <= rambo.hitBox->getTop()) {
+            
+            if ( powerUps[j].frame == 2) {
 
-            shootFaster();
+                nBats = 0;
+                nPirates = 0;
+
+            } else if ( powerUps[j].frame == 3 ) { 
+            
+                shootFaster();
+
+            } else if( powerUps[j].frame == 4 ) { 
+                
+                if (rambo.health < 4) {
+                    rambo.health++;
+                }
+            } 
+            else {
+                shootFaster();
+            }
+
             powerUps[j].done = true;
 
         }  
@@ -297,7 +318,7 @@ void renderTheBackground() {
         //render background end
 }
 
-PowerUp::PowerUp(float x, float y, float velX, float velY)
+PowerUp::PowerUp(float x, float y, float velX, float velY, int index)
 {
     	centerX = x;
 	    centerY = y;
@@ -305,8 +326,8 @@ PowerUp::PowerUp(float x, float y, float velX, float velY)
         velocityY = velY;
 	    height = .03* (float)g.yres;
 	    width = height;
-        spriteSheetIndex = 8;
-        frame = 0;
+        spriteSheetIndex = 11;
+        frame = index;
         done = false;
         hitBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
 
@@ -318,16 +339,39 @@ void PowerUp::draw()
 {
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
-    glBindTexture(GL_TEXTURE_2D, g.powerUpTexture);
+    glBindTexture(GL_TEXTURE_2D, g.powerUpsTexture);
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
     glColor4ub(255,255,255,255);
     
 	float ssWidth = (float)1.0/img[spriteSheetIndex].columns;
 	float ssHeight = (float)1.0/img[spriteSheetIndex].rows;
+    
+    int ix = this->frame % img[spriteSheetIndex].columns;
+    int iy = 0;
+	
+    if (frame >= img[spriteSheetIndex].columns) {
+        iy = 1;
+    }
 
-	float textureX = 0;
-	float textureY = 0;
+    if (frame >= (img[spriteSheetIndex].columns*2)) {
+        iy = 2;
+    }
+
+    if (frame >= (img[spriteSheetIndex].columns*3)) {
+        iy = 3;
+    }
+
+    if (frame >= img[spriteSheetIndex].columns*4) {
+        iy = 4;
+    }
+
+    if (frame >= (img[spriteSheetIndex].columns*5)) {
+        iy = 5;
+    }
+    
+    float textureX = (float)ix / img[spriteSheetIndex].columns;
+    float textureY = (float)iy / img[spriteSheetIndex].rows;
 
 	glBegin(GL_QUADS);
 	glTexCoord2f(textureX, textureY+ssHeight);
@@ -351,7 +395,6 @@ void PowerUp::draw()
         hitBox->draw();
     }
     update();
-    
 }
 
 void PowerUp::update() {
@@ -362,13 +405,19 @@ void PowerUp::update() {
                     centerX);     
 
 }
-void createPowerUp(float x, float y, float velX, float velY)
+void createPowerUp(float x, float y, float velX, float velY, int index)
 {
+    srand (time(NULL));
+
+    index = rand() % 6 + 1;
+
     //create temporary powerUp
-    PowerUp temp(x, y, velX, velY);
+    PowerUp temp(x, y, velX, velY, index);
+  
     //push temp powerUp to actual
-    //vector defined in main
     powerUps.push_back(temp);
+
+
 }
 
 void cleanPowerUps()

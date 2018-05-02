@@ -80,7 +80,7 @@ void kuljitS_physics()
 					g.ramboBullets[i].pos[1] < bats[j].hitBox->getTop()) {
 				deleteBullet(i);
 				if(bats[j].shiny) {
-					createPowerUp(bats[j].centerX, bats[j].centerY, 0.1, 0.1);
+					createPowerUp(bats[j].centerX, bats[j].centerY, 0.1, 0.1, 0);
 				}
 				bats[j].centerY = bats[nBats-1].centerY;
 				bats[j].centerX = bats[nBats-1].centerX;

@@ -18,7 +18,7 @@ class PowerUp{
   
         // struct timespec animationTime;
 		// float animationSpeedFactor;        
-        PowerUp(float, float, float, float);
+        PowerUp(float, float, float, float, int);
        /* ~PowerUp() {
             delete hitBox;
         }*/
