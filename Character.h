@@ -23,6 +23,7 @@ class Character{
         int spriteSheetIndex;
         float velocityX;
         float velocityY;
+		float velocityXStrength;
 		HitBox *hitBox;
 		HitBox *boundingBox;
       

@@ -55,6 +55,7 @@ Character::Character(int ssIdx)
     spriteSheetIndex = ssIdx;
     velocityX = 0;
     velocityY = 0;
+    velocityXStrength = 4;
     hitBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
     boundingBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
 }
@@ -464,7 +465,7 @@ void walkLeft()
     if (keys[XK_Left]) {
         
         rambo.flipped = true;
-        rambo.velocityX = -4;
+        rambo.velocityX = -rambo.velocityXStrength;
         if (rambo.shooting || keys[g.shootingKey] || keys[XK_Up] || keys[XK_Down])
             return;
         timers.recordTime(&timers.timeCurrent);
@@ -487,7 +488,7 @@ void walkRight()
 {
     if (keys[XK_Right]) {
         rambo.flipped = false;
-        rambo.velocityX = 4;
+        rambo.velocityX = rambo.velocityXStrength;
         if(rambo.shooting || keys[g.shootingKey] || keys[XK_Up] || keys[XK_Down])
             return;
         
