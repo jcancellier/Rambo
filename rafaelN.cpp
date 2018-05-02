@@ -3,7 +3,6 @@
 //Edited By: Rafael Noriega
 //2015 - 2018
 
-#define USE_OPEN_SOUND true
 #include <X11/keysym.h>
 #include "Global.h"
 #include "Timers.h"
