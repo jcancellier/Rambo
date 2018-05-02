@@ -2,8 +2,13 @@
 //Gordon Griesel
 //2015 - 2018
 
-#define USE_OPENAL_SOUND true
-
+#include "Global.h"
+#include "Timers.h"
+#include "SpriteSheet.h"
+#include "Character.h"
+#include <GL/glx.h>
+#include <sstream>
+#include "fonts.h"
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
