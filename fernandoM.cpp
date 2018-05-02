@@ -243,6 +243,8 @@ void fernandoPhysics()
             
             
             if ( powerUps[j].frame == 1) {
+                
+                rambo.velocityXStrength++;
 
             } else if ( powerUps[j].frame == 2) {
 
@@ -256,7 +258,6 @@ void fernandoPhysics()
                 nPirates = 0;
 
             } else if ( powerUps[j].frame == 3 ) { 
-            
                 shootFaster();
 
             } else if( powerUps[j].frame == 4 ) { 
