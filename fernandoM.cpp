@@ -26,6 +26,8 @@
 #include <stdio.h>  
 #include <stdlib.h>     
 #include <time.h>  
+#include "joshuaC.h"
+#include "Enemy1.h"
 
 //extern variables
 extern int flipped;
@@ -38,13 +40,13 @@ extern SpriteSheet img[];
 extern int nbullets;
 extern int MAX_ENEMIES;
 extern int nPirates;
-extern Character* enemies;
 extern int MAX_BATS;
 extern int nBats;
 extern Bat* bats;
 extern std::vector<PowerUp> powerUps;
 extern bool display_hitbox;
 extern float gravity;
+extern Enemy1* pirates;
 
 using namespace std; 
 
@@ -239,8 +241,17 @@ void fernandoPhysics()
 				powerUps[j].hitBox->getTop() >= rambo.hitBox->getBottom() &&
 				powerUps[j].hitBox->getBottom() <= rambo.hitBox->getTop()) {
             
-            if ( powerUps[j].frame == 2) {
+            
+            if ( powerUps[j].frame == 1) {
 
+            } else if ( powerUps[j].frame == 2) {
+
+                for(int i = 0; i < nBats; i++) {
+                    createExplosion(bats[i].centerX,bats[i].centerY);
+                }
+                for(int i = 0; i < nPirates; i++) {
+                    createExplosion(pirates[i].centerX,pirates[i].centerY);
+                }
                 nBats = 0;
                 nPirates = 0;
 
@@ -324,7 +335,7 @@ PowerUp::PowerUp(float x, float y, float velX, float velY, int index)
 	    centerY = y;
         velocityX = velX;
         velocityY = velY;
-	    height = .03* (float)g.yres;
+	    height = .04* (float)g.yres;
 	    width = height;
         spriteSheetIndex = 11;
         frame = index;
@@ -409,7 +420,9 @@ void createPowerUp(float x, float y, float velX, float velY, int index)
 {
     srand (time(NULL));
 
-    index = rand() % 6 + 1;
+        index = rand() % 4 + 1;
+ 
+    cout << "Index: " << index << endl;
 
     //create temporary powerUp
     PowerUp temp(x, y, velX, velY, index);
