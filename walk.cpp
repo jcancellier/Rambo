@@ -3,7 +3,7 @@
 //authors: Joshua Cancellier, Kuljit Singh, Fernando Montes de Oca, Erik Soto, Rafael Noriega
 //walk Framework byd:  Gordon Griesel
 //date:    summer 2017 - 2018
-// 
+ 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,6 +32,9 @@
 #include "rafaelN.h"
 #include <vector>
 
+//#ifdef USE_OPENAL_SOUND
+#include </usr/include/AL/alut.h>
+//#endif //USE_OPENAL_SOUND
 //globals
 int nbullets = 0;
 int keys[65536];
@@ -217,6 +220,7 @@ void render(void);
 int main(void)
 {
     initOpengl();
+    alutInit(0,NULL);
     erikInit();
     while (!done) {
         while (x11.getXPending()) {
@@ -230,6 +234,7 @@ int main(void)
         x11.swapBuffers();
     }
     //cleanup_fonts();
+    alutExit();
     return 0;
 }
 
@@ -589,7 +594,6 @@ int checkKeys(XEvent *e)
             g.walk ^= 1;
             break;
         case XK_Left:
-            sound();
             break;
         case XK_Right:
             break;

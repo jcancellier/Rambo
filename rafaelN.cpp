@@ -21,6 +21,9 @@ bool inUse[8] = {0,0,0,0,0,0,0,0};
 
 void* migos(void* arg)
 {
+    if (arg){
+
+    }
     //int* threadNumber = (int*)arg;
     //int i = *threadNumber;
 

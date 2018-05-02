@@ -45,7 +45,7 @@ extern Bat* bats;
 extern std::vector<PowerUp> powerUps;
 extern bool display_hitbox;
 extern float gravity;
-
+extern void sound();
 using namespace std; 
 
 //constants 
@@ -202,6 +202,7 @@ void spaceButton() {
                 b->color[1] = 1.0f;
                 b->color[2] = 1.0f; 
                 nbullets++;
+		sound();
             }
         }
     }	
