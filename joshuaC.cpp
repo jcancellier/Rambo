@@ -1073,10 +1073,17 @@ void Bat::update()
 //     //                              centerX - (height*.5),  //5
 //     //                              centerX + (height / 2) - (height * .2));     //20
 //     //     } else { //standing
-hitBox->updateHitBox(centerY + (height / 2),
-                    centerY - (height / 2) - (height * .486111), //28
-                    centerX - (width / 2) + (height * .086805),  //5
-                    centerX + (height / 2) - (height * .2));     //20
+if (flipped) {
+    hitBox->updateHitBox(centerY + (height / 2),
+                    centerY - (height / 2) - (height * .1), //28
+                    centerX + 23 - (width / 2) + (height * .1),  //5
+                    centerX + 23 + (height / 2) - (height * .1));     //20
+} else {
+        hitBox->updateHitBox(centerY + (height / 2),
+                    centerY - (height / 2) - (height * .1), //28
+                    centerX - 20 - (width / 2) + (height * .1),  //5
+                    centerX - 20 + (height / 2) - (height * .1));     //20           //nigger
+}
 //     //     }
 //     // }
 //     // /* **************End Hitbox Updating************** */
