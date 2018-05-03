@@ -57,7 +57,7 @@ float fireRate = 0.35;
 //Bullet Constructor
 Bullet::Bullet() 
 {
-    velocityValue = 10;
+    velocityValue = rambo.velocityX + 10;
     //define starter values
 	pos[0] = rambo.getCenterX();
     pos[1] = rambo.getCenterY();
@@ -158,7 +158,7 @@ void spaceButton() {
 			                b->vel[0] = b->velocityValue;
 			                b->vel[1] = -b->velocityValue;
                         } else { 
-                                    //shoot straight
+                            //shoot straight
 			                b->vel[0] = b->velocityValue;
 			                b->vel[1] = 0;
                         }
@@ -245,9 +245,9 @@ void fernandoPhysics()
             
             
             if ( powerUps[j].frame == 1) {
-                
-                rambo.velocityXStrength++;
-
+                if (rambo.velocityXStrength < 8) {
+                    rambo.velocityXStrength++;
+                }
             } else if ( powerUps[j].frame == 2) {
 
                 for(int i = 0; i < nBats; i++) {

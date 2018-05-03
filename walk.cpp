@@ -32,9 +32,9 @@
 #include "rafaelN.h"
 #include <vector>
 
-//#ifdef USE_OPENAL_SOUND
+#ifdef USE_OPENAL_SOUND
 #include </usr/include/AL/alut.h>
-//#endif //USE_OPENAL_SOUND
+#endif //USE_OPENAL_SOUND
 //globals
 int nbullets = 0;
 int keys[65536];
