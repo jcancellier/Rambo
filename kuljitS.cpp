@@ -133,7 +133,7 @@ void kuljitS_physics()
 	}
 
 	//create new piratesif not at maxpirates 
-	if (nPirates< level*1) {
+	if (nPirates< level*1 && nPirates < MAX_PIRATES) {
 		timers.recordTime(&timers.timeCurrent);
 		double timeSpan = timers.timeDiff(&timers.pirateSpawnTime,
 				&timers.timeCurrent);
@@ -155,7 +155,7 @@ void kuljitS_physics()
 		}  
 	}    
 
-	if (nBats< level*2) {
+	if (nBats< level*2 && nBats < MAX_BATS) {
 		timers.recordTime(&timers.timeCurrent);
 		double timeSpan = timers.timeDiff(&timers.batSpawnTime,
 				&timers.timeCurrent);
@@ -181,7 +181,7 @@ void kuljitS_physics()
 		}  
 	}    
 
-	if (nJuggernauts< (level>>2)) {
+	if (nJuggernauts< (level>>2) && nJuggernauts < MAX_JUGGERNAUTS) {
 		timers.recordTime(&timers.timeCurrent);
 		double timeSpan = timers.timeDiff(&timers.juggernautSpawnTime,
 				&timers.timeCurrent);
