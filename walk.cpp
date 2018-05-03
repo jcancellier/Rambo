@@ -224,7 +224,9 @@ void render(void);
 int main(void)
 {
     initOpengl();
+    #ifdef USE_OPENAL_SOUND
     alutInit(0,NULL);
+    #endif
     erikInit();
     while (!done) {
         while (x11.getXPending()) {
@@ -238,8 +240,11 @@ int main(void)
         x11.swapBuffers();
     }
     //cleanup_fonts();
+    #ifdef USE_OPENAL_SOUND
     alutExit();
-    return 0;
+    #endif
+     
+   return 0;
 }
 
 //This function removes background from sprite sheet
