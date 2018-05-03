@@ -39,7 +39,7 @@ extern void deleteBullet(int);
 extern int done;
 extern int cursorPosition[];
 extern int level;
-
+extern void sound(int select);
 
 double juggernautSpawnDelay = 1.0;
 double menuSelectionDelay = 0.15;
@@ -866,6 +866,7 @@ void checkKeysPauseMenu()
 }
 void renderMainMenu()
 {
+    	sound(1);
 	//set background to game background
 	glPushMatrix();
 	glColor3f(1.0, 1.0, 1.0);
