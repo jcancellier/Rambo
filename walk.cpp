@@ -21,6 +21,7 @@
 #include "Character.h"
 #include "Enemy1.h"
 #include "Bat.h"
+#include "Hulk.h"
 #include "Explosion.h"
 #include "joshuaC.h"
 #include "erikS.h"
@@ -72,7 +73,8 @@ SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7),
                     SpriteSheet("images/mushroomHead.gif", 1, 1),
                     SpriteSheet("images/healthBar.gif", 1, 5),
                     SpriteSheet("images/enemyHealthBars.gif", 4, 4),
-                    SpriteSheet("images/powerUps.gif", 1, 6)
+                    SpriteSheet("images/powerUps.gif", 1, 6),
+                    SpriteSheet("images/hulk.gif", 1, 6),
 					};
 
 //Global class
@@ -85,7 +87,7 @@ Enemy1* pirates = new Enemy1[MAX_PIRATES];
 //bats
 Bat* bats = new Bat[MAX_BATS];
 //juggrnauts
-Enemy1* juggernauts = new Enemy1[MAX_JUGGERNAUTS];
+Hulk* juggernauts = new Hulk[MAX_JUGGERNAUTS];
 
 std::vector<Explosion> explosions;
 std::vector<PowerUp> powerUps;
@@ -328,6 +330,7 @@ void initOpengl(void)
     glGenTextures(1, &g.healthBarTexture);
     glGenTextures(1, &g.enemyHealthBarTexture);
     glGenTextures(1, &g.powerUpsTexture);
+    glGenTextures(1, &g.hulkTexture);
 
     
     //-------------------------------------------------------------------------
@@ -500,6 +503,19 @@ void initOpengl(void)
     //must build a new set of data...
     //This is where the texture is initialized in OpenGL (full sheet)
     walkData = buildAlphaData(&img[11]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+    // hulk texture 
+    w = img[12].width;
+    h = img[12].height;
+    glBindTexture(GL_TEXTURE_2D, g.hulkTexture);
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //
+    //must build a new set of data...
+    //This is where the texture is initialized in OpenGL (full sheet)
+    walkData = buildAlphaData(&img[12]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
 

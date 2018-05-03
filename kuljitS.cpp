@@ -9,6 +9,7 @@
 #include "Character.h"
 #include "Enemy1.h"
 #include "Bat.h"
+#include "Hulk.h"
 #include "fonts.h"
 #include <sstream>
 #include "joshuaC.h"
@@ -33,7 +34,7 @@ extern int nBats;
 extern Bat* bats;
 extern int MAX_JUGGERNAUTS;
 extern int nJuggernauts;
-extern Enemy1* juggernauts;
+extern Hulk* juggernauts;
 extern int nbullets;
 extern void deleteBullet(int);
 extern int done;
@@ -189,11 +190,11 @@ void kuljitS_physics()
 			if (rnd() < .5) {
 				juggernauts[nJuggernauts].centerX = 0 - rnd()*50; 
 				juggernauts[nJuggernauts].velocityX = rnd()*2 + 0.5;  
-				juggernauts[nJuggernauts].flipped=true;
+				juggernauts[nJuggernauts].flipped=false;
 			} else {
 				juggernauts[nJuggernauts].centerX = g.xres + rnd()*50;  
 				juggernauts[nJuggernauts].velocityX = -1*(rnd()*2 + 0.5);
-				juggernauts[nJuggernauts].flipped=false;  
+				juggernauts[nJuggernauts].flipped=true;  
 			}
 			juggernauts[nJuggernauts].hitBox->updateHitBox(0,0,0,0);
 			juggernauts[nJuggernauts].health = 4;
@@ -338,12 +339,12 @@ void kuljitS_physics()
 	for (int i=0; i<nJuggernauts; i++) {
 		if (juggernauts[i].centerX < 0 && juggernauts[i].velocityX<0) {
 			juggernauts[i].velocityX *= -1;
-			juggernauts[i].flipped=true;
+			juggernauts[i].flipped=false;
 		}
 
 		if (juggernauts[i].centerX > g.xres && juggernauts[i].velocityX>0) {
 			juggernauts[i].velocityX *= -1;
-			juggernauts[i].flipped=false;
+			juggernauts[i].flipped=true;
 		}
 
 		if (juggernauts[i].centerY <= 100) {

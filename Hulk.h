@@ -1,9 +1,9 @@
 #include "HitBox.h"
 
-#ifndef ENEMY1_H
-#define ENEMY1_H
+#ifndef HULK_H
+#define HULK_H
 
-class Enemy1{
+class Hulk{
     public:
 	    float centerX;
 	    float centerY;
@@ -17,16 +17,14 @@ class Enemy1{
         float velocityX;
         float velocityY;
 		HitBox *hitBox;
-		HitBox *boundingBox;
         struct timespec walkTime;
 		float animationSpeedFactor;
       
-        Enemy1();
+        Hulk();
         void draw();
 		void update();
-		~Enemy1(){
+		~Hulk(){
 			delete hitBox;
-			delete boundingBox;
 		}
 };
 

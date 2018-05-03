@@ -69,6 +69,7 @@ class Global{
 	GLuint healthBarTexture;
 	GLuint enemyHealthBarTexture;
 	GLuint powerUpsTexture;
+	GLuint hulkTexture;
     Vec box[20];
 	int shootingKey;
 	Global();
