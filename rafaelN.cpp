@@ -86,7 +86,6 @@ void* migos(void* arg)
 	//Close out OpenAL itself.
 //	alutExit();
     //inUse[i]=0;
-    pthread_exit(NULL);
     /*
 //Get active context.
 	ALCcontext *Context = alcGetCurrentContext();
@@ -100,6 +99,7 @@ void* migos(void* arg)
 	alcCloseDevice(Device);
 */
 #endif //USE_OPENAL_SOUND
+    pthread_exit(NULL);
 	//return 0;
 }
 
