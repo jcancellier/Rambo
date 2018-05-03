@@ -14,6 +14,7 @@
 typedef double Flt;
 typedef double Vec[3];
 typedef Flt     Matrix[4][4];
+extern  int MAX_JUGGERNAUTS;
 
 //macros
 #define rnd() (((double)rand())/(double)RAND_MAX)
@@ -40,6 +41,10 @@ Timers::Timers() {
     recordTime(&batSpawnTime);    
     recordTime(&ramboCollisionTime);
     recordTime(&juggernautSpawnTime);
+    juggernautChargeTime = new timespec[MAX_JUGGERNAUTS];
+    for (int i=0; i< MAX_JUGGERNAUTS; i++) {
+        recordTime(&juggernautChargeTime[i]);
+    }
 }
 
 double Timers::timeDiff(struct timespec *start, struct timespec *end) {

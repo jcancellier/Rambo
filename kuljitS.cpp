@@ -38,7 +38,7 @@ extern int nbullets;
 extern void deleteBullet(int);
 extern int done;
 extern int cursorPosition[];
-
+extern int level;
 
 
 double juggernautSpawnDelay = 1.0;
@@ -49,7 +49,11 @@ double ramboCollisionDelay = 1.0;
 bool activateRamboFlicker = false;
 
 void kuljitS_physics() 
-{
+{   
+    if (level <=100) {
+        level = g.score/500 + 1;
+    }
+
 	//check for bullet collision with enemy
 	for (int i=0; i<nbullets; i++) {
 		for (int j=0; j<nPirates; j++) {
@@ -59,8 +63,8 @@ void kuljitS_physics()
 					g.ramboBullets[i].pos[1] < pirates[j].hitBox->getTop()) {
 				pirates[j].health--;
 				pirates[j].health--;
-				//pirates[j].health--;
                 deleteBullet(i);
+                g.score+=25;
                 if (pirates[j].health <= 0) {
                     createExplosion(pirates[j].centerX, pirates[j].centerY);
                     pirates[j].centerY = pirates[nPirates-1].centerY;
@@ -74,7 +78,6 @@ void kuljitS_physics()
                             pirates[nPirates-1].hitBox->getBottom(),
                             pirates[nPirates-1].hitBox->getLeft(),
                             pirates[nPirates-1].hitBox->getRight());
-                    g.score+=50;
                     nPirates--;
                 }
 			}
@@ -129,7 +132,7 @@ void kuljitS_physics()
 	}
 
 	//create new piratesif not at maxpirates 
-	if (nPirates< MAX_PIRATES) {
+	if (nPirates< level*1) {
 		timers.recordTime(&timers.timeCurrent);
 		double timeSpan = timers.timeDiff(&timers.pirateSpawnTime,
 				&timers.timeCurrent);
@@ -151,7 +154,7 @@ void kuljitS_physics()
 		}  
 	}    
 
-	if (nBats< MAX_BATS) {
+	if (nBats< level*2) {
 		timers.recordTime(&timers.timeCurrent);
 		double timeSpan = timers.timeDiff(&timers.batSpawnTime,
 				&timers.timeCurrent);
@@ -177,7 +180,7 @@ void kuljitS_physics()
 		}  
 	}    
 
-	if (nJuggernauts< MAX_JUGGERNAUTS) {
+	if (nJuggernauts< (level>>2)) {
 		timers.recordTime(&timers.timeCurrent);
 		double timeSpan = timers.timeDiff(&timers.juggernautSpawnTime,
 				&timers.timeCurrent);
@@ -359,8 +362,9 @@ void kuljitS_physics()
                     juggernauts[i].velocityX < 0)){
 				juggernauts[i].velocityY = JUMP_STRENGTH*2;
                 float timetofall = abs(2*JUMP_STRENGTH*2/gravity);
-                juggernauts[i].velocityX = -(juggernauts[i].centerX - rambo.centerX)/timetofall; 
-			}
+                juggernauts[i].velocityX = -(juggernauts[i].centerX - rambo.centerX)/timetofall;
+            }
+		
 		} else {
             juggernauts[i].velocityY += gravity;
         }
@@ -388,73 +392,75 @@ void kuljitS_render(){
 		ggprint8b(&r, 16, 0xffffff, "%i", i);
         
         //draw enemy health bar //////////////////////////////////////
-        glPushMatrix();
-        glColor3f(1.0, 1.0, 1.0);
-        glBindTexture(GL_TEXTURE_2D, g.enemyHealthBarTexture);
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.0f);
-        glColor4ub(255,255,255,255);
+        if (pirates[i].health < 4) {
+            glPushMatrix();
+            glColor3f(1.0, 1.0, 1.0);
+            glBindTexture(GL_TEXTURE_2D, g.enemyHealthBarTexture);
+            glEnable(GL_ALPHA_TEST);
+            glAlphaFunc(GL_GREATER, 0.0f);
+            glColor4ub(255,255,255,255);
 
-        float ssWidth = (float)1.0/img[10].columns;
-        float ssHeight = (float)1.0/img[10].rows;
+            float ssWidth = (float)1.0/img[10].columns;
+            float ssHeight = (float)1.0/img[10].rows;
 
-        int ix = 0;
-        int iy = 0;
+            int ix = 0;
+            int iy = 0;
 
-        switch(pirates[i].health) {
-            case 4:
-                ix = 0;
-                iy = 0;
-                break;
-            case 3:
-                ix = 0;
-                iy = 1;
-                break;
-            case 2:
-                ix = 3;
-                iy = 1;
-                break;
-            case 1:
-                ix = 2;
-                iy = 2;
-                break;
-            case 0:
-                ix = 3;
-                iy = 3;
-                break;
-            default:
-                ix = 2;
-                iy = 3;
-                break;
-        };
+            switch(pirates[i].health) {
+                case 4:
+                    ix = 0;
+                    iy = 0;
+                    break;
+                case 3:
+                    ix = 0;
+                    iy = 1;
+                    break;
+                case 2:
+                    ix = 3;
+                    iy = 1;
+                    break;
+                case 1:
+                    ix = 2;
+                    iy = 2;
+                    break;
+                case 0:
+                    ix = 3;
+                    iy = 3;
+                    break;
+                default:
+                    ix = 2;
+                    iy = 3;
+                    break;
+            };
 
-        float textureX = (float)ix / img[10].columns;
-        float textureY = (float)iy / img[10].rows;
+            float textureX = (float)ix / img[10].columns;
+            float textureY = (float)iy / img[10].rows;
 
-        float centerX = pirates[i].centerX;
-        float centerY = pirates[i].centerY + 150;
+            float centerX = pirates[i].centerX;
+            float centerY = pirates[i].centerY + 150;
 
-        float width = img[10].width*.1;
-        float height = img[10].height*.1;
+            float width = img[10].width*.1;
+            float height = img[10].height*.1;
 
-        glBegin(GL_QUADS);
-        glTexCoord2f(textureX, textureY+ssHeight);
-        glVertex2i(centerX-width, centerY-height);
+            glBegin(GL_QUADS);
+            glTexCoord2f(textureX, textureY+ssHeight);
+            glVertex2i(centerX-width, centerY-height);
 
-        glTexCoord2f(textureX, textureY);
-        glVertex2i(centerX-width, centerY+height);
+            glTexCoord2f(textureX, textureY);
+            glVertex2i(centerX-width, centerY+height);
 
-        glTexCoord2f(textureX+ssWidth, textureY);
-        glVertex2i(centerX+width, centerY+height);
+            glTexCoord2f(textureX+ssWidth, textureY);
+            glVertex2i(centerX+width, centerY+height);
 
-        glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
-        glVertex2i(centerX+width, centerY-height);
-        glEnd();
+            glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+            glVertex2i(centerX+width, centerY-height);
+            glEnd();
 
-        glPopMatrix();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_ALPHA_TEST);
-
+            glPopMatrix();
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glDisable(GL_ALPHA_TEST);
+        }
+        
         ////////////////////////////////////////////
 	}
 
@@ -477,61 +483,62 @@ void kuljitS_render(){
 
         int ix = 0;
         int iy = 0;
+        
+        if (bats[i].health < 4) { 
+            switch(bats[i].health) {
+                case 4:
+                    ix = 0;
+                    iy = 0;
+                    break;
+                case 3:
+                    ix = 0;
+                    iy = 1;
+                    break;
+                case 2:
+                    ix = 3;
+                    iy = 1;
+                    break;
+                case 1:
+                    ix = 2;
+                    iy = 2;
+                    break;
+                case 0:
+                    ix = 3;
+                    iy = 3;
+                    break;
+                default:
+                    ix = 2;
+                    iy = 3;
+                    break;
+            };
 
-        switch(pirates[i].health) {
-            case 4:
-                ix = 0;
-                iy = 0;
-                break;
-            case 3:
-                ix = 0;
-                iy = 1;
-                break;
-            case 2:
-                ix = 3;
-                iy = 1;
-                break;
-            case 1:
-                ix = 2;
-                iy = 2;
-                break;
-            case 0:
-                ix = 3;
-                iy = 3;
-                break;
-            default:
-                ix = 2;
-                iy = 3;
-                break;
-        };
+            float textureX = (float)ix / img[10].columns;
+            float textureY = (float)iy / img[10].rows;
 
-        float textureX = (float)ix / img[10].columns;
-        float textureY = (float)iy / img[10].rows;
+            float centerX = bats[i].centerX;
+            float centerY = bats[i].centerY + 150;
 
-        float centerX = pirates[i].centerX;
-        float centerY = pirates[i].centerY + 150;
+            float width = img[10].width*.1;
+            float height = img[10].height*.1;
 
-        float width = img[10].width*.1;
-        float height = img[10].height*.1;
+            glBegin(GL_QUADS);
+            glTexCoord2f(textureX, textureY+ssHeight);
+            glVertex2i(centerX-width, centerY-height);
 
-        glBegin(GL_QUADS);
-        glTexCoord2f(textureX, textureY+ssHeight);
-        glVertex2i(centerX-width, centerY-height);
+            glTexCoord2f(textureX, textureY);
+            glVertex2i(centerX-width, centerY+height);
 
-        glTexCoord2f(textureX, textureY);
-        glVertex2i(centerX-width, centerY+height);
+            glTexCoord2f(textureX+ssWidth, textureY);
+            glVertex2i(centerX+width, centerY+height);
 
-        glTexCoord2f(textureX+ssWidth, textureY);
-        glVertex2i(centerX+width, centerY+height);
+            glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+            glVertex2i(centerX+width, centerY-height);
+            glEnd();
 
-        glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
-        glVertex2i(centerX+width, centerY-height);
-        glEnd();
-
-        glPopMatrix();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_ALPHA_TEST);
-
+            glPopMatrix();
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glDisable(GL_ALPHA_TEST);
+        }
         ////////////////////////////////////////////
 	}
 	
@@ -554,61 +561,62 @@ void kuljitS_render(){
 
         int ix = 0;
         int iy = 0;
+        
+        if (juggernauts[i].health < 4) {
+            switch(juggernauts[i].health) {
+                case 4:
+                    ix = 0;
+                    iy = 0;
+                    break;
+                case 3:
+                    ix = 0;
+                    iy = 1;
+                    break;
+                case 2:
+                    ix = 3;
+                    iy = 1;
+                    break;
+                case 1:
+                    ix = 2;
+                    iy = 2;
+                    break;
+                case 0:
+                    ix = 3;
+                    iy = 3;
+                    break;
+                default:
+                    ix = 2;
+                    iy = 3;
+                    break;
+            };
 
-        switch(juggernauts[i].health) {
-            case 4:
-                ix = 0;
-                iy = 0;
-                break;
-            case 3:
-                ix = 0;
-                iy = 1;
-                break;
-            case 2:
-                ix = 3;
-                iy = 1;
-                break;
-            case 1:
-                ix = 2;
-                iy = 2;
-                break;
-            case 0:
-                ix = 3;
-                iy = 3;
-                break;
-            default:
-                ix = 2;
-                iy = 3;
-                break;
-        };
+            float textureX = (float)ix / img[10].columns;
+            float textureY = (float)iy / img[10].rows;
 
-        float textureX = (float)ix / img[10].columns;
-        float textureY = (float)iy / img[10].rows;
+            float centerX = juggernauts[i].centerX;
+            float centerY = juggernauts[i].centerY + 150;
 
-        float centerX = juggernauts[i].centerX;
-        float centerY = juggernauts[i].centerY + 150;
+            float width = img[10].width*.1;
+            float height = img[10].height*.1;
 
-        float width = img[10].width*.1;
-        float height = img[10].height*.1;
+            glBegin(GL_QUADS);
+            glTexCoord2f(textureX, textureY+ssHeight);
+            glVertex2i(centerX-width, centerY-height);
 
-        glBegin(GL_QUADS);
-        glTexCoord2f(textureX, textureY+ssHeight);
-        glVertex2i(centerX-width, centerY-height);
+            glTexCoord2f(textureX, textureY);
+            glVertex2i(centerX-width, centerY+height);
 
-        glTexCoord2f(textureX, textureY);
-        glVertex2i(centerX-width, centerY+height);
+            glTexCoord2f(textureX+ssWidth, textureY);
+            glVertex2i(centerX+width, centerY+height);
 
-        glTexCoord2f(textureX+ssWidth, textureY);
-        glVertex2i(centerX+width, centerY+height);
+            glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+            glVertex2i(centerX+width, centerY-height);
+            glEnd();
 
-        glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
-        glVertex2i(centerX+width, centerY-height);
-        glEnd();
-
-        glPopMatrix();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_ALPHA_TEST);
-
+            glPopMatrix();
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glDisable(GL_ALPHA_TEST);
+        }
         ////////////////////////////////////////////
 	}
 
@@ -617,6 +625,7 @@ void kuljitS_render(){
 	r.left = g.xres/2;
 	r.center = 1;
 	ggprint13(&r, 16, 0xffffff, "Score: %i", g.score);
+	ggprint13(&r, 16, 0xffffff, "Level: %i", level);
 
 
 	//draw rambo logo //////////////////////////////////////

@@ -9,6 +9,7 @@ class Timers{
         struct timespec walkTime, ramboWeaponOutTime, menuSelectionTime;
         struct timespec pirateSpawnTime, batSpawnTime, ramboCollisionTime;
         struct timespec juggernautSpawnTime;
+        struct timespec* juggernautChargeTime;
         Timers();
         double timeDiff(struct timespec*, struct timespec*);
         void timeCopy(struct timespec*, struct timespec*);
