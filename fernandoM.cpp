@@ -48,6 +48,8 @@ extern bool display_hitbox;
 extern float gravity;
 extern void sound();
 extern Enemy1* pirates;
+extern Enemy1* juggernauts;
+extern int nJuggernauts;
 
 using namespace std; 
 
@@ -57,7 +59,7 @@ float fireRate = 0.35;
 //Bullet Constructor
 Bullet::Bullet() 
 {
-    velocityValue = rambo.velocityX + 10;
+    velocityValue = 10;
     //define starter values
 	pos[0] = rambo.getCenterX();
     pos[1] = rambo.getCenterY();
@@ -256,8 +258,13 @@ void fernandoPhysics()
                 for(int i = 0; i < nPirates; i++) {
                     createExplosion(pirates[i].centerX,pirates[i].centerY);
                 }
+                for(int i = 0; i < nPirates; i++) {
+                    createExplosion(juggernauts[i].centerX,juggernauts[i].centerY);
+                }
+                g.score = g.score + (nBats * 25) + (nPirates * 50) + (nJuggernauts * 100) + 100;
                 nBats = 0;
                 nPirates = 0;
+                nJuggernauts = 0;
 
             } else if ( powerUps[j].frame == 3 ) { 
                 shootFaster();
@@ -271,9 +278,7 @@ void fernandoPhysics()
             else {
                 shootFaster();
             }
-
             powerUps[j].done = true;
-
         }  
     }
     //update powerUp position
@@ -344,9 +349,6 @@ PowerUp::PowerUp(float x, float y, float velX, float velY, int index)
         frame = index;
         done = false;
         hitBox = new HitBox(centerY+(height/2),centerY-(height/2),centerX-(width/2),centerX+(height/2));
-
-        // animationTime = timers.timeCurrent;
-		// animationSpeedFactor = 1;
 }
 
 void PowerUp::draw()
@@ -459,8 +461,9 @@ double printGroupNumber()
     r.bot = g.yres - 200;
     r.left = g.xres/4;
 
-    for(int i = 0; i < 100000; i++) {
+    for (int i = 0; i < 100000; i++) {
         r.center = 0;
+        for (int j = 0; j < )
     }
 
     ggprint8b(&r, 16, 0xffff47, "Group 2");
