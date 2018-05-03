@@ -46,9 +46,11 @@ int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
 int MAX_PIRATES = 0;
-int MAX_BATS = 10;
+int MAX_BATS = 0;
+int MAX_JUGGERNAUTS = 2;
 int nPirates = 0;
 int nBats = 0;
+int nJuggernauts = 0;
 int done = 0;
 int cursorPosition[2];
 
@@ -78,6 +80,8 @@ Character rambo(0);
 Enemy1* pirates = new Enemy1[MAX_PIRATES];
 //bats
 Bat* bats = new Bat[MAX_BATS];
+//juggrnauts
+Enemy1* juggernauts = new Enemy1[MAX_JUGGERNAUTS];
 
 std::vector<Explosion> explosions;
 std::vector<PowerUp> powerUps;

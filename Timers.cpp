@@ -39,6 +39,7 @@ Timers::Timers() {
     recordTime(&pirateSpawnTime);    
     recordTime(&batSpawnTime);    
     recordTime(&ramboCollisionTime);
+    recordTime(&juggernautSpawnTime);
 }
 
 double Timers::timeDiff(struct timespec *start, struct timespec *end) {

@@ -31,11 +31,17 @@ extern Enemy1* pirates;
 extern int MAX_BATS;
 extern int nBats;
 extern Bat* bats;
+extern int MAX_JUGGERNAUTS;
+extern int nJuggernauts;
+extern Enemy1* juggernauts;
 extern int nbullets;
 extern void deleteBullet(int);
 extern int done;
 extern int cursorPosition[];
 
+
+
+double juggernautSpawnDelay = 1.0;
 double menuSelectionDelay = 0.15;
 double pirateSpawnDelay = 1.0;
 double batSpawnDelay = 2.0;
@@ -51,6 +57,7 @@ void kuljitS_physics()
 					g.ramboBullets[i].pos[0] < pirates[j].hitBox->getRight() &&
 					g.ramboBullets[i].pos[1] > pirates[j].hitBox->getBottom() &&
 					g.ramboBullets[i].pos[1] < pirates[j].hitBox->getTop()) {
+				pirates[j].health--;
 				pirates[j].health--;
 				//pirates[j].health--;
                 deleteBullet(i);
@@ -91,6 +98,32 @@ void kuljitS_physics()
 				bats[j].shiny = bats[nBats-1].shiny;
 				g.score+=50;
 				nBats--;
+			}
+		}
+		
+        for (int j=0; j<nJuggernauts; j++) {
+			if (g.ramboBullets[i].pos[0] > juggernauts[j].hitBox->getLeft() &&
+					g.ramboBullets[i].pos[0] < juggernauts[j].hitBox->getRight() &&
+					g.ramboBullets[i].pos[1] > juggernauts[j].hitBox->getBottom() &&
+					g.ramboBullets[i].pos[1] < juggernauts[j].hitBox->getTop()) {
+				juggernauts[j].health--;
+                deleteBullet(i);
+                if (juggernauts[j].health <= 0) {
+                    createExplosion(juggernauts[j].centerX, juggernauts[j].centerY);
+                    juggernauts[j].centerY = juggernauts[nJuggernauts-1].centerY;
+                    juggernauts[j].centerX = juggernauts[nJuggernauts-1].centerX;
+                    juggernauts[j].velocityY = juggernauts[nJuggernauts-1].velocityY;
+                    juggernauts[j].velocityX = juggernauts[nJuggernauts-1].velocityX;
+                    juggernauts[j].flipped = juggernauts[nJuggernauts-1].flipped;
+                    juggernauts[j].health = juggernauts[nJuggernauts-1].health;
+                    juggernauts[j].hitBox->updateHitBox(
+                            juggernauts[nJuggernauts-1].hitBox->getTop(),
+                            juggernauts[nJuggernauts-1].hitBox->getBottom(),
+                            juggernauts[nJuggernauts-1].hitBox->getLeft(),
+                            juggernauts[nJuggernauts-1].hitBox->getRight());
+                    g.score+=50;
+                    nJuggernauts--;
+                }
 			}
 		}
 	}
@@ -144,6 +177,28 @@ void kuljitS_physics()
 		}  
 	}    
 
+	if (nJuggernauts< MAX_JUGGERNAUTS) {
+		timers.recordTime(&timers.timeCurrent);
+		double timeSpan = timers.timeDiff(&timers.juggernautSpawnTime,
+				&timers.timeCurrent);
+		if (timeSpan > juggernautSpawnDelay) {
+			juggernauts[nJuggernauts].centerY = 100;  
+			if (rnd() < .5) {
+				juggernauts[nJuggernauts].centerX = 0 - rnd()*50; 
+				juggernauts[nJuggernauts].velocityX = rnd()*2 + 0.5;  
+				juggernauts[nJuggernauts].flipped=true;
+			} else {
+				juggernauts[nJuggernauts].centerX = g.xres + rnd()*50;  
+				juggernauts[nJuggernauts].velocityX = -1*(rnd()*2 + 0.5);
+				juggernauts[nJuggernauts].flipped=false;  
+			}
+			juggernauts[nJuggernauts].hitBox->updateHitBox(0,0,0,0);
+			juggernauts[nJuggernauts].health = 4;
+            timers.recordTime(&timers.juggernautSpawnTime); 
+			nJuggernauts++; 
+		}  
+	}
+
 	//check for enemy collisions
 	for (int i=0; i<nPirates; i++) {
 		if (pirates[i].hitBox->getLeft() <= rambo.hitBox->getRight() &&
@@ -173,6 +228,29 @@ void kuljitS_physics()
 				bats[i].hitBox->getRight() >= rambo.hitBox->getLeft() &&
 				bats[i].hitBox->getTop() >= rambo.hitBox->getBottom() &&
 				bats[i].hitBox->getBottom() <= rambo.hitBox->getTop()) {
+			timers.recordTime(&timers.timeCurrent);
+			double timeSpan = timers.timeDiff(&timers.ramboCollisionTime,
+					&timers.timeCurrent);
+			if (timeSpan > ramboCollisionDelay) {
+				activateRamboFlicker = true;
+				printf("Enemy Collision\n");
+				rambo.health--;
+				if (rambo.health<=0) {
+					printf("RAMBO DEAD\n");
+					//temporary until death menu exists
+					gameState=PAUSEMENU; 
+				}
+				timers.recordTime(&timers.ramboCollisionTime);
+			}
+
+		}
+	} 
+	
+    for (int i=0; i<nJuggernauts; i++) {
+		if (juggernauts[i].hitBox->getLeft() <= rambo.hitBox->getRight() &&
+				juggernauts[i].hitBox->getRight() >= rambo.hitBox->getLeft() &&
+				juggernauts[i].hitBox->getTop() >= rambo.hitBox->getBottom() &&
+				juggernauts[i].hitBox->getBottom() <= rambo.hitBox->getTop()) {
 			timers.recordTime(&timers.timeCurrent);
 			double timeSpan = timers.timeDiff(&timers.ramboCollisionTime,
 					&timers.timeCurrent);
@@ -253,6 +331,44 @@ void kuljitS_physics()
 		bats[i].centerX += bats[i].velocityX;
 		bats[i].centerY += bats[i].velocityY;
 	}
+
+	for (int i=0; i<nJuggernauts; i++) {
+		if (juggernauts[i].centerX < 0 && juggernauts[i].velocityX<0) {
+			juggernauts[i].velocityX *= -1;
+			juggernauts[i].flipped=true;
+		}
+
+		if (juggernauts[i].centerX > g.xres && juggernauts[i].velocityX>0) {
+			juggernauts[i].velocityX *= -1;
+			juggernauts[i].flipped=false;
+		}
+
+		if (juggernauts[i].centerY <= 100) {
+			juggernauts[i].centerY = 100;
+			juggernauts[i].velocityY = 0;
+            if (juggernauts[i].velocityX > 2.5) {
+				juggernauts[i].velocityX = (rnd()*2 + 0.5);
+            }
+            if (juggernauts[i].velocityX < -2.5) {
+				juggernauts[i].velocityX = -1*(rnd()*2 + 0.5);
+            }
+				juggernauts[nJuggernauts].velocityX = rnd()*2 + 0.5;  
+			if ((juggernauts[i].centerX - rambo.centerX < -400 &&
+                    juggernauts[i].velocityX > 0) ||
+                    (juggernauts[i].centerX - rambo.centerX > 400 && 
+                    juggernauts[i].velocityX < 0)){
+				juggernauts[i].velocityY = JUMP_STRENGTH*2;
+                float timetofall = abs(2*JUMP_STRENGTH*2/gravity);
+                juggernauts[i].velocityX = -(juggernauts[i].centerX - rambo.centerX)/timetofall; 
+			}
+		} else {
+            juggernauts[i].velocityY += gravity;
+        }
+
+		juggernauts[i].centerX += juggernauts[i].velocityX;
+		juggernauts[i].centerY += juggernauts[i].velocityY;
+	}
+
 	//velocity == 0 if standing on a platform
 	if (rambo.centerY <= 100) {
 		rambo.centerY = 100;
@@ -347,7 +463,155 @@ void kuljitS_render(){
 		r.left = bats[i].centerX;
 		r.bot = bats[i].centerY + 100;
 		ggprint8b(&r, 16, 0xffffff, "%i", i);
+        
+        //draw enemy health bar //////////////////////////////////////
+        glPushMatrix();
+        glColor3f(1.0, 1.0, 1.0);
+        glBindTexture(GL_TEXTURE_2D, g.enemyHealthBarTexture);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+        glColor4ub(255,255,255,255);
+
+        float ssWidth = (float)1.0/img[10].columns;
+        float ssHeight = (float)1.0/img[10].rows;
+
+        int ix = 0;
+        int iy = 0;
+
+        switch(pirates[i].health) {
+            case 4:
+                ix = 0;
+                iy = 0;
+                break;
+            case 3:
+                ix = 0;
+                iy = 1;
+                break;
+            case 2:
+                ix = 3;
+                iy = 1;
+                break;
+            case 1:
+                ix = 2;
+                iy = 2;
+                break;
+            case 0:
+                ix = 3;
+                iy = 3;
+                break;
+            default:
+                ix = 2;
+                iy = 3;
+                break;
+        };
+
+        float textureX = (float)ix / img[10].columns;
+        float textureY = (float)iy / img[10].rows;
+
+        float centerX = pirates[i].centerX;
+        float centerY = pirates[i].centerY + 150;
+
+        float width = img[10].width*.1;
+        float height = img[10].height*.1;
+
+        glBegin(GL_QUADS);
+        glTexCoord2f(textureX, textureY+ssHeight);
+        glVertex2i(centerX-width, centerY-height);
+
+        glTexCoord2f(textureX, textureY);
+        glVertex2i(centerX-width, centerY+height);
+
+        glTexCoord2f(textureX+ssWidth, textureY);
+        glVertex2i(centerX+width, centerY+height);
+
+        glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+        glVertex2i(centerX+width, centerY-height);
+        glEnd();
+
+        glPopMatrix();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_ALPHA_TEST);
+
+        ////////////////////////////////////////////
 	}
+	
+    for (int i=0; i<nJuggernauts; i++) {
+		juggernauts[i].draw();
+		r.left = juggernauts[i].centerX;
+		r.bot = juggernauts[i].centerY + 100;
+		ggprint8b(&r, 16, 0xffffff, "%i", i);
+        
+        //draw enemy health bar //////////////////////////////////////
+        glPushMatrix();
+        glColor3f(1.0, 1.0, 1.0);
+        glBindTexture(GL_TEXTURE_2D, g.enemyHealthBarTexture);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+        glColor4ub(255,255,255,255);
+
+        float ssWidth = (float)1.0/img[10].columns;
+        float ssHeight = (float)1.0/img[10].rows;
+
+        int ix = 0;
+        int iy = 0;
+
+        switch(juggernauts[i].health) {
+            case 4:
+                ix = 0;
+                iy = 0;
+                break;
+            case 3:
+                ix = 0;
+                iy = 1;
+                break;
+            case 2:
+                ix = 3;
+                iy = 1;
+                break;
+            case 1:
+                ix = 2;
+                iy = 2;
+                break;
+            case 0:
+                ix = 3;
+                iy = 3;
+                break;
+            default:
+                ix = 2;
+                iy = 3;
+                break;
+        };
+
+        float textureX = (float)ix / img[10].columns;
+        float textureY = (float)iy / img[10].rows;
+
+        float centerX = juggernauts[i].centerX;
+        float centerY = juggernauts[i].centerY + 150;
+
+        float width = img[10].width*.1;
+        float height = img[10].height*.1;
+
+        glBegin(GL_QUADS);
+        glTexCoord2f(textureX, textureY+ssHeight);
+        glVertex2i(centerX-width, centerY-height);
+
+        glTexCoord2f(textureX, textureY);
+        glVertex2i(centerX-width, centerY+height);
+
+        glTexCoord2f(textureX+ssWidth, textureY);
+        glVertex2i(centerX+width, centerY+height);
+
+        glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+        glVertex2i(centerX+width, centerY-height);
+        glEnd();
+
+        glPopMatrix();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_ALPHA_TEST);
+
+        ////////////////////////////////////////////
+	}
+
 	//print score
 	r.bot = g.yres - 20;
 	r.left = g.xres/2;
