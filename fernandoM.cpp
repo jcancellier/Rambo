@@ -100,7 +100,7 @@ void shootFaster() {
       */
 
     if (fireRate > 0.09) {
-	fireRate = fireRate - 0.07;
+		fireRate = fireRate - 0.07;
     }
 }
 void spaceButton() {
@@ -247,32 +247,28 @@ void fernandoPhysics()
 
 
 	    if ( powerUps[j].frame == 1) {
-		if (rambo.velocityXStrength < 8) {
-		    rambo.velocityXStrength++;
-		    shootFaster();
-		    sound(5);
-		}
+			if (rambo.velocityXStrength < 8) {
+		    	rambo.velocityXStrength++;
+		 		sound(5);
+			}
 	    } else if ( powerUps[j].frame == 2) {
-		sound(4);
-		for(int i = 0; i < nBats; i++) {
-		    createExplosion(bats[i].centerX,bats[i].centerY);
-		}
-		for(int i = 0; i < nPirates; i++) {
-		    createExplosion(pirates[i].centerX,pirates[i].centerY);
-		}
-		for(int i = 0; i < nPirates; i++) {
-		    createExplosion(juggernauts[i].centerX,juggernauts[i].centerY);
-		}
-		g.score = g.score + (nBats * 25) + (nPirates * 50) + (nJuggernauts * 100) + 100;
-		nBats = 0;
-		nPirates = 0;
-		nJuggernauts = 0;
-		sound(4);
-
+			for(int i = 0; i < nBats; i++) {
+		    	createExplosion(bats[i].centerX,bats[i].centerY);
+			}
+			for(int i = 0; i < nPirates; i++) {
+		    	createExplosion(pirates[i].centerX,pirates[i].centerY);
+			}
+			for(int i = 0; i < nPirates; i++) {
+		    	createExplosion(juggernauts[i].centerX,juggernauts[i].centerY);
+			}
+			g.score = g.score + (nBats * 25) + (nPirates * 50) + (nJuggernauts * 100) + 100;
+			nBats = 0;
+			nPirates = 0;
+			nJuggernauts = 0;
+			sound(4);
 	    } else if ( powerUps[j].frame == 3 ) { 
-		shootFaster();
-		sound(5);
-
+			shootFaster();
+			sound(5);
 	    } else if( powerUps[j].frame == 4 ) { 
 
 		if (rambo.health < 4) {
@@ -281,6 +277,7 @@ void fernandoPhysics()
 		}
 	    } 
 	    else {
+			cout << "ELSE STATEMENT" << endl;
 		shootFaster();
 	    }
 	    powerUps[j].done = true;
@@ -289,9 +286,9 @@ void fernandoPhysics()
     //update powerUp position
     for (unsigned int i = 0; i < powerUps.size(); i++) {
 
-	if (powerUps[i].centerY > 60) {
-	    powerUps[i].centerY += gravity;
-	}
+		if (powerUps[i].centerY > 60) {
+	    	powerUps[i].centerY += gravity;
+		}
     }
 }
 
@@ -372,23 +369,23 @@ void PowerUp::draw()
     int iy = 0;
 
     if (frame >= img[spriteSheetIndex].columns) {
-	iy = 1;
+		iy = 1;
     }
 
     if (frame >= (img[spriteSheetIndex].columns*2)) {
-	iy = 2;
+		iy = 2;
     }
 
     if (frame >= (img[spriteSheetIndex].columns*3)) {
-	iy = 3;
+		iy = 3;
     }
 
     if (frame >= img[spriteSheetIndex].columns*4) {
-	iy = 4;
+		iy = 4;
     }
 
     if (frame >= (img[spriteSheetIndex].columns*5)) {
-	iy = 5;
+		iy = 5;
     }
 
     float textureX = (float)ix / img[spriteSheetIndex].columns;
@@ -413,7 +410,7 @@ void PowerUp::draw()
     glDisable(GL_ALPHA_TEST);
 
     if (display_hitbox) {
-	hitBox->draw();
+		hitBox->draw();
     }
     update();
 }
@@ -432,6 +429,9 @@ void createPowerUp(float x, float y, float velX, float velY, int index)
 
     index = rand() % 4 + 1;
 
+	while (rambo.health == 4 && index == 4) {
+		index = rand() % 4 + 1;
+	}
     cout << "Index: " << index << endl;
 
     //create temporary powerUp
