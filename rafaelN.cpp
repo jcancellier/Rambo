@@ -1,7 +1,9 @@
 //Finally a simple OpenAL example program.
 //Gordon Griesel
 //2015 - 2018
-
+//edited by: Rafael Noriega
+//Spring 2018
+#include <iostream>
 #include "Global.h"
 #include "Timers.h"
 #include "SpriteSheet.h"
@@ -13,6 +15,7 @@
 #include <string.h>
 #include <math.h>
 #include <unistd.h>
+#include <fstream>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include "rafaelN.h"
@@ -420,35 +423,35 @@ void sound(int select) {
 		flag = false;
 	    }
 	    return;
-	//sound for the gunshots
+	    //sound for the gunshots
 	case 2: if (pthread_create(&thread, NULL, shoot, (void*)NULL)) {
 		    printf("Error: unable to create thread\n");
 		} else {
 		    printf("Thread created for shooting\n");
 		    return;
 		}
-	//sound for when an enemy hits rambo
+		//sound for when an enemy hits rambo
 	case 3: if (pthread_create(&thread, NULL, hit, (void*)NULL)) {
 		    printf("Error: unable to create thread\n");
 		} else {
 		    printf("Thread created for hit\n");
 		    return;
 		}
-	//sound for the nuke powerup
+		//sound for the nuke powerup
 	case 4: if (pthread_create(&thread, NULL, nuke, (void*)NULL)) {
 		    printf("Error: unable to create thread\n");
 		} else {
 		    printf("Thread created for nuke\n");
 		    return;
 		}
-	//sound for gaining life	
+		//sound for gaining life	
 	case 5: if (pthread_create(&thread, NULL, life, (void*)NULL)) {
 		    printf("Error: unable to create thread\n");
 		} else {
 		    printf("Thread created for nuke\n");
 		    return;
 		}
-	//sound for shooting faster	
+		//sound for shooting faster	
 	case 6: if (pthread_create(&thread, NULL, fire_speed, (void*)NULL)) {
 		    printf("Error: unable to create thread\n");
 		} else {
@@ -457,5 +460,14 @@ void sound(int select) {
 		}
     }    
 }
+/*
+void leader_board()
+{
+    ofstream fout("leaderboard.txt",ios::app);
 
-
+    if (fout.is_open()){
+	std::fout<< "100" <<std::endl;
+    }    
+    fout.close();
+}
+*/
