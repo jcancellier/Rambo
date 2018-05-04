@@ -216,6 +216,7 @@ void kuljitS_physics()
 				activateRamboFlicker = true;
 				printf("Enemy Collision\n");
 				rambo.health--;
+				sound(3);
 				if (rambo.health<=0) {
 					printf("RAMBO DEAD\n");
 					//temporary until death menu exists
@@ -239,6 +240,7 @@ void kuljitS_physics()
 				activateRamboFlicker = true;
 				printf("Enemy Collision\n");
 				rambo.health--;
+				sound(3);
 				if (rambo.health<=0) {
 					printf("RAMBO DEAD\n");
 					//temporary until death menu exists
@@ -262,6 +264,7 @@ void kuljitS_physics()
 				activateRamboFlicker = true;
 				printf("Enemy Collision\n");
 				rambo.health--;
+				sound(3);
 				if (rambo.health<=0) {
 					printf("RAMBO DEAD\n");
 					//temporary until death menu exists
