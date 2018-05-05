@@ -273,11 +273,8 @@ void fernandoPhysics()
 		    	rambo.health++;
 		    	sound(6);
 			}
-	    } else if ( powerUps[j].frame == 5 ) { 
-		 	headShot();
-			
 	    } else if ( powerUps[j].frame == 0 ) { 
-			//moreBullets();
+			headShot();
 	    }
 	    else {
 			cout << "ELSE STATEMENT" << endl;
@@ -437,11 +434,11 @@ void createPowerUp(float x, float y, float velX, float velY, int index)
 {
     srand (time(NULL));
 
-    index = rand() % 5 + 1;
+    index = rand() % 5;
 
 	while ((rambo.health == 4 && index == 4) || (rambo.headshot && index == 5) || 
 			(fireRate <= 0.09 && index == 3) || (rambo.velocityXStrength >= 8 && index == 1)) {
-		index = rand() % 5 + 1;
+		index = rand() % 5;
 	}
 
     //create temporary powerUp
