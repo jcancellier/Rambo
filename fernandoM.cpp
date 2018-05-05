@@ -439,16 +439,8 @@ void createPowerUp(float x, float y, float velX, float velY, int index)
 
     index = rand() % 5 + 1;
 
-	while (rambo.health == 4 && index == 4) {
-		index = rand() % 5 + 1;
-	}
-	while (rambo.headshot && index == 5) {
-		index = rand() % 5 + 1;
-	}
-	while (fireRate <= 0.09 && index == 3) {
-		index = rand() % 5 + 1;
-	}
-	while (rambo.velocityXStrength >= 8 && index == 1) {
+	while ((rambo.health == 4 && index == 4) || (rambo.headshot && index == 5) || 
+			(fireRate <= 0.09 && index == 3) || (rambo.velocityXStrength >= 8 && index == 1)) {
 		index = rand() % 5 + 1;
 	}
 
