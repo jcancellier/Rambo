@@ -50,7 +50,7 @@ int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
 int MAX_JUGGERNAUTS = 0;
-int MAX_PIRATES = 0;
+int MAX_PIRATES = 1;
 int MAX_BATS = 50;
 int level = 1;
 int nPirates = 0;
@@ -598,7 +598,6 @@ int checkKeys(XEvent *e)
              return 0;
              }
              */
-
 
         //Toggle debug mode
         if (e->type == KeyPress && key == XK_h)

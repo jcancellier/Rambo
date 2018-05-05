@@ -48,7 +48,7 @@ double pirateSpawnDelay = 1.0;
 double batSpawnDelay = 2.0;
 double ramboCollisionDelay = 1.0;
 bool activateRamboFlicker = false;
-
+ 
 void kuljitS_physics() 
 {   
     if (level <=100) {
@@ -62,8 +62,14 @@ void kuljitS_physics()
 					g.ramboBullets[i].pos[0] < pirates[j].hitBox->getRight() &&
 					g.ramboBullets[i].pos[1] > pirates[j].hitBox->getBottom() &&
 					g.ramboBullets[i].pos[1] < pirates[j].hitBox->getTop()) {
-				pirates[j].health--;
-				pirates[j].health--;
+				if (rambo.headshot) {
+					pirates[j].health = 0;
+				}
+				else {
+					pirates[j].health--;
+					pirates[j].health--;
+				}
+				
                 deleteBullet(i);
                 g.score+=25;
                 if (pirates[j].health <= 0) {
@@ -110,7 +116,13 @@ void kuljitS_physics()
 					g.ramboBullets[i].pos[0] < juggernauts[j].hitBox->getRight() &&
 					g.ramboBullets[i].pos[1] > juggernauts[j].hitBox->getBottom() &&
 					g.ramboBullets[i].pos[1] < juggernauts[j].hitBox->getTop()) {
-				juggernauts[j].health--;
+
+				if(rambo.headshot) {
+					juggernauts[j].health = 0;
+				}
+				else {
+					juggernauts[j].health--;
+				}
                 deleteBullet(i);
                 if (juggernauts[j].health <= 0) {
                     createExplosion(juggernauts[j].centerX, juggernauts[j].centerY);

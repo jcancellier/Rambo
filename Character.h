@@ -24,6 +24,8 @@ class Character{
         float velocityX;
         float velocityY;
 		float velocityXStrength;
+		bool headshot;
+		
 		HitBox *hitBox;
 		HitBox *boundingBox;
       

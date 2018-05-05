@@ -76,6 +76,7 @@ Character::Character()
     angleUp = false;
     angleDown = false;
     shootingStraight = false;
+    headshot = false;
     health = 4;
     spriteSheetIndex = 0;
     velocityX = 0;

@@ -55,7 +55,11 @@ using namespace std;
 
 //constants 
 const int MAX_BULLETS = 30;
-float fireRate = 0.35;
+float fireRate = 0.35;	
+struct timespec newHeadshotTimer;
+double seconds = 0;
+double headshotSeconds = 10.0;
+
 //Bullet Constructor
 Bullet::Bullet() 
 {
@@ -87,21 +91,15 @@ void Bullet::draw()
 
 void shootFaster() {
 
-    /*struct timespec powerUpTimer;
-      clock_gettime(CLOCK_REALTIME, &powerUpTimer);
-      double powerUpSeconds = timers.timeDiff(&g.bulletTimer, &powerUpTimer);
-      cout << "FIRERATE BEFORE: " << fireRate << endl;
-
-      if (powerUpSeconds < 10) {
-      fireRate = 0.10;
-      }
-      cout << "FIRERATE AFTER: " << fireRate << endl;
-      cout << "POWER UP SECONFS" << powerUpSeconds << endl;
-      */
-
     if (fireRate > 0.09) {
 		fireRate = fireRate - 0.07;
     }
+}
+//make headshot a state in character
+
+void headShot() {
+	clock_gettime(CLOCK_REALTIME, &newHeadshotTimer);	
+	rambo.headshot = true;
 }
 void spaceButton() {
 
@@ -271,11 +269,16 @@ void fernandoPhysics()
 			sound(5);
 	    } else if( powerUps[j].frame == 4 ) { 
 
-		if (rambo.health < 4) {
-		    rambo.health++;
-		    sound(6);
-		}
-	    } 
+			if (rambo.health < 4) {
+		    	rambo.health++;
+		    	sound(6);
+			}
+	    } else if ( powerUps[j].frame == 5 ) { 
+		 	headShot();
+			
+	    } else if ( powerUps[j].frame == 0 ) { 
+			//moreBullets();
+	    }
 	    else {
 			cout << "ELSE STATEMENT" << endl;
 		shootFaster();
@@ -290,6 +293,13 @@ void fernandoPhysics()
 	    	powerUps[i].centerY += gravity;
 		}
     }
+
+	if(rambo.headshot) {
+		seconds = timers.timeDiff(&newHeadshotTimer, &timers.timeCurrent);
+		if (seconds > headshotSeconds) {
+			rambo.headshot = false;
+		}
+	}
 }
 
 void deleteBullet(int n) 
@@ -427,12 +437,20 @@ void createPowerUp(float x, float y, float velX, float velY, int index)
 {
     srand (time(NULL));
 
-    index = rand() % 4 + 1;
+    index = rand() % 5 + 1;
 
 	while (rambo.health == 4 && index == 4) {
-		index = rand() % 4 + 1;
+		index = rand() % 5 + 1;
 	}
-    cout << "Index: " << index << endl;
+	while (rambo.headshot && index == 5) {
+		index = rand() % 5 + 1;
+	}
+	while (fireRate <= 0.09 && index == 3) {
+		index = rand() % 5 + 1;
+	}
+	while (rambo.velocityXStrength >= 8 && index == 1) {
+		index = rand() % 5 + 1;
+	}
 
     //create temporary powerUp
     PowerUp temp(x, y, velX, velY, index);
