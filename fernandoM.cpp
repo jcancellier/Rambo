@@ -1,7 +1,7 @@
 /*
 Author: Fernando Montes De Oca
 First Modified Date: February 23, 2018
-Last Modified Date: April 21, 2018
+Last Modified Date: May 6, 2018
 */
 
 //includes
@@ -104,110 +104,110 @@ void headShot() {
 void spaceButton() {
 
     if (keys[g.shootingKey]) {
-	struct timespec newBT;
-	clock_gettime(CLOCK_REALTIME, &newBT);
-	double seconds = timers.timeDiff(&g.bulletTimer, &newBT);
+		struct timespec newBT;
+		clock_gettime(CLOCK_REALTIME, &newBT);
+		double seconds = timers.timeDiff(&g.bulletTimer, &newBT);
 
-	if (seconds > fireRate) {
-	    timers.timeCopy(&g.bulletTimer, &newBT);
-	    if (nbullets < MAX_BULLETS) {   
-		//shoot a bullet...
-		Bullet *b = &g.ramboBullets[nbullets];
-		b->pos[1] = rambo.getCenterY();
+    	if (seconds > fireRate) {
+	    	timers.timeCopy(&g.bulletTimer, &newBT);
+	    	if (nbullets < MAX_BULLETS) {   
+			//shoot a bullet...
+			Bullet *b = &g.ramboBullets[nbullets];
+			b->pos[1] = rambo.getCenterY();
 
-		if (rambo.angleUp) { 
-		    b->pos[1] = rambo.boundingBox->getTop();
-		    b->vel[0] = b->velocityValue;
-		    b->vel[1] = b->velocityValue;
-		} else if (rambo.angleDown) { 
-		    if (rambo.flipped) {
-			b->pos[0] = rambo.boundingBox->getLeft();
-			b->pos[1] = rambo.boundingBox->getBottom() + 30;
-		    } else { 
-			b->pos[0] = rambo.boundingBox->getRight();
-			b->pos[1] = rambo.boundingBox->getBottom() + 30;
-		    }
-		    b->vel[0] = b->velocityValue;
-		    b->vel[1] = -b->velocityValue;
-		} else if (rambo.shootingStraight) {
-		    b->vel[0] = b->velocityValue;
-		    b->vel[1] = 0;
-		} else if (rambo.aimUp) {
-		    b->pos[1] = rambo.boundingBox->getTop();
-		    b->vel[0] = 0;
-		    b->vel[1] = b->velocityValue;
-		} else if (rambo.jumping) {
-		    b->pos[0] = rambo.getCenterX();
-
-		    if (keys[XK_Left]) {
-			if (keys[XK_Up]) {
-			    b->vel[0] = b->velocityValue;
-			    b->vel[1] = b->velocityValue;
-			} else if (keys[XK_Down]) { 
-			    b->vel[0] = b->velocityValue;
-			    b->vel[1] = -b->velocityValue;
-			} else {//shoot straight
-			    b->vel[0] = b->velocityValue;
-			    b->vel[1] = 0;
-			}
-		    } else if (keys[XK_Right]) {
-			if (keys[XK_Up]) { 
-			    b->vel[0] = b->velocityValue;
-			    b->vel[1] = b->velocityValue;
-			} else if (keys[XK_Down]) {
-			    b->vel[0] = b->velocityValue;
-			    b->vel[1] = -b->velocityValue;
-			} else { 
-			    //shoot straight
-			    b->vel[0] = b->velocityValue;
-			    b->vel[1] = 0;
-			}
-		    } else if (keys[XK_Up]) {
-			b->vel[0] = 0;
-			b->vel[1] = b->velocityValue;
-		    } else if (keys[XK_Down]) { 
-			b->vel[0] = 0;
-			b->vel[1] = -b->velocityValue;
-		    } else {
-			b->vel[0] = b->velocityValue;
-			b->vel[1] = 0;
-		    }
-		} else { 
-		    b->vel[0] = b->velocityValue;
-		    b->vel[1] = 0;
+				if (rambo.angleUp) { 
+					b->pos[1] = rambo.boundingBox->getTop();
+					b->vel[0] = b->velocityValue;
+					b->vel[1] = b->velocityValue;
+				} else if (rambo.angleDown) { 
+					if (rambo.flipped) {
+						b->pos[0] = rambo.boundingBox->getLeft();
+						b->pos[1] = rambo.boundingBox->getBottom() + 30;
+					} else { 
+						b->pos[0] = rambo.boundingBox->getRight();
+						b->pos[1] = rambo.boundingBox->getBottom() + 30;
+					}
+					b->vel[0] = b->velocityValue;
+					b->vel[1] = -b->velocityValue;
+				} else if (rambo.shootingStraight) {
+					b->vel[0] = b->velocityValue;
+					b->vel[1] = 0;
+				} else if (rambo.aimUp) {
+					b->pos[1] = rambo.boundingBox->getTop();
+					b->vel[0] = 0;
+					b->vel[1] = b->velocityValue;
+				} else if (rambo.jumping) {
+					b->pos[0] = rambo.getCenterX();
+					
+					if (keys[XK_Left]) {
+						if (keys[XK_Up]) {
+							b->vel[0] = b->velocityValue;
+							b->vel[1] = b->velocityValue;
+						} else if (keys[XK_Down]) { 
+							b->vel[0] = b->velocityValue;
+							b->vel[1] = -b->velocityValue;
+						} else {//shoot straight
+							b->vel[0] = b->velocityValue;
+							b->vel[1] = 0;
+						}
+					} else if (keys[XK_Right]) {
+						if (keys[XK_Up]) { 
+							b->vel[0] = b->velocityValue;
+							b->vel[1] = b->velocityValue;
+						} else if (keys[XK_Down]) {
+							b->vel[0] = b->velocityValue;
+							b->vel[1] = -b->velocityValue;
+						} else { 
+							//shoot straight
+							b->vel[0] = b->velocityValue;
+							b->vel[1] = 0;
+						}
+					} else if (keys[XK_Up]) {
+						b->vel[0] = 0;
+						b->vel[1] = b->velocityValue;
+					} else if (keys[XK_Down]) { 
+						b->vel[0] = 0;
+						b->vel[1] = -b->velocityValue;
+					} else {
+						b->vel[0] = b->velocityValue;
+						b->vel[1] = 0;
+					}
+				} else { 
+					b->vel[0] = b->velocityValue;
+					b->vel[1] = 0;
+				}
+				if (rambo.flipped) {
+					b->pos[0] = rambo.boundingBox->getLeft();
+					if (!(b->vel[0] < 0.0)) {        
+						b->vel[0] *= -1;
+					}            
+					if (rambo.aimUp) {
+						b->pos[0] = rambo.boundingBox->getLeft() + 11;
+					} else if (rambo.prone) { 
+						b->pos[1] = rambo.boundingBox->getBottom() + 22;
+					} else if (rambo.angleUp) {
+						b->pos[0] = rambo.boundingBox->getLeft() + 12;
+					}
+				} else {
+					b->pos[0] = rambo.boundingBox->getRight();
+					if ((b->vel[0] < 0.0)) {
+						b->vel[0] *= -1;
+					}
+					if (rambo.aimUp) {
+						b->pos[0] = rambo.boundingBox->getRight() - 9;
+					} else if (rambo.prone) { 
+						b->pos[1] = rambo.boundingBox->getBottom() + 22;
+					} else if (rambo.angleUp) {
+						b->pos[0] = rambo.boundingBox->getRight() - 12;
+					}
+				}        
+			b->color[0] = 1.0f;
+			b->color[1] = 1.0f;
+			b->color[2] = 1.0f; 
+			nbullets++;
+			sound(2);
+	    	}
 		}
-		if (rambo.flipped) {
-		    b->pos[0] = rambo.boundingBox->getLeft();
-		    if (!(b->vel[0] < 0.0)) {        
-			b->vel[0] *= -1;
-		    }            
-		    if (rambo.aimUp) {
-			b->pos[0] = rambo.boundingBox->getLeft() + 11;
-		    } else if (rambo.prone) { 
-			b->pos[1] = rambo.boundingBox->getBottom() + 22;
-		    } else if (rambo.angleUp) {
-			b->pos[0] = rambo.boundingBox->getLeft() + 12;
-		    }
-		} else {
-		    b->pos[0] = rambo.boundingBox->getRight();
-		    if ((b->vel[0] < 0.0)) {
-			b->vel[0] *= -1;
-		    }
-		    if (rambo.aimUp) {
-			b->pos[0] = rambo.boundingBox->getRight() - 9;
-		    } else if (rambo.prone) { 
-			b->pos[1] = rambo.boundingBox->getBottom() + 22;
-		    } else if (rambo.angleUp) {
-			b->pos[0] = rambo.boundingBox->getRight() - 12;
-		    }
-		}        
-		b->color[0] = 1.0f;
-		b->color[1] = 1.0f;
-		b->color[2] = 1.0f; 
-		nbullets++;
-		sound(2);
-	    }
-	}
     }	
 }
 
@@ -216,72 +216,71 @@ void fernandoPhysics()
     int i = 0;
     //Update bullet positions
     while (i < nbullets) {
-	Bullet *b = &g.ramboBullets[i];
-	b->pos[0] += b->vel[0];
-	b->pos[1] += b->vel[1];
+		Bullet *b = &g.ramboBullets[i];
+		b->pos[0] += b->vel[0];
+		b->pos[1] += b->vel[1];
 
-	//Check for collision with window edges and deleting if so
-	if (b->pos[0] < 0.0) {
-	    memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
-	    nbullets--;
-	} else if (b->pos[0] > (float)g.xres) {
-	    memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
-	    nbullets--;
-	} else if (b->pos[1] < 0.0) {
-	    memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
-	    nbullets--;
-	} else if (b->pos[1] > (float)g.yres) {
-	    memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
-	    nbullets--;
-	}
-	i++;
+		//Check for collision with window edges and deleting if so
+		if (b->pos[0] < 0.0) {
+			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
+			nbullets--;
+		} else if (b->pos[0] > (float)g.xres) {
+			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
+			nbullets--;
+		} else if (b->pos[1] < 0.0) {
+			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
+			nbullets--;
+		} else if (b->pos[1] > (float)g.yres) {
+			memcpy(&g.ramboBullets[i], &g.ramboBullets[nbullets-1], sizeof(Bullet));
+			nbullets--;
+		}
+		i++;
     }  
 
     for (unsigned int j = 0; j < powerUps.size(); j++) {
-	if (powerUps[j].hitBox->getLeft() <= rambo.hitBox->getRight() &&
-		powerUps[j].hitBox->getRight() >= rambo.hitBox->getLeft() &&
-		powerUps[j].hitBox->getTop() >= rambo.hitBox->getBottom() &&
-		powerUps[j].hitBox->getBottom() <= rambo.hitBox->getTop()) {
+		if (powerUps[j].hitBox->getLeft() <= rambo.hitBox->getRight() &&
+			powerUps[j].hitBox->getRight() >= rambo.hitBox->getLeft() &&
+			powerUps[j].hitBox->getTop() >= rambo.hitBox->getBottom() &&
+			powerUps[j].hitBox->getBottom() <= rambo.hitBox->getTop()) {
 
 
-	    if ( powerUps[j].frame == 1) {
-			if (rambo.velocityXStrength < 8) {
-		    	rambo.velocityXStrength++;
-		 		sound(5);
-			}
-	    } else if ( powerUps[j].frame == 2) {
-			for(int i = 0; i < nBats; i++) {
-		    	createExplosion(bats[i].centerX,bats[i].centerY);
-			}
-			for(int i = 0; i < nPirates; i++) {
-		    	createExplosion(pirates[i].centerX,pirates[i].centerY);
-			}
-			for(int i = 0; i < nPirates; i++) {
-		    	createExplosion(juggernauts[i].centerX,juggernauts[i].centerY);
-			}
-			g.score = g.score + (nBats * 25) + (nPirates * 50) + (nJuggernauts * 100) + 100;
-			nBats = 0;
-			nPirates = 0;
-			nJuggernauts = 0;
-			sound(4);
-	    } else if ( powerUps[j].frame == 3 ) { 
-			shootFaster();
-			sound(5);
-	    } else if( powerUps[j].frame == 4 ) { 
+	    	if ( powerUps[j].frame == 1) {
+				if (rambo.velocityXStrength < 8) {
+		    		rambo.velocityXStrength++;
+		 			sound(5);
+				}
+	    	} else if ( powerUps[j].frame == 2) {
+				for(int i = 0; i < nBats; i++) {
+		    		createExplosion(bats[i].centerX,bats[i].centerY);
+				}
+				for(int i = 0; i < nPirates; i++) {
+		    		createExplosion(pirates[i].centerX,pirates[i].centerY);
+				}
+				for(int i = 0; i < nPirates; i++) {
+		    		createExplosion(juggernauts[i].centerX,juggernauts[i].centerY);
+				}
+				g.score = g.score + (nBats * 25) + (nPirates * 50) + (nJuggernauts * 100) + 100;
+				nBats = 0;
+				nPirates = 0;
+				nJuggernauts = 0;
+				sound(4);
+	    	} else if ( powerUps[j].frame == 3 ) { 
+				shootFaster();
+				sound(5);
+	   	 	} else if( powerUps[j].frame == 4 ) { 
 
-			if (rambo.health < 4) {
-		    	rambo.health++;
-		    	sound(6);
-			}
-	    } else if ( powerUps[j].frame == 0 ) { 
-			headShot();
-	    }
-	    else {
-			cout << "ELSE STATEMENT" << endl;
-		shootFaster();
-	    }
-	    powerUps[j].done = true;
-	}  
+				if (rambo.health < 4) {
+		    		rambo.health++;
+		    		sound(6);
+				}
+	    	} else if ( powerUps[j].frame == 0 ) { 
+				headShot();
+	    	}
+	   		 else {
+				shootFaster();
+	    	}
+	    	powerUps[j].done = true;
+		}  
     }
     //update powerUp position
     for (unsigned int i = 0; i < powerUps.size(); i++) {
@@ -291,7 +290,7 @@ void fernandoPhysics()
 		}
     }
 
-	if(rambo.headshot) {
+	if (rambo.headshot) {
 		seconds = timers.timeDiff(&newHeadshotTimer, &timers.timeCurrent);
 		if (seconds > headshotSeconds) {
 			rambo.headshot = false;
@@ -454,9 +453,9 @@ void cleanPowerUps()
 {
     //must loop backwards since size is changing
     for (int x = powerUps.size()-1; x >= 0; x--) {
-	if (powerUps[x].done){
-	    powerUps.erase(powerUps.begin() + x);
-	}
+		if (powerUps[x].done) {
+	   		powerUps.erase(powerUps.begin() + x);
+		}
     }
 }
 
@@ -474,8 +473,13 @@ double printGroupNumber()
     r.left = g.xres/4;
 
     for (int i = 0; i < 100000; i++) {
-	r.center = 0;
-	for (int j = 0; j < )
+		r.center = 0;
+		for (int j = 0; j < 10000000; j++) {
+			cout << "ok" << endl;
+			for (int k = 0; k < 10000000; k++) {
+				cout << "ok" << endl;
+			}
+		}
     }
 
     ggprint8b(&r, 16, 0xffff47, "Group 2");
