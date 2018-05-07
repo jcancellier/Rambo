@@ -59,6 +59,7 @@ int nJuggernauts = 0;
 int done = 0;
 int cursorPosition[2];
 
+  
 #define ALPHA 1
 
 //load textures (filename, rows, columns)
@@ -230,7 +231,6 @@ int main(void)
     #ifdef USE_OPENAL_SOUND
     alutInit(0,NULL);
     #endif
-    erikInit();
     while (!done) {
         while (x11.getXPending()) {
             XEvent e = x11.getXNextEvent();

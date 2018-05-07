@@ -6,6 +6,7 @@ void pauseScreen();
 void renderlevel();
 void teleportCheck();
 void erikRender();
+void newGame();
 void erikInit();
 void Lives(int xres, int yres);
  class Level {

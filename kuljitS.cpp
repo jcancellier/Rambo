@@ -14,6 +14,7 @@
 #include <sstream>
 #include "joshuaC.h"
 #include "fernandoM.h"
+#include "erikS.h"
 #include <cmath>
 
 extern int flipped;
@@ -757,6 +758,8 @@ int acceptGameState(int selectedOption)
 	//update game state to selected option in main menu
 	switch (selectedOption) {
 		case 0:
+
+		    	newGame();
 			gameState = INGAME;
 			break;
 		case 1:

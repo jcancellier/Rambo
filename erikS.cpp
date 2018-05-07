@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
+#include <vector>
 #include <fstream>
 #include <cstdlib>
 #include <sstream>
@@ -17,12 +18,24 @@
 #include <GL/glx.h>
 #include "ppm.h"
 #include "fonts.h"
+#include "PowerUp.h"
+#include "Explosion.h"
 #include "erikS.h"
 #include "Global.h"
+#include "Timers.h"
 #include "Character.h"
+#include "joshuaC.h"
 extern Global g;
 extern Level lev;
 extern Character rambo;
+extern int level;
+extern int nPirates;
+extern int nBats;
+extern float fireRate;
+extern int nJuggernauts;
+extern Timers timers;
+extern std::vector<PowerUp> powerUps;
+extern std::vector<Explosion> explosions;
 using namespace std;
 
 //macros
@@ -33,10 +46,53 @@ using namespace std;
 #define VecSub(a,b,c) (c)[0]=(a)[0]-(b)[0]; \
 			     (c)[1]=(a)[1]-(b)[1]; \
 (c)[2]=(a)[2]-(b)[2]
-
-void erikInit(){
+void newGame()
+{
+    fireRate=.35;
+    powerUps.clear();
+    explosions.clear();
+    level=1;
+    nPirates =0;
+    nBats =0;
+    nJuggernauts =0;
+//Constructors
+    rambo.centerX = g.xres/2;
+    rambo.centerY = 800;
+    rambo.height = .08 * (float)g.yres;
+    float height =rambo.height;
+    rambo.width = height * 0.7;
+    //printf("%f\n", height);
+    rambo.frame = 0;
+    rambo.flipped = false;
+    rambo.jumping = false;
+    rambo.shooting = false;
+    rambo.prone = false;
+    rambo.aimUp = false;
+    rambo.angleUp = false;
+    rambo.angleDown = false;
+    rambo.shootingStraight = false;
+    rambo.health = 4;
+    rambo.headshot = false;
+    rambo.velocityX = 0;
+    rambo.velocityY = 0;
+    rambo.velocityXStrength = 4;
+    g.walk=0;
+    g.walkFrame =0;
+    g.delay = 0.1;
+    g.drawWeaponDelay = 0.5;
+    g.score =0;
+    timers.recordTime(&timers.timeStart);    
+     timers.recordTime(&timers.timeEnd);    
+     timers.recordTime(&timers.timeCurrent);    
+     timers.recordTime(&timers.walkTime);    
+     timers.recordTime(&timers.ramboWeaponOutTime);    
+     timers.recordTime(&timers.menuSelectionTime);    
+     timers.recordTime(&timers.pirateSpawnTime);    
+     timers.recordTime(&timers.batSpawnTime);    
+     timers.recordTime(&timers.ramboCollisionTime);
+     timers.recordTime(&timers.juggernautSpawnTime);
+    
     }
-
 
 void teleportCheck()
 {
