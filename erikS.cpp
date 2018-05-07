@@ -5,6 +5,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include "SpriteSheet.h"
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
@@ -21,6 +22,7 @@
 #include "PowerUp.h"
 #include "Explosion.h"
 #include "erikS.h"
+#include "kuljitS.h"
 #include "Global.h"
 #include "Timers.h"
 #include "Character.h"
@@ -28,7 +30,10 @@
 extern Global g;
 extern Level lev;
 extern Character rambo;
+extern int selectedOption;
 extern int level;
+extern SpriteSheet img[];
+extern int keys[];
 extern int nPirates;
 extern int nBats;
 extern float fireRate;
@@ -38,6 +43,7 @@ extern std::vector<PowerUp> powerUps;
 extern std::vector<Explosion> explosions;
 using namespace std;
 
+extern double menuSelectionDelay;
 //macros
 #define rnd() (((double)rand())/(double)RAND_MAX)
 #define random(a) (rand()%a)
@@ -458,5 +464,112 @@ void erikRender()
     e.drawPlatform();  
     f.drawPlatform();  
 }
+void renderDeath()
+{
+    	glClearColor(0.0,0.5,1.0,1.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	//draw rambo logo //////////////////////////////////////
+	glPushMatrix();
+	glColor3f(1.0, 1.0, 1.0);
+	glBindTexture(GL_TEXTURE_2D, g.wasted);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
 
+	float ssWidth = (float)1.0/img[1].columns;
+	float ssHeight = (float)1.0/img[1].rows;
 
+	float textureX = 0;
+	float textureY = 0;
+
+	float centerX = g.xres/2;
+	float centerY = g.yres*2/3; 
+
+	float width = floor(((float)g.xres/1280)*img[1].width);
+	float height = floor(((float)g.yres/720)*img[1].height);
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(textureX, textureY+ssHeight);
+	glVertex2i(centerX-width, centerY-height);
+
+	glTexCoord2f(textureX, textureY);
+	glVertex2i(centerX-width, centerY+height);
+
+	glTexCoord2f(textureX+ssWidth, textureY);
+	glVertex2i(centerX+width, centerY+height);
+
+	glTexCoord2f(textureX+ssWidth, textureY+ssHeight);
+	glVertex2i(centerX+width, centerY-height);
+	glEnd();
+
+	glPopMatrix();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_ALPHA_TEST);
+
+	////////////////////////////////////////////
+
+	//display meny options
+	Rect r;
+	r.bot = g.yres/3;
+	r.left = g.xres/2;
+	r.center = 1;
+
+	switch (selectedOption) {
+		case 0:
+			ggprint8b(&r, 16, 0x123fff, "NEW GAME");
+			ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
+			ggprint8b(&r, 16, 0xffffff, "EXIT");
+			break;
+		case 1:
+			
+			ggprint8b(&r, 16, 0xffffff, "NEW GAME");
+			ggprint8b(&r, 16, 0x123fff, "LEADERBOARD");
+			ggprint8b(&r, 16, 0xffffff, "EXIT");
+			break;
+		case 2:
+		
+			ggprint8b(&r, 16, 0xffffff, "NEW GAME");
+			ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
+			ggprint8b(&r, 16, 0x123fff, "EXIT");
+			break;
+		case 3:
+			ggprint8b(&r, 16, 0xffffff, "NEW GAME");
+			ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
+			ggprint8b(&r, 16, 0xffffff, "EXIT");
+			break;
+		default:
+			break;
+	}
+}
+void checkKeysDeath()
+{
+	if (keys[XK_Up]) {
+		timers.recordTime(&timers.timeCurrent);
+		double timeSpan = timers.timeDiff(&timers.menuSelectionTime,
+				&timers.timeCurrent);
+		if (timeSpan > menuSelectionDelay) {
+			selectedOption = ((selectedOption-1)+4)%4;
+			timers.recordTime(&timers.menuSelectionTime);
+		}
+	}
+
+	if (keys[XK_Down]) {
+		timers.recordTime(&timers.timeCurrent);
+		double timeSpan = timers.timeDiff(&timers.menuSelectionTime,
+				&timers.timeCurrent);
+		if (timeSpan > menuSelectionDelay) {
+			selectedOption = ((selectedOption+1)+4)%4;
+			timers.recordTime(&timers.menuSelectionTime);
+		}
+	}
+
+	if (keys[XK_Return]) {
+		timers.recordTime(&timers.timeCurrent);
+		double timeSpan = timers.timeDiff(&timers.menuSelectionTime,
+				&timers.timeCurrent);
+		if (timeSpan > menuSelectionDelay) {
+			acceptGameState(selectedOption);
+			timers.recordTime(&timers.menuSelectionTime);
+		}
+	}
+}

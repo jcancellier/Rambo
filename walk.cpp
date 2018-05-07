@@ -76,6 +76,7 @@ SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7),
                     SpriteSheet("images/enemyHealthBars.gif", 4, 4),
                     SpriteSheet("images/powerUps.gif", 1, 6),
                     SpriteSheet("images/hulk.gif", 1, 6),
+                    SpriteSheet("images/wasted.gif", 1, 1),
 					};
 
 //Global class
@@ -331,6 +332,7 @@ void initOpengl(void)
     glGenTextures(1, &g.enemyHealthBarTexture);
     glGenTextures(1, &g.powerUpsTexture);
     glGenTextures(1, &g.hulkTexture);
+    glGenTextures(1, &g.wasted);
 
     
     //-------------------------------------------------------------------------
@@ -518,7 +520,21 @@ void initOpengl(void)
     walkData = buildAlphaData(&img[12]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+ // wasted texture 
+    w = img[13].width;
+    h = img[13].height;
+    glBindTexture(GL_TEXTURE_2D, g.wasted);
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //
+    //must build a new set of data...
+    //This is where the texture is initialized in OpenGL (full sheet)
+    walkData = buildAlphaData(&img[13]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, walkData);
 
+    
     //free(walkData);
     //unlink("./images/walk.ppm");
     //-------------------------------------------------------------------------
@@ -532,6 +548,8 @@ void checkMouse(XEvent *e)
         checkMouseMainMenu(e);
         break;
     case PAUSEMENU:
+        break;
+    case DEATH:
         break;
     case INGAME:
         //Did the mouse move?
@@ -581,25 +599,10 @@ int checkKeys(XEvent *e)
         break;
     case PAUSEMENU:
         break;
+    case DEATH:
+	break;
     case INGAME:
-        //keyboard input?
-        /*
-             static int shift=0;
-             if (e->type != KeyRelease && e->type != KeyPress)
-             return 0;
-             int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
-             if (e->type == KeyRelease) {
-             if (key == XK_Shift_L || key == XK_Shift_R)
-             shift = 0;
-             return 0;
-             }
-             if (key == XK_Shift_L || key == XK_Shift_R) {
-             shift=1;
-             return 0;
-             }
-             */
-
-        //Toggle debug mode
+               //Toggle debug mode
         if (e->type == KeyPress && key == XK_h)
         {
             debug_mode = !debug_mode;
@@ -691,6 +694,9 @@ void physics(void)
     case PAUSEMENU:
         checkKeysPauseMenu();
         break;
+    case DEATH:
+	checkKeysDeath();
+	break;
     case INGAME:
         joshuaCInput();
         kuljitS_physics();
@@ -714,6 +720,9 @@ void render(void)
     case PAUSEMENU:
         renderPauseMenu();
         break;
+    case DEATH:
+	renderDeath();
+	break;
     case INGAME:{
         Rect r;
         //Clear the screen

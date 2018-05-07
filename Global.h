@@ -31,6 +31,7 @@ typedef Flt     Matrix[4][4];
 #define MAINMENU 0
 #define INGAME 1
 #define PAUSEMENU 2
+#define DEATH 3
 
 //OPTIONS
 #define NEWGAME 0
@@ -71,6 +72,7 @@ class Global{
 	GLuint enemyHealthBarTexture;
 	GLuint powerUpsTexture;
 	GLuint hulkTexture;
+	GLuint wasted;
     Vec box[20];
 	int shootingKey;
 	Global();
