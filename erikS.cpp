@@ -466,9 +466,17 @@ void erikRender()
 }
 void renderDeath()
 {
-    	glClearColor(0.0,0.5,1.0,1.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	//draw rambo logo //////////////////////////////////////
+    	//glClearColor(0.0,0.5,1.0,1.0);
+	//glClear(GL_COLOR_BUFFER_BIT);
+	float ws = (float)1/img[2].columns;
+        float hs = (float)1/img[2].rows;
+	float w  = img[2].width/1.4;
+	float h  = img[2].height/1.5;
+	
+
+	// render background after dead screen
+	renderBackground(ws,hs,w,h);
+	//draw Wasted logo //////////////////////////////////////
 	glPushMatrix();
 	glColor3f(1.0, 1.0, 1.0);
 	glBindTexture(GL_TEXTURE_2D, g.wasted);
@@ -533,7 +541,7 @@ void renderDeath()
 			ggprint8b(&r, 16, 0x123fff, "EXIT");
 			break;
 		case 3:
-			ggprint8b(&r, 16, 0xffffff, "NEW GAME");
+			ggprint8b(&r, 16, 0x123fff, "NEW GAME");
 			ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
 			ggprint8b(&r, 16, 0xffffff, "EXIT");
 			break;
@@ -548,7 +556,7 @@ void checkKeysDeath()
 		double timeSpan = timers.timeDiff(&timers.menuSelectionTime,
 				&timers.timeCurrent);
 		if (timeSpan > menuSelectionDelay) {
-			selectedOption = ((selectedOption-1)+4)%4;
+			selectedOption = ((selectedOption-1)+3)%4;
 			timers.recordTime(&timers.menuSelectionTime);
 		}
 	}
@@ -558,7 +566,7 @@ void checkKeysDeath()
 		double timeSpan = timers.timeDiff(&timers.menuSelectionTime,
 				&timers.timeCurrent);
 		if (timeSpan > menuSelectionDelay) {
-			selectedOption = ((selectedOption+1)+4)%4;
+			selectedOption = ((selectedOption+1)+3)%3;
 			timers.recordTime(&timers.menuSelectionTime);
 		}
 	}
