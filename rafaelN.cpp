@@ -27,7 +27,7 @@
 
 bool inUse[8] = {0,0,0,0,0,0,0,0};
 bool flag = true;
-
+extern Global g;
 
 void* shoot(void* arg)
 {
@@ -460,14 +460,19 @@ void sound(int select) {
 		}
     }    
 }
-/*
+
+
 void leader_board()
 {
-    ofstream fout("leaderboard.txt",ios::app);
+    std::string player_name="John Doe";
+    std::stringstream ss;
+    ss<<g.score;
+    std::string score_str = ss.str();
 
-    if (fout.is_open()){
-	std::fout<< "100" <<std::endl;
-    }    
-    fout.close();
+    std::string command = 
+	"curl http://cs.csubak.edu/\\~rnoriega/3350/leaderboard/insert.php";
+    command += "\\?name=" + player_name;
+    command += "\\&score=" + g.score;
+
+    system(command.c_str());
 }
-*/

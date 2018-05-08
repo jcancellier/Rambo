@@ -41,6 +41,7 @@ extern int nJuggernauts;
 extern Timers timers;
 extern std::vector<PowerUp> powerUps;
 extern std::vector<Explosion> explosions;
+extern void leader_board();
 using namespace std;
 
 extern double menuSelectionDelay;
@@ -540,6 +541,7 @@ void renderDeath()
 		default:
 			break;
 	}
+	leader_board();
 }
 void checkKeysDeath()
 {
