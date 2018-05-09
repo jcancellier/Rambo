@@ -466,15 +466,20 @@ void leader_board()
 {
     printf("In leaderboard\n");
     
-    std::string player_name="John";
+    std::string player_name="";
     std::stringstream ss;
     ss<<g.score;
     std::string score_str = ss.str();
+    printf("*********************************\n");  
+    printf("Congrats, your score was %s\n", score_str.c_str());
+    printf("*********************************\n");
+    printf("Enter name for leaderboard: ");
+    std::cin >> player_name;
 
     std::string command = 
 	"curl -i http://cs.csubak.edu/\\~rnoriega/3350/leaderboard/update_scores.php";
     command += "\\?name=" + player_name;
-    command += "\\&score=1200";
+    command += "\\&score=" + score_str;
 
     system(command.c_str());
     printf("exit leader_board()\n");

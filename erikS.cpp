@@ -43,7 +43,7 @@ extern std::vector<PowerUp> powerUps;
 extern std::vector<Explosion> explosions;
 extern void leader_board();
 using namespace std;
-bool flag = true;
+bool flag = false;
 extern double menuSelectionDelay;
 //macros
 #define rnd() (((double)rand())/(double)RAND_MAX)
