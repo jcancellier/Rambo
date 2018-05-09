@@ -75,7 +75,7 @@ SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7),
                     SpriteSheet("images/healthBar.gif", 1, 5),
                     SpriteSheet("images/enemyHealthBars.gif", 4, 4),
                     SpriteSheet("images/powerUps.gif", 1, 6),
-                    SpriteSheet("images/hulk.gif", 1, 6),
+                    SpriteSheet("images/hulk.gif", 2, 6),
                     SpriteSheet("images/wasted.gif", 1, 1),
 					};
 
