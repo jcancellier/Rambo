@@ -764,7 +764,7 @@ int acceptGameState(int selectedOption)
 			break;
 		case 1:
 			//open HTML LEADERBOARD
-			system("firefox cs.csubak.edu");
+			system("firefox cs.csubak.edu/~rnoriega/3350/leaderboard");
 			//ShellExecute(NULL, "open", "cs.csubak.edu", NULL, NULL, SW_SHOWNORMAL);
 			break;
 		case 2:
