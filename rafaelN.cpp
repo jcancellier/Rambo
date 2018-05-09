@@ -26,7 +26,7 @@
 #endif //USE_OPENAL_SOUND
 
 bool inUse[8] = {0,0,0,0,0,0,0,0};
-bool flag = true;
+bool flag2 = true;
 extern Global g;
 
 void* shoot(void* arg)
@@ -414,13 +414,13 @@ void sound(int select) {
     {
 	//sound for the main menu war background sound
 	case 1:
-	    if (flag){ 
+	    if (flag2){ 
 		if (pthread_create(&thread, NULL, bg_sound, (void*)NULL)) {	
 		    printf("Error: unable to create thread\n");
 		} else {
 		    printf("Thread created\n");
 		}
-		flag = false;
+		flag2 = false;
 	    }
 	    return;
 	    //sound for the gunshots
@@ -464,15 +464,18 @@ void sound(int select) {
 
 void leader_board()
 {
-    std::string player_name="John Doe";
+    printf("In leaderboard\n");
+    
+    std::string player_name="John";
     std::stringstream ss;
     ss<<g.score;
     std::string score_str = ss.str();
 
     std::string command = 
-	"curl http://cs.csubak.edu/\\~rnoriega/3350/leaderboard/insert.php";
+	"curl -i http://cs.csubak.edu/\\~rnoriega/3350/leaderboard/update_scores.php";
     command += "\\?name=" + player_name;
-    command += "\\&score=" + g.score;
+    command += "\\&score=1200";
 
     system(command.c_str());
+    printf("exit leader_board()\n");
 }
