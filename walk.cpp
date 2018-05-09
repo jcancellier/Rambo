@@ -80,6 +80,7 @@ SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7),
                     SpriteSheet("images/wasted.gif", 1, 1),
 					};
 
+
 //Global class
 Global g;
 Level lev;
@@ -97,6 +98,12 @@ std::vector<PowerUp> powerUps;
 
 //Setup timers
 Timers timers;
+Platform platforms[5]= {Platform(0,200,0,210,150,210,150,200),
+   Platform(g.xres,200,g.xres,210,g.xres-150,210,g.xres-150,200),
+   Platform((g.xres/3)+25,200,(g.xres/3)+25,210,(g.xres/3)-170+25,210,(g.xres/3)-170+25,200),
+   Platform((g.xres/1.3)+25,200,(g.xres/1.3)+25,210,(g.xres/1.3)-170+25,210,(g.xres/1.3)-170+25,200),
+   Platform((g.xres/1.87)+25,300,(g.xres/1.87)+25,310,(g.xres/1.87)-170+25,310,(g.xres/1.87)-170+25,300)};
+
 
 class X11_wrapper
 {

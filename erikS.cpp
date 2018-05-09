@@ -41,6 +41,7 @@ extern int nJuggernauts;
 extern Timers timers;
 extern std::vector<PowerUp> powerUps;
 extern std::vector<Explosion> explosions;
+extern Platform platforms[];
 extern void leader_board();
 using namespace std;
 bool flag = true;
@@ -452,19 +453,12 @@ void Live(int xres, int yres)
 }
 void erikRender()
 {
-    Platform a(0,200,0,210,150,210,150,200);
-    Platform c(g.xres,200,g.xres,210,g.xres-150,210,g.xres-150,200);
-    Platform d((g.xres/3)+25,200,(g.xres/3)+25,210,(g.xres/3)-170+25,210,(g.xres/3)-170+25,200);
-    Platform e((g.xres/1.3)+25,200,(g.xres/1.3)+25,210,(g.xres/1.3)-170+25,210,(g.xres/1.3)-170+25,200);
-    Platform f((g.xres/1.87)+25,300,(g.xres/1.87)+25,310,(g.xres/1.87)-170+25,310,(g.xres/1.87)-170+25,300);
+    for(int i=0; i < 5; i++)
+    {
+	platforms[i].drawPlatform();
+    }
 
-
-    a.drawPlatform();   
-    c.drawPlatform();   
-    d.drawPlatform();   
-    e.drawPlatform();  
-    f.drawPlatform();  
-}
+   }
 void renderDeath()
 {
     	//glClearColor(0.0,0.5,1.0,1.0);
