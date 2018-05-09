@@ -1173,6 +1173,7 @@ Hulk::Hulk()
 
 void Hulk::draw()
 {
+    checkJumping();
     glPushMatrix();
     glColor3f(1.0, 1.0, 1.0);
     glBindTexture(GL_TEXTURE_2D, g.hulkTexture);
@@ -1185,7 +1186,11 @@ void Hulk::draw()
     
     int ix = this->frame % img[spriteSheetIndex].columns;
     int iy = 0;
-    
+
+    if (frame >= img[spriteSheetIndex].columns) {
+        iy = 1;
+    }
+
     float textureX = (float)ix / img[spriteSheetIndex].columns;
     float textureY = (float)iy / img[spriteSheetIndex].rows;
     
@@ -1216,12 +1221,17 @@ void Hulk::draw()
     //record time between frames
     double timeSpan = timers.timeDiff(&this->walkTime,
                                       &timers.timeCurrent);
-    if (timeSpan > g.delay/abs(velocityX)*animationSpeedFactor) {
-        //advance frame
-        frame++;
-        if(frame >= img[spriteSheetIndex].columns)
-            frame = 0;
-        timers.recordTime(&this->walkTime);
+    if(!jumping){
+        if (timeSpan > g.delay/abs(velocityX)*animationSpeedFactor) {
+            //advance frame
+            frame++;
+            if(frame >= img[spriteSheetIndex].columns)
+                frame = 0;
+            timers.recordTime(&this->walkTime);
+        }
+    }
+    else{
+        
     }
 
     //////end update animation/////////
@@ -1233,6 +1243,14 @@ void Hulk::update()
                     centerY - (height / 2) - (height * .486111), //28
                     centerX - (width / 2) + (height * .086805),  //5
                     centerX + (height / 2) - (height * .2));     //20
+}
+
+void Hulk::checkJumping() {
+    if (centerY > 100) {
+        jumping = true;
+    } else {
+        jumping = false;
+    }
 }
 
 void createExplosion(float x, float y)

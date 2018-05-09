@@ -23,6 +23,7 @@ class Hulk{
         Hulk();
         void draw();
 		void update();
+		void checkJumping();
 		~Hulk(){
 			delete hitBox;
 		}
