@@ -43,7 +43,7 @@ extern std::vector<PowerUp> powerUps;
 extern std::vector<Explosion> explosions;
 extern void leader_board();
 using namespace std;
-
+bool flag = true;
 extern double menuSelectionDelay;
 //macros
 #define rnd() (((double)rand())/(double)RAND_MAX)
@@ -549,7 +549,11 @@ void renderDeath()
 		default:
 			break;
 	}
-	leader_board();
+	
+	if(flag) {
+	     leader_board();
+		flag = false;
+	}
 }
 void checkKeysDeath()
 {
