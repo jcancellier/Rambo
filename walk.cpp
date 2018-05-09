@@ -760,7 +760,7 @@ void render(void)
         rambo.draw();
         kuljitS_render();
 
-	erikRender();
+	//erikRender();
         
 	//rambo.drawOptimized();
 
