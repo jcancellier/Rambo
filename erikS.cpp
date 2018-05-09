@@ -556,7 +556,7 @@ void checkKeysDeath()
 		double timeSpan = timers.timeDiff(&timers.menuSelectionTime,
 				&timers.timeCurrent);
 		if (timeSpan > menuSelectionDelay) {
-			selectedOption = ((selectedOption-1)+3)%4;
+			selectedOption = ((selectedOption-1)+3)%3;
 			timers.recordTime(&timers.menuSelectionTime);
 		}
 	}
