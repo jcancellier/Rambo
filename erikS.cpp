@@ -98,7 +98,7 @@ void newGame()
      timers.recordTime(&timers.batSpawnTime);    
      timers.recordTime(&timers.ramboCollisionTime);
      timers.recordTime(&timers.juggernautSpawnTime);
-    
+    flag = true;
     }
 
 void teleportCheck()
@@ -541,11 +541,11 @@ void renderDeath()
 			ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
 			ggprint8b(&r, 16, 0x123fff, "EXIT");
 			break;
-		case 3:
-			ggprint8b(&r, 16, 0x123fff, "NEW GAME");
-			ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
-			ggprint8b(&r, 16, 0xffffff, "EXIT");
-			break;
+		// case 3:
+		// 	ggprint8b(&r, 16, 0x123fff, "NEW GAME");
+		// 	ggprint8b(&r, 16, 0xffffff, "LEADERBOARD");
+		// 	ggprint8b(&r, 16, 0xffffff, "EXIT");
+		// 	break;
 		default:
 			break;
 	}

@@ -28,6 +28,7 @@
 bool inUse[8] = {0,0,0,0,0,0,0,0};
 bool flag2 = true;
 extern Global g;
+extern std::string player_name;
 
 void* shoot(void* arg)
 {
@@ -466,7 +467,6 @@ void leader_board()
 {
     printf("In leaderboard\n");
     
-    std::string player_name="";
     std::stringstream ss;
     ss<<g.score;
     std::string score_str = ss.str();
@@ -474,7 +474,6 @@ void leader_board()
     printf("Congrats, your score was %s\n", score_str.c_str());
     printf("*********************************\n");
     printf("Enter name for leaderboard: ");
-    std::cin >> player_name;
 
     std::string command = 
 	"curl -i http://cs.csubak.edu/\\~rnoriega/3350/leaderboard/update_scores.php";

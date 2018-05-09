@@ -58,7 +58,8 @@ int nBats = 0;
 int nJuggernauts = 0;
 int done = 0;
 int cursorPosition[2];
-
+std::string player_name="";
+bool getName = true;
   
 #define ALPHA 1
 
@@ -228,6 +229,11 @@ void render(void);
 
 int main(void)
 {
+    if (getName) {
+        printf("Enter name for leaderboard: ");
+        std::cin >> player_name;
+        getName = false;
+    }
     initOpengl();
     #ifdef USE_OPENAL_SOUND
     alutInit(0,NULL);
