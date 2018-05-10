@@ -779,6 +779,7 @@ void render(void)
             powerUps[i].draw();
         }
         //DRAW BULLET 
+	erikRender();
         Bullet *b; 
         for (int i = 0; i < nbullets; i++) {
             b = &g.ramboBullets[i];
@@ -789,7 +790,6 @@ void render(void)
         rambo.draw();
         kuljitS_render();
 
-	erikRender();
         
 	//rambo.drawOptimized();
 
