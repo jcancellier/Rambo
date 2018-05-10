@@ -40,7 +40,7 @@ typedef Flt     Matrix[4][4];
 #define RESUMEGAME 3
 
 //CONSTANTS
-#define JUMP_STRENGTH 15
+#define JUMP_STRENGTH 12
 #define PI 3.1415
 
 class Global{

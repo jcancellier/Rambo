@@ -407,7 +407,7 @@ void kuljitS_render(){
 		pirates[i].draw();
 		r.left = pirates[i].centerX;
 		r.bot = pirates[i].centerY + 100;
-		ggprint8b(&r, 16, 0xffffff, "%i", i);
+		//ggprint8b(&r, 16, 0xffffff, "%i", i);
         
         //draw enemy health bar //////////////////////////////////////
         if (pirates[i].health < 4) {
@@ -486,7 +486,7 @@ void kuljitS_render(){
 		bats[i].draw();
 		r.left = bats[i].centerX;
 		r.bot = bats[i].centerY + 100;
-		ggprint8b(&r, 16, 0xffffff, "%i", i);
+		//ggprint8b(&r, 16, 0xffffff, "%i", i);
         
         //draw enemy health bar //////////////////////////////////////
         glPushMatrix();
@@ -564,7 +564,7 @@ void kuljitS_render(){
 		juggernauts[i].draw();
 		r.left = juggernauts[i].centerX;
 		r.bot = juggernauts[i].centerY + 100;
-		ggprint8b(&r, 16, 0xffffff, "%i", i);
+		//ggprint8b(&r, 16, 0xffffff, "%i", i);
         
         //draw enemy health bar //////////////////////////////////////
         glPushMatrix();

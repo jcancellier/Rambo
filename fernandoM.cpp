@@ -113,7 +113,7 @@ void spaceButton() {
 	    	if (nbullets < MAX_BULLETS) {   
 			//shoot a bullet...
 			Bullet *b = &g.ramboBullets[nbullets];
-			b->pos[1] = rambo.getCenterY();
+			b->pos[1] = rambo.boundingBox->getBottom() + rambo.height;
 
 				if (rambo.angleUp) { 
 					b->pos[1] = rambo.boundingBox->getTop();

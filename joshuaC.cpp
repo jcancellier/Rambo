@@ -240,7 +240,7 @@ void Character::draw()
         ramboFlicker = true;
     }
     if (display_hitbox) {
-        //hitBox->draw();
+        hitBox->draw();
         boundingBox->draw(1.0, 0.431, 0.796);
     }
     update();
