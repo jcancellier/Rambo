@@ -994,7 +994,7 @@ if (flipped) {
         hitBox->updateHitBox(centerY + (height / 2),
                     centerY - (height / 2) - (height * .1), //28
                     centerX - 20 - (width / 2) + (height * .1),  //5
-                    centerX - 20 + (height / 2) - (height * .1));     //20           //nigger
+                    centerX - 20 + (height / 2) - (height * .1));     //20          
 }
 //     //     }
 //     // }
