@@ -9,6 +9,7 @@ void erikRender();
 void newGame();
 void erikInit();
 void renderDeath();
+void platformPhysics();
 void checkKeysDeath();
 void Lives(int xres, int yres);
  class Level {

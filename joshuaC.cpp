@@ -33,7 +33,7 @@ extern bool display_hitbox;
 extern bool activateRamboFlicker;
 extern double ramboCollisionDelay;
 extern std::vector<Explosion> explosions;
-
+extern bool hit;
 bool ramboFlicker = false;
 
 //Constructors

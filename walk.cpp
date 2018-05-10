@@ -46,6 +46,7 @@ float cy = 200; //Sprite y postion
 int flipped = 0;
 bool debug_mode = false;
 bool display_hitbox = false;
+bool hit = true;
 int gameState = MAINMENU;
 int selectedOption = NEWGAME;
 int MAX_BULLETS = 30;
@@ -729,6 +730,7 @@ void physics(void)
     case INGAME:
         joshuaCInput();
         kuljitS_physics();
+	platformPhysics();
         fernandoPhysics();
 	teleportCheck();
         spaceButton();
