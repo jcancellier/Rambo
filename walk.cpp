@@ -100,11 +100,9 @@ std::vector<PowerUp> powerUps;
 
 //Setup timers
 Timers timers;
-Platform platforms[5]= {Platform(0,200,0,210,150,210,150,200),
-   Platform(g.xres,200,g.xres,210,g.xres-150,210,g.xres-150,200),
-   Platform((g.xres/3)+25,200,(g.xres/3)+25,210,(g.xres/3)-170+25,210,(g.xres/3)-170+25,200),
-   Platform((g.xres/1.3)+25,200,(g.xres/1.3)+25,210,(g.xres/1.3)-170+25,210,(g.xres/1.3)-170+25,200),
-   Platform((g.xres/1.87)+25,300,(g.xres/1.87)+25,310,(g.xres/1.87)-170+25,310,(g.xres/1.87)-170+25,300)};
+Platform platforms[3]= {Platform(50,200,50,210,200,210,200,200),
+   Platform(g.xres-50,200,g.xres-50,210,g.xres-200,210,g.xres-20,200),
+   Platform((g.xres/2)+100,200,(g.xres/2)+100,210,(g.xres/2)-100,210,(g.xres/2)-100,200)};
 
 
 class X11_wrapper
@@ -730,10 +728,10 @@ void physics(void)
     case INGAME:
         joshuaCInput();
         kuljitS_physics();
-	platformPhysics();
         fernandoPhysics();
 	teleportCheck();
         spaceButton();
+	platformPhysics();
         break;
     default:
         printf("FATAL ERROR IN GAME STATE\n\n");

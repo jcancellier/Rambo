@@ -197,7 +197,7 @@ Platform::Platform(
     // set the ranges for physics
     top = greatest(ypos,ypos2,ypos3,ypos4);
     bottom = least(ypos,ypos2,ypos3,ypos4);
-    
+
     one.x = xpos;
     one.y = ypos;
 
@@ -213,14 +213,14 @@ Platform::Platform(
     centerx = (xpos + xpos3)/2;
     centery = (ypos + ypos2)/2;
     left = least(xpos,xpos2,xpos3,xpos4);
-    
+
     right = greatest(xpos,xpos2,xpos3,xpos4);
 }
 
 void Platform::drawPlatform()
 {
-    float width = img[14].width*.5;
-    float height = img[14].height*.5;
+    float width = img[14].width*.6;
+    float height = img[14].height*.6;
 
     glPushMatrix();
     glBindTexture(GL_TEXTURE_2D, g.platform);
@@ -459,7 +459,7 @@ void Live(int xres, int yres)
 }
 void erikRender()
 {
-    for(int i=0; i < 5; i++)
+    for(int i=0; i < 3; i++)
     {
 	platforms[i].drawPlatform();
     }
@@ -599,22 +599,33 @@ void checkKeysDeath()
 }
 void platformPhysics()
 {
-    for(int j =0; j < 5; j++)
+    for(int j =0; j < 3; j++)
     {
-	if ( platforms[j].left <= rambo.hitBox->getRight() &&
-		platforms[j].right >= rambo.hitBox->getLeft() &&
-		platforms[j].top >= rambo.hitBox->getBottom() &&
-		platforms[j].bottom <= rambo.hitBox->getTop()
-	   )
+	if (platforms[j].left <= rambo.centerX &&
+		platforms[j].right >= rambo.centerX &&
+		platforms[j].top >= rambo.centerY-rambo.height &&
+		platforms[j].bottom <= rambo.centerY+rambo.height)
 	{
-	    hit = true;
-	   // rambo.centerY = platforms[j].top;
-	   // rambo.jumping = false;
+	    if(rambo.velocityY < 0){
+	    rambo.jumping = false;
+	    rambo.centerY = platforms[j].top + rambo.height;
+	    break;
+	    }
+	} else if (rambo.centerY > 100 && !(platforms[j].left <= rambo.centerX) 
+		&& !(platforms[j].right >= rambo.centerX) 
+		&&!(platforms[j].top >= rambo.centerY-rambo.height) 
+		&&!(platforms[j].bottom <= rambo.centerY+rambo.height)) {
+	    rambo.jumping = false;
+	    break;
 	}
-	else 
-	    hit = false;
-
+	else if(rambo.centerY==100) {
+	    rambo.jumping = false;
+	}
+	else{
+	    rambo.jumping = true;
+	}
 
     }
+
 }
 

@@ -46,7 +46,7 @@ Character::Character(int ssIdx)
     //printf("%f\n", height);
     frame = 0;
     flipped = false;
-    jumping = false;
+    jumping = true;
     shooting = false;
     prone = false;
     aimUp = false;
@@ -70,7 +70,7 @@ Character::Character()
     width = height * 0.7;
     frame = 0;
     flipped = false;
-    jumping = false;
+    jumping = true;
     shooting = false;
     prone = false;
     aimUp = false;
@@ -512,11 +512,6 @@ void walkRight()
 
 void jumpAnimation()
 {
-    if (rambo.centerY > 100) {
-        rambo.jumping = true;
-    } else {
-        rambo.jumping = false;
-    }
 
     if (keys[XK_d] || rambo.jumping) {
         

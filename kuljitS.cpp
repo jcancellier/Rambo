@@ -394,6 +394,7 @@ void kuljitS_physics()
 	if (rambo.centerY <= 100) {
 		rambo.centerY = 100;
 		rambo.velocityY = 0;
+        rambo.jumping = false;
 	}
 
 }
@@ -759,7 +760,7 @@ int acceptGameState(int selectedOption)
 	switch (selectedOption) {
 		case 0:
 
-		    	newGame();
+		    newGame();
 			gameState = INGAME;
 			break;
 		case 1:
