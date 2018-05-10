@@ -73,6 +73,7 @@ class Global{
 	GLuint powerUpsTexture;
 	GLuint hulkTexture;
 	GLuint wasted;
+	GLuint platform;
     Vec box[20];
 	int shootingKey;
 	Global();

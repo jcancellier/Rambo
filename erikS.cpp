@@ -207,28 +207,29 @@ Platform::Platform(
 
     four.x = xpos4;
     four.y = ypos4;
+
+    centerx = (xpos + xpos3)/2;
+    centery = (ypos + ypos2)/2;
 }
 
 void Platform::drawPlatform()
 {
-    glColor3f(0.8, 0.8, 0.6);
-    glPushMatrix();
-    glBindTexture(GL_TEXTURE_2D, g.walkTexture);
-    /*	glBegin(GL_QUADS);
-	glTexCoord2f(0.0, 1.0); glVertex2i( 0,  0);
-	glTexCoord2f(0.0, 0.0); glVertex2i( 0, ty);
-	glTexCoord2f(1.0, 0.0); glVertex2i(tx, ty);
-	glTexCoord2f(1.0, 1.0); glVertex2i(tx,  0);
-	glEnd();
-	*/
-    glBegin(GL_QUADS);
-    glVertex2i(one.x,	one.y);
-    glVertex2i(two.x,	two.y);
-    glColor3f(set.r,set.g,set.b);
-    glVertex2i(three.x,	three.y);
-    glVertex2i(four.x,	four.y);
+            float width = img[14].width*.5;
+            float height = img[14].height*.5;
 
-    glEnd();
+    	glPushMatrix();
+    	glBindTexture(GL_TEXTURE_2D, g.platform);
+	glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+
+    	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(centerx-width, centery-height);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i( centerx-width, centery+height);
+	glTexCoord2f(1.0f, 0.0f); glVertex2i(centerx+width, centery+height );
+	glTexCoord2f(1.0f, 1.0f); glVertex2i(centerx+width, centery-height);
+	glEnd();
+	
+      glEnd();
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
 }
@@ -461,8 +462,10 @@ void erikRender()
    }
 void renderDeath()
 {
+    	Rect d;
     	//glClearColor(0.0,0.5,1.0,1.0);
 	//glClear(GL_COLOR_BUFFER_BIT);
+	
 	float ws = (float)1/img[2].columns;
         float hs = (float)1/img[2].rows;
 	float w  = img[2].width/1.4;
@@ -471,6 +474,14 @@ void renderDeath()
 
 	// render background after dead screen
 	renderBackground(ws,hs,w,h);
+
+	d.bot = g.yres - 20;
+	d.left = g.xres/2;
+	d.center = 1;
+	ggprint13(&d, 16, 0xffffff, "Score: %i", g.score);
+	ggprint13(&d, 16, 0xffffff, "Level: %i", level);
+
+
 	//draw Wasted logo //////////////////////////////////////
 	glPushMatrix();
 	glColor3f(1.0, 1.0, 1.0);

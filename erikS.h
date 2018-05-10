@@ -42,6 +42,8 @@ class Platform {
 	int bottom;
 	int left;
 	int right;
+	int centerx;
+	int centery;
 	Platform(
 		float xpos, float ypos,
 		float xpos2, float ypos2,

@@ -78,6 +78,7 @@ SpriteSheet img[] = {SpriteSheet("images/walk.gif", 4, 7),
                     SpriteSheet("images/powerUps.gif", 1, 6),
                     SpriteSheet("images/hulk.gif", 2, 6),
                     SpriteSheet("images/wasted.gif", 1, 1),
+                    SpriteSheet("images/platform.gif", 1, 1)
 					};
 
 
@@ -346,6 +347,7 @@ void initOpengl(void)
     glGenTextures(1, &g.powerUpsTexture);
     glGenTextures(1, &g.hulkTexture);
     glGenTextures(1, &g.wasted);
+    glGenTextures(1, &g.platform);
 
     
     //-------------------------------------------------------------------------
@@ -546,6 +548,20 @@ void initOpengl(void)
     walkData = buildAlphaData(&img[13]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+// wasted texture 
+    w = img[14].width;
+    h = img[14].height;
+    glBindTexture(GL_TEXTURE_2D, g.platform);
+    //
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //
+    //must build a new set of data...
+    //This is where the texture is initialized in OpenGL (full sheet)
+    walkData = buildAlphaData(&img[14]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, walkData);
+
 
     
     //free(walkData);
@@ -773,7 +789,7 @@ void render(void)
         rambo.draw();
         kuljitS_render();
 
-	//erikRender();
+	erikRender();
         
 	//rambo.drawOptimized();
 
