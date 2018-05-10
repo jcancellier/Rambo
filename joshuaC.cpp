@@ -1290,3 +1290,16 @@ void checkRamboFlicker()
     if(timeSpan > ramboCollisionDelay)
         activateRamboFlicker = false;
 }
+
+void drawControls() {
+	Rect r;
+	signed int c = 0x00ffff44;
+	r.bot = g.yres-20;
+	r.left = 5;
+	r.center = 0;
+	ggprint13(&r, 16, c, "Controls");
+	ggprint13(&r, 16, c, "--------------------");
+	ggprint13(&r, 16, c, "f key = shoot");
+	ggprint13(&r, 16, c, "d key = jump");	
+	ggprint13(&r, 16, c, "arrows = movement");
+}

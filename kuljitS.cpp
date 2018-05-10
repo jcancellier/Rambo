@@ -377,8 +377,8 @@ void kuljitS_physics()
                     juggernauts[i].velocityX > 0) ||
                     (juggernauts[i].centerX - rambo.centerX > 400 && 
                     juggernauts[i].velocityX < 0)){
-				juggernauts[i].velocityY = JUMP_STRENGTH*2;
-                float timetofall = abs(2*JUMP_STRENGTH*2/gravity);
+				juggernauts[i].velocityY = (JUMP_STRENGTH-2)*2;
+                float timetofall = abs(2*(JUMP_STRENGTH-2)*2/gravity);
                 juggernauts[i].velocityX = -(juggernauts[i].centerX - rambo.centerX)/timetofall;
             }
 		

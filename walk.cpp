@@ -745,9 +745,11 @@ void render(void)
     {
     case MAINMENU:
         renderMainMenu();
+	drawControls();
         break;
     case PAUSEMENU:
         renderPauseMenu();
+	drawControls();
         break;
     case DEATH:
 	renderDeath();

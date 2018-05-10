@@ -466,7 +466,7 @@ void sound(int select) {
 void leader_board()
 {
     printf("In leaderboard\n");
-    
+
     std::stringstream ss;
     ss<<g.score;
     std::string score_str = ss.str();
