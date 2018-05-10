@@ -407,79 +407,79 @@ void* fire_speed(void* arg)
 }
 
 void sound(int select) {
-	pthread_t thread;
-	//for(int i=1; i< 8; i++) {
-	//if (!inUse[i]) {
-	// inUse[i] = 1;
-	switch(select)
-	{
-		//sound for the main menu war background sound
-		case 1:
-			if (flag2){ 
-				if (pthread_create(&thread, NULL, bg_sound, (void*)NULL)) {	
-					printf("Error: unable to create thread\n");
-				} else {
-					printf("Thread created\n");
-				}
-				flag2 = false;
-			}
-			return;
-			//sound for the gunshots
-		case 2: if (pthread_create(&thread, NULL, shoot, (void*)NULL)) {
-				printf("Error: unable to create thread\n");
-			} else {
-				printf("Thread created for shooting\n");
-				return;
-			}
-			//sound for when an enemy hits rambo
-		case 3: if (pthread_create(&thread, NULL, hit, (void*)NULL)) {
-				printf("Error: unable to create thread\n");
-			} else {
-				printf("Thread created for hit\n");
-				return;
-			}
-			//sound for the nuke powerup
-		case 4: if (pthread_create(&thread, NULL, nuke, (void*)NULL)) {
-				printf("Error: unable to create thread\n");
-			} else {
-				printf("Thread created for nuke\n");
-				return;
-			}
-			//sound for gaining life	
-		case 5: if (pthread_create(&thread, NULL, life, (void*)NULL)) {
-				printf("Error: unable to create thread\n");
-			} else {
-				printf("Thread created for nuke\n");
-				return;
-			}
-			//sound for shooting faster	
-		case 6: if (pthread_create(&thread, NULL, fire_speed, (void*)NULL)) {
-				printf("Error: unable to create thread\n");
-			} else {
-				printf("Thread created for nuke\n");
-				return;
-			}
-	}    
+    pthread_t thread;
+    //for(int i=1; i< 8; i++) {
+    //if (!inUse[i]) {
+    // inUse[i] = 1;
+    switch(select)
+    {
+	//sound for the main menu war background sound
+	case 1:
+	    if (flag2){ 
+		if (pthread_create(&thread, NULL, bg_sound, (void*)NULL)) {	
+		    printf("Error: unable to create thread\n");
+		} else {
+		    //printf("Thread created\n");
+		}
+		flag2 = false;
+	    }
+	    return;
+	    //sound for the gunshots
+	case 2: if (pthread_create(&thread, NULL, shoot, (void*)NULL)) {
+		    printf("Error: unable to create thread\n");
+		} else {
+		    //printf("Thread created for shooting\n");
+		    return;
+		}
+		//sound for when an enemy hits rambo
+	case 3: if (pthread_create(&thread, NULL, hit, (void*)NULL)) {
+		    printf("Error: unable to create thread\n");
+		} else {
+		    //printf("Thread created for hit\n");
+		    return;
+		}
+		//sound for the nuke powerup
+	case 4: if (pthread_create(&thread, NULL, nuke, (void*)NULL)) {
+		    printf("Error: unable to create thread\n");
+		} else {
+		    //printf("Thread created for nuke\n");
+		    return;
+		}
+		//sound for gaining life	
+	case 5: if (pthread_create(&thread, NULL, life, (void*)NULL)) {
+		    printf("Error: unable to create thread\n");
+		} else {
+		    //printf("Thread created for nuke\n");
+		    return;
+		}
+		//sound for shooting faster	
+	case 6: if (pthread_create(&thread, NULL, fire_speed, (void*)NULL)) {
+		    printf("Error: unable to create thread\n");
+		} else {
+		    //printf("Thread created for nuke\n");
+		    return;
+		}
+    }    
 }
 
 
 void leader_board()
 {
-	printf("In leaderboard\n");
+    //printf("In leaderboard\n");
 
-	std::stringstream ss;
-	ss<<g.score;
-	std::string score_str = ss.str();
-	printf("*********************************\n");  
-	printf("Congrats, your score was %s\n", score_str.c_str());
-	printf("*********************************\n");
-	printf("Enter name for leaderboard: ");
+    std::stringstream ss;
+    ss<<g.score;
+    std::string score_str = ss.str();
+    printf("*********************************\n");  
+    printf("Congrats, your score was %s\n", score_str.c_str());
+    printf("*********************************\n");
+    //printf("Enter name for leaderboard: ");
 
 	std::string command = 
 		"curl -i http://cs.csubak.edu/\\~rnoriega/3350/leaderboard/update_scores.php";
 	command += "\\?name=" + player_name;
 	command += "\\&score=" + score_str;
 
-	system(command.c_str());
-	printf("exit leader_board()\n");
+    system(command.c_str());
+    //printf("exit leader_board()\n");
 }

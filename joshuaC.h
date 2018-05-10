@@ -15,4 +15,5 @@ void checkRamboFlicker();
 void checkOnlyRunning();
 void createExplosion(float, float);
 void cleanExplosions();
+void drawControls();
 #endif
